@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Swapify</string>
+    <string name="CustomerName">Customer Name</string>
+    <string name="CustomerUsername">Customer Username</string>
+    <string name="CustomerEmail">Customer E-mail</string>
+    <string name="CustomerPassword">Customer Password</string>
+    <string name="ConfirmPassword">Confirm Password</string>
+    <string name="CustomerRegister">Register</string>
 </resources>

@@ -1,2 +1,2 @@
 # SwapifyApp
-Introducing our new item sharing and swapping app - the ultimate tool for decluttering your home, discovering new items, and connecting with your community
+Introducing our new item sharing and swapping app - the ultimate tool for decluttering your home, discovering new items, and connecting with your community! With our app, you can easily upload items you no longer need or want, and browse listings from other users to find items that interest you. You can also communicate with other users directly to arrange for item exchanges, and build trust with our built-in rating system. Our app is easy to use, secure, and designed to help you get the most out of your stuff.

@@ -7,4 +7,5 @@
     <string name="ConfirmPassword">Confirm Password</string>
     <string name="CustomerRegister">Register</string>
     <string name="a_short_description_of_4_rows">Introducing our new item sharing and swapping app - the ultimate tool for decluttering your home, discovering new items, and connecting with your community! With our app, you can easily upload items you no longer need or want, and browse listings from other users to find items that interest you.</string>
+    <string name="back_button">Back Button</string>
 </resources>

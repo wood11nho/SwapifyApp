@@ -7,22 +7,26 @@ import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 
-public class MainActivity extends AppCompatActivity {
+import android.content.Intent;
+
+public class RegisterActivity extends AppCompatActivity {
 
     MaterialButton btnRegister;
     EditText edtName, edtUsername, edtEmail, edtPassword, edtConfirmPassword;
     ListView lstCustomers;
     private DBObject db;
+    ImageButton btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_register);
 
 
         btnRegister = findViewById(R.id.btnRegister);
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.edtPassword);
         edtConfirmPassword = findViewById(R.id.edtConfirmPassword);
         lstCustomers = findViewById(R.id.lvCustomerList);
+        btnBack = findViewById(R.id.btnBack);
 
         db = new DBObject(this);
 
@@ -42,6 +47,16 @@ public class MainActivity extends AppCompatActivity {
                     CreateCustomerTask task = new CreateCustomerTask();
                     task.execute();
                 }
+            }
+        });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // navigate to the entry activity
+                Intent intent = new Intent(RegisterActivity.this, EntryActivity.class);
+                startActivity(intent);
+                finish(); // finish the current activity to remove it from the stack
             }
         });
     }
@@ -55,19 +70,19 @@ public class MainActivity extends AppCompatActivity {
 
         // Validate input fields
         if (name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            Toast.makeText(MainActivity.this, "Please fill in all fields", Toast.LENGTH_LONG).show();
+            Toast.makeText(RegisterActivity.this, "Please fill in all fields", Toast.LENGTH_LONG).show();
             return false;
         }
 
         // Verify if the password and confirm password are the same
         if (!password.equals(confirmPassword)) {
-            Toast.makeText(MainActivity.this, "Passwords do not match", Toast.LENGTH_LONG).show();
+            Toast.makeText(RegisterActivity.this, "Passwords do not match", Toast.LENGTH_LONG).show();
             return false;
         }
 
         // Verify if the email is valid
         if (!isValidEmail(email)) {
-            Toast.makeText(MainActivity.this, "Invalid email address", Toast.LENGTH_LONG).show();
+            Toast.makeText(RegisterActivity.this, "Invalid email address", Toast.LENGTH_LONG).show();
             return false;
         }
 
@@ -97,10 +112,11 @@ public class MainActivity extends AppCompatActivity {
             boolean success = db.addOne(customer);
             // Show the customer in a toast message
             if (success) {
-                Toast.makeText(MainActivity.this, "Customer added", Toast.LENGTH_LONG).show();
+                Toast.makeText(RegisterActivity.this, "Customer added", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(MainActivity.this, "Error adding customer", Toast.LENGTH_LONG).show();
+                Toast.makeText(RegisterActivity.this, "Error adding customer", Toast.LENGTH_LONG).show();
             }
         }
+
     }
 }

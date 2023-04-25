@@ -11,8 +11,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
-import com.example.swapify.DBObject;
-
 
 public class MainActivity extends AppCompatActivity {
 

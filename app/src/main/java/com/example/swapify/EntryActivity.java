@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class EntryActivity extends AppCompatActivity {
 
     Button registerButton;
+    Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,10 +18,19 @@ public class EntryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_entry);
 
         registerButton = findViewById(R.id.sign_up_button);
+        loginButton = findViewById(R.id.log_in_button);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(EntryActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(EntryActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });

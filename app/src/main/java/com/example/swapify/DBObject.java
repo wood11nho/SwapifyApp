@@ -1,7 +1,10 @@
 package com.example.swapify;
 
+import static com.example.swapify.CustomerModel.encryptPassword;
+
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -52,4 +55,31 @@ public class DBObject extends SQLiteOpenHelper {
         }
         return false;
     }
+
+    public boolean authenticate(String email, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + USERS_TABLE + " WHERE " + COLUMN_EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int hashedPasswordColumnIndex = cursor.getColumnIndex(COLUMN_PASSWORD);
+            if (hashedPasswordColumnIndex >= 0) {
+                String hashedPassword = cursor.getString(hashedPasswordColumnIndex);
+                String hashedInputPassword = encryptPassword(password);
+                if (hashedPassword.equals(hashedInputPassword)) {
+                    cursor.close();
+                    db.close();
+                    return true;
+                }
+            }
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
+        return false;
+    }
+
+
 }

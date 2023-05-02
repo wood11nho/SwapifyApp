@@ -112,7 +112,10 @@ public class RegisterActivity extends AppCompatActivity {
             boolean success = db.addOne(customer);
             // Show the customer in a toast message
             if (success) {
-                Toast.makeText(RegisterActivity.this, "Customer added", Toast.LENGTH_LONG).show();
+                // navigate to login activity
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish(); // finish the current activity to remove it from the stack
             } else {
                 Toast.makeText(RegisterActivity.this, "Error adding customer", Toast.LENGTH_LONG).show();
             }

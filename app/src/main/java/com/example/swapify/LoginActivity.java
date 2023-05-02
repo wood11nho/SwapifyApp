@@ -2,12 +2,15 @@ package com.example.swapify;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
@@ -18,6 +21,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText edtEmail, edtPassword;
     ImageButton btnBack;
     private DBObject db;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         edtEmail = findViewById(R.id.edtEmail);
         edtPassword = findViewById(R.id.edtPassword);
         btnBack = findViewById(R.id.btnBack);
+        progressBar = findViewById(R.id.progressBar);
 
         db = new DBObject(this);
 
@@ -72,18 +77,48 @@ public class LoginActivity extends AppCompatActivity {
 
     private class AuthenticateUserTask extends AsyncTask<String, Void, Boolean> {
 
+        ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+            progressDialog.setMessage("Authenticating...");
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+            progressDialog.setMessage("Authenticating...");
+        }
+
         @Override
         protected Boolean doInBackground(String... credentials) {
             String email = credentials[0];
             String password = credentials[1];
             // Authenticate the user
-            return db.authenticate(email, password);
+            boolean success = db.authenticate(email, password);
+            if (success) {
+                // Save the user email to SharedPreferences
+                SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("email", email);
+                editor.putString("username", db.getUsername(email));
+                editor.apply();
+            }
+            return success;
         }
 
         @Override
         protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+            progressBar.setVisibility(View.GONE);
+            progressDialog.dismiss();
             if (success) {
-                Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_LONG).show();
+                // navigate to the home activity
+                Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+                startActivity(intent);
+                finish(); // finish the current activity to remove it from the stack
             } else {
                 Toast.makeText(LoginActivity.this, "Incorrect email or password", Toast.LENGTH_LONG).show();
             }

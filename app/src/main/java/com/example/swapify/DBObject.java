@@ -17,6 +17,10 @@ public class DBObject extends SQLiteOpenHelper {
     public static final String COLUMN_USERNAME = "USERNAME";
     public static final String COLUMN_EMAIL = "EMAIL";
     public static final String COLUMN_PASSWORD = "PASSWORD";
+    public static final String COLUMN_PROFILE_PICTURE = "PROFILE_PICTURE";
+    public static final String COLUMN_PHONE_NUMBER = "PHONE_NUMBER";
+    public static final String COLUMN_BIO = "BIO";
+    public static final String COLUMN_COUNTRY = "COUNTRY";
 
     public DBObject(@Nullable Context context) {
         super(context, "swapify.db", null, 1);
@@ -24,7 +28,7 @@ public class DBObject extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableStatement = "CREATE TABLE " + USERS_TABLE + "(ID INTEGER PRIMARY KEY, " + COLUMN_NAME + " TEXT, " + COLUMN_USERNAME + " TEXT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PASSWORD + " TEXT)";
+        String createTableStatement = "CREATE TABLE " + USERS_TABLE + "(ID INTEGER PRIMARY KEY, " + COLUMN_NAME + " TEXT, " + COLUMN_USERNAME + " TEXT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PASSWORD + " TEXT, " + COLUMN_PROFILE_PICTURE + " TEXT, " + COLUMN_PHONE_NUMBER + " TEXT, " + COLUMN_BIO + " TEXT, " + COLUMN_COUNTRY + " TEXT)";
 
         db.execSQL(createTableStatement);
     }
@@ -42,6 +46,10 @@ public class DBObject extends SQLiteOpenHelper {
         cv.put(COLUMN_USERNAME, customerModel.getUsername());
         cv.put(COLUMN_EMAIL, customerModel.getEmail());
         cv.put(COLUMN_PASSWORD, customerModel.getPasswordHash());
+        cv.put(COLUMN_PROFILE_PICTURE, customerModel.getProfilePicture());
+        cv.put(COLUMN_PHONE_NUMBER, customerModel.getPhoneNumber());
+        cv.put(COLUMN_BIO, customerModel.getBio());
+        cv.put(COLUMN_COUNTRY, customerModel.getCountry());
 
         db.beginTransaction();
         try{
@@ -82,4 +90,44 @@ public class DBObject extends SQLiteOpenHelper {
     }
 
 
+    public String getUsername(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + USERS_TABLE + " WHERE " + COLUMN_EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int usernameColumnIndex = cursor.getColumnIndex(COLUMN_USERNAME);
+            if (usernameColumnIndex >= 0) {
+                String username = cursor.getString(usernameColumnIndex);
+                cursor.close();
+                db.close();
+                return username;
+            }
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
+        return "";
+    }
+
+    public boolean updateProfilePicture(String email, String profilePicture) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_PROFILE_PICTURE, profilePicture);
+
+        db.beginTransaction();
+        try{
+            long update = db.update(USERS_TABLE, cv, COLUMN_EMAIL + " = ?", new String[]{email});
+            if (update != -1) {
+                db.setTransactionSuccessful();
+                return true;
+            }
+        }finally {
+            db.endTransaction();
+        }
+        return false;
+    }
 }

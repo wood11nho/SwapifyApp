@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Swapify</string>
-    <string name="CustomerName">Customer Name</string>
-    <string name="CustomerUsername">Customer Username</string>
-    <string name="CustomerEmail">Customer E-mail</string>
-    <string name="CustomerPassword">Customer Password</string>
+    <string name="CustomerName">Name</string>
+    <string name="CustomerUsername">Username</string>
+    <string name="CustomerEmail">E-mail</string>
+    <string name="CustomerPassword">Password</string>
     <string name="ConfirmPassword">Confirm Password</string>
     <string name="CustomerRegister">Register</string>
     <string name="a_short_description_of_4_rows">Introducing our new item sharing and swapping app - the ultimate tool for decluttering your home, discovering new items, and connecting with your community! With our app, you can easily upload items you no longer need or want, and browse listings from other users to find items that interest you.</string>

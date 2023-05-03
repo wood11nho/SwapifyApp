@@ -130,4 +130,26 @@ public class DBObject extends SQLiteOpenHelper {
         }
         return false;
     }
+
+    public String getName(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + USERS_TABLE + " WHERE " + COLUMN_EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int nameColumnIndex = cursor.getColumnIndex(COLUMN_NAME);
+            if (nameColumnIndex >= 0) {
+                String name = cursor.getString(nameColumnIndex);
+                cursor.close();
+                db.close();
+                return name;
+            }
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
+        return "";
+    }
 }

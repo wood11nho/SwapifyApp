@@ -7,6 +7,11 @@ public class SessionManager {
     private static final String PREFS_NAME = "user_prefs";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_EMAIL = "email";
+    private static final String KEY_NAME = "name";
+    private static final String KEY_BIO = "bio";
+    private static final String KEY_PROFILE_PIC = "profile_pic";
+    private static final String KEY_COUNTRY = "country";
+    private static final String KEY_PHONE_NUMBER = "phone_number";
 
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences.Editor editor;
@@ -26,6 +31,26 @@ public class SessionManager {
 
     public String getUsername() {
         return sharedPreferences.getString(KEY_USERNAME, "");
+    }
+
+    public String getName() {
+        return sharedPreferences.getString(KEY_NAME, "");
+    }
+
+    public String getBio() {
+        return sharedPreferences.getString(KEY_BIO, "");
+    }
+
+    public String getProfilePic() {
+        return sharedPreferences.getString(KEY_PROFILE_PIC, "");
+    }
+
+    public String getCountry() {
+        return sharedPreferences.getString(KEY_COUNTRY, "");
+    }
+
+    public String getPhoneNumber() {
+        return sharedPreferences.getString(KEY_PHONE_NUMBER, "");
     }
 
     public void clearSession() {

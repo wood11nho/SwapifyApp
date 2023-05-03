@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -8,9 +7,14 @@
         android:id="@+id/profile_picture"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@mipmap/default_profile_picture"
         android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/default_profile_picture"
+        android:background="@drawable/circle_background"
+        android:padding="10dp"
+        android:cropToPadding="true"
+        android:scaleType="centerCrop" />
+
 
     <TextView
         android:id="@+id/name_text"
@@ -71,6 +75,15 @@
         android:textSize="16sp"
         android:layout_below="@id/bio_text"
         android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/edit_profile_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit profile"
+        android:layout_below="@id/country_text"
+        android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

@@ -99,11 +99,16 @@ public class LoginActivity extends AppCompatActivity {
             // Authenticate the user
             boolean success = db.authenticate(email, password);
             if (success) {
-                // Save the user email to SharedPreferences
+                // Save the user details to SharedPreferences
                 SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("email", email);
                 editor.putString("username", db.getUsername(email));
+                editor.putString("name", db.getName(email));
+                editor.putString("phone", null);
+                editor.putString("country", null);
+                editor.putString("bio", null);
+                editor.putString("profile_picture", null);
                 editor.apply();
             }
             return success;

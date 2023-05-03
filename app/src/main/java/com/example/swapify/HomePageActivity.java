@@ -35,7 +35,7 @@ public class HomePageActivity extends AppCompatActivity {
 
         // Set the welcome message with the username
         tvWelcomeMessage = findViewById(R.id.tvWelcomeMessage);
-        tvWelcomeMessage.setText("Hi, " + username + " \uD83D\uDE03!\nWelcome to Swapify!");
+        tvWelcomeMessage.setText("Hi, " + username + " \uD83D\uDE03!");
 
         menuButton = findViewById(R.id.menu_button);
         profileButton = findViewById(R.id.profile_button);
@@ -47,7 +47,6 @@ public class HomePageActivity extends AppCompatActivity {
                 menuButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.purple));
                 // Change background tint of profile button to grey
                 profileButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.grey));
-                // TODO: Implement logic to show basic page
                 Intent intent = new Intent(HomePageActivity.this, HomePageActivity.class);
                 startActivity(intent);
                 finish(); // finish the current activity to remove it from the stack
@@ -61,7 +60,6 @@ public class HomePageActivity extends AppCompatActivity {
                 profileButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.purple));
                 // Change background tint of menu button to grey
                 menuButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.grey));
-                // TODO: Implement logic to show profile page
                 Intent intent = new Intent(HomePageActivity.this, ProfileActivity.class);
                 startActivity(intent);
             }

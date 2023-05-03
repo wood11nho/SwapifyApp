@@ -68,10 +68,10 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:id="@+id/country_text"
+        android:id="@+id/city_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Country"
+        android:text="City"
         android:textSize="16sp"
         android:layout_below="@id/bio_text"
         android:layout_marginTop="10dp"
@@ -82,7 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Edit profile"
-        android:layout_below="@id/country_text"
+        android:layout_below="@id/city_text"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true" />
 

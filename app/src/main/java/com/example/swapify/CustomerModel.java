@@ -14,7 +14,7 @@ public class CustomerModel {
     private String profilePicture;
     private String phoneNumber;
     private String bio;
-    private String country;
+    private String city;
 
     public CustomerModel(String name, String username, String email, String passwordHash) {
         this.id = idCounter;
@@ -25,7 +25,7 @@ public class CustomerModel {
         this.profilePicture = "";
         this.phoneNumber = "";
         this.bio = "";
-        this.country = "";
+        this.city = "";
         idCounter++;
     }
 
@@ -56,8 +56,8 @@ public class CustomerModel {
         return bio;
     }
 
-    public String getCountry() {
-        return country;
+    public String getCity() {
+        return city;
     }
 
     static String encryptPassword(String password) {
@@ -87,7 +87,7 @@ public class CustomerModel {
                 ", profilePicture='" + profilePicture + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", bio='" + bio + '\'' +
-                ", country='" + country + '\'' +
+                ", city='" + city + '\'' +
                 '}';
     }
 }

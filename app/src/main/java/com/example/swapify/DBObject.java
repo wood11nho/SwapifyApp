@@ -20,22 +20,34 @@ public class DBObject extends SQLiteOpenHelper {
     public static final String COLUMN_PROFILE_PICTURE = "PROFILE_PICTURE";
     public static final String COLUMN_PHONE_NUMBER = "PHONE_NUMBER";
     public static final String COLUMN_BIO = "BIO";
-    public static final String COLUMN_COUNTRY = "COUNTRY";
+    public static final String COLUMN_CITY = "CITY";
 
     public DBObject(@Nullable Context context) {
-        super(context, "swapify.db", null, 1);
+        super(context, "swapify.db", null, 2);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableStatement = "CREATE TABLE " + USERS_TABLE + "(ID INTEGER PRIMARY KEY, " + COLUMN_NAME + " TEXT, " + COLUMN_USERNAME + " TEXT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PASSWORD + " TEXT, " + COLUMN_PROFILE_PICTURE + " TEXT, " + COLUMN_PHONE_NUMBER + " TEXT, " + COLUMN_BIO + " TEXT, " + COLUMN_COUNTRY + " TEXT)";
+        String createTableStatement = "CREATE TABLE " + USERS_TABLE + "(ID INTEGER PRIMARY KEY, " + COLUMN_NAME + " TEXT, " + COLUMN_USERNAME + " TEXT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PASSWORD + " TEXT)";
 
         db.execSQL(createTableStatement);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if(oldVersion < 2){
+            String alterTableStatement = "ALTER TABLE " + USERS_TABLE + " ADD COLUMN " + COLUMN_PROFILE_PICTURE + " TEXT";
+            db.execSQL(alterTableStatement);
 
+            alterTableStatement = "ALTER TABLE " + USERS_TABLE + " ADD COLUMN " + COLUMN_PHONE_NUMBER + " TEXT";
+            db.execSQL(alterTableStatement);
+
+            alterTableStatement = "ALTER TABLE " + USERS_TABLE + " ADD COLUMN " + COLUMN_BIO + " TEXT";
+            db.execSQL(alterTableStatement);
+
+            alterTableStatement = "ALTER TABLE " + USERS_TABLE + " ADD COLUMN " + COLUMN_CITY + " TEXT";
+            db.execSQL(alterTableStatement);
+        }
     }
 
     public boolean addOne(CustomerModel customerModel){
@@ -49,7 +61,7 @@ public class DBObject extends SQLiteOpenHelper {
         cv.put(COLUMN_PROFILE_PICTURE, customerModel.getProfilePicture());
         cv.put(COLUMN_PHONE_NUMBER, customerModel.getPhoneNumber());
         cv.put(COLUMN_BIO, customerModel.getBio());
-        cv.put(COLUMN_COUNTRY, customerModel.getCountry());
+        cv.put(COLUMN_CITY, customerModel.getCity());
 
         db.beginTransaction();
         try{

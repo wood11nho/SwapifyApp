@@ -164,4 +164,70 @@ public class DBObject extends SQLiteOpenHelper {
         db.close();
         return "";
     }
+
+    public String getPhone(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + USERS_TABLE + " WHERE " + COLUMN_EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int phoneColumnIndex = cursor.getColumnIndex(COLUMN_PHONE_NUMBER);
+            if (phoneColumnIndex >= 0) {
+                String phone = cursor.getString(phoneColumnIndex);
+                cursor.close();
+                db.close();
+                return phone;
+            }
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
+        return "";
+    }
+
+    public String getCity(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + USERS_TABLE + " WHERE " + COLUMN_EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int countryColumnIndex = cursor.getColumnIndex(COLUMN_CITY);
+            if (countryColumnIndex >= 0) {
+                String city = cursor.getString(countryColumnIndex);
+                cursor.close();
+                db.close();
+                return city;
+            }
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
+        return "";
+    }
+
+    public String getBio(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + USERS_TABLE + " WHERE " + COLUMN_EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int bioColumnIndex = cursor.getColumnIndex(COLUMN_BIO);
+            if (bioColumnIndex >= 0) {
+                String bio = cursor.getString(bioColumnIndex);
+                cursor.close();
+                db.close();
+                return bio;
+            }
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
+        return "";
+    }
 }

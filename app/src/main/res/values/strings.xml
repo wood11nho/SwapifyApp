@@ -52,7 +52,6 @@
         <item>Valcea</item>
         <item>Vaslui</item>
         <item>Vrancea</item>
-
     </string-array>
 
     <string name="select_city_prompt">Select a city</string>

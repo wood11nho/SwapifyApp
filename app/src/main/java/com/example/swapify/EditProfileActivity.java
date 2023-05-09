@@ -56,7 +56,8 @@ public class EditProfileActivity extends AppCompatActivity {
             emailEdtText.setText(email);
         if(!phone_number.isEmpty())
             phone_numberEdtText.setText(phone_number);
-        bioEdtText.setText(bio);
+        if(!bio.isEmpty())
+            bioEdtText.setText(bio);
         if(!city.isEmpty())
             citySpinner.setSelection(((ArrayAdapter<String>)citySpinner.getAdapter()).getPosition(city));
 
@@ -84,6 +85,7 @@ public class EditProfileActivity extends AppCompatActivity {
             values.put("email", emailEdtText.getText().toString());
             values.put("phone_number", phone_numberEdtText.getText().toString());
             values.put("bio", bioEdtText.getText().toString());
+            Log.d("bio in db: ", bioEdtText.getText().toString());
             values.put("city", citySpinner.getSelectedItem().toString());
             db.update("users", values, "username = ?", new String[]{username});
 

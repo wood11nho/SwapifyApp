@@ -3,6 +3,7 @@ package com.example.swapify;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,6 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
         editProfileButton = findViewById(R.id.edit_profile_button);
 
         SharedPreferences preferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        Log.d("profileactivity", preferences.toString());
         String name = preferences.getString("name", "");
         String username = preferences.getString("username", "");
         String email = preferences.getString("email", "");
@@ -42,6 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
         txtEmail.setText("Email: " + email);
         txtPhone_number.setText("Phone Number: " + phone_number);
         txtBio.setText("Bio: " + bio);
+        Log.d("bio profileactivity", bio);
         txtCity.setText("City: " + city);
 
         editProfileButton.setOnClickListener(new View.OnClickListener() {

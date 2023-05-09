@@ -105,9 +105,9 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putString("email", email);
                 editor.putString("username", db.getUsername(email));
                 editor.putString("name", db.getName(email));
-                editor.putString("phone", null);
-                editor.putString("country", null);
-                editor.putString("bio", null);
+                editor.putString("phone", db.getPhone(email));
+                editor.putString("city", db.getCity(email));
+                editor.putString("bio", db.getBio(email));
                 editor.putString("profile_picture", null);
                 editor.apply();
             }

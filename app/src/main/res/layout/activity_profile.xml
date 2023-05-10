@@ -68,12 +68,22 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
+        android:id="@+id/county_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="County"
+        android:textSize="16sp"
+        android:layout_below="@id/bio_text"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
         android:id="@+id/city_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="City"
         android:textSize="16sp"
-        android:layout_below="@id/bio_text"
+        android:layout_below="@id/county_text"
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true" />
 

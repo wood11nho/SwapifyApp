@@ -9,50 +9,11 @@
     <string name="a_short_description_of_4_rows">Introducing our new item sharing and swapping app - the ultimate tool for decluttering your home, discovering new items, and connecting with your community! With our app, you can easily upload items you no longer need or want, and browse listings from other users to find items that interest you.</string>
     <string name="back_button">Back Button</string>
 
+    <string-array name="counties_array">
+    </string-array>
     <string-array name="cities_array">
-        <item>Alba</item>
-        <item>Arad</item>
-        <item>Arges</item>
-        <item>Bacau</item>
-        <item>Bihor</item>
-        <item>Bistrita-Nasaud</item>
-        <item>Botosani</item>
-        <item>Braila</item>
-        <item>Brasov</item>
-        <item>Bucuresti</item>
-        <item>Buzau</item>
-        <item>Calarasi</item>
-        <item>Caras-Severin</item>
-        <item>Cluj</item>
-        <item>Constanta</item>
-        <item>Covasna</item>
-        <item>Dambovita</item>
-        <item>Dolj</item>
-        <item>Galati</item>
-        <item>Giurgiu</item>
-        <item>Gorj</item>
-        <item>Harghita</item>
-        <item>Hunedoara</item>
-        <item>Ialomita</item>
-        <item>Iasi</item>
-        <item>Ilfov</item>
-        <item>Maramures</item>
-        <item>Mehedinti</item>
-        <item>Mures</item>
-        <item>Neamt</item>
-        <item>Olt</item>
-        <item>Prahova</item>
-        <item>Salaj</item>
-        <item>Satu Mare</item>
-        <item>Sibiu</item>
-        <item>Suceava</item>
-        <item>Teleorman</item>
-        <item>Timis</item>
-        <item>Tulcea</item>
-        <item>Valcea</item>
-        <item>Vaslui</item>
-        <item>Vrancea</item>
     </string-array>
 
     <string name="select_city_prompt">Select a city</string>
+    <string name="select_county_prompt">Select a county</string>
 </resources>

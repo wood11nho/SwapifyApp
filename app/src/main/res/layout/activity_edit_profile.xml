@@ -79,12 +79,30 @@
             android:textSize="16sp" />
 
         <TextView
+            android:id="@+id/county_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Choose your county:"
+            android:textSize="16sp" />
+
+        <Spinner
+            android:id="@+id/county_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/counties_array"
+            android:prompt="@string/select_county_prompt"
+            android:padding="8dp"
+            android:textSize="16sp" />
+
+        <TextView
             android:id="@+id/city_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Choose your city:"
             android:padding="8dp"
+            android:text="Choose your city:"
             android:textSize="16sp" />
+
 
         <Spinner
             android:id="@+id/city_spinner"
@@ -93,7 +111,8 @@
             android:entries="@array/cities_array"
             android:prompt="@string/select_city_prompt"
             android:padding="8dp"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            />
 
         <Button
             android:id="@+id/save_button"
@@ -101,6 +120,7 @@
             android:layout_height="wrap_content"
             android:text="Save"
             android:layout_gravity="center_horizontal"
+
             android:layout_marginTop="16dp" />
 
     </LinearLayout>

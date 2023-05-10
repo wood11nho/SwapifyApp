@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ProfileActivity extends AppCompatActivity {
     private ImageView imgProfilePic;
-    private TextView txtName, txtUsername, txtEmail, txtPhone_number, txtBio, txtCity;
+    private TextView txtName, txtUsername, txtEmail, txtPhone_number, txtBio, txtCity, txtCounty;
     private Button editProfileButton;
 
     @Override
@@ -27,6 +27,7 @@ public class ProfileActivity extends AppCompatActivity {
         txtEmail = findViewById(R.id.email_text);
         txtPhone_number = findViewById(R.id.phone_number_text);
         txtBio = findViewById(R.id.bio_text);
+        txtCounty = findViewById(R.id.county_text);
         txtCity = findViewById(R.id.city_text);
         editProfileButton = findViewById(R.id.edit_profile_button);
 
@@ -37,6 +38,7 @@ public class ProfileActivity extends AppCompatActivity {
         String email = preferences.getString("email", "");
         String phone_number = preferences.getString("phone_number", "");
         String bio = preferences.getString("bio", "");
+        String county = preferences.getString("county", "");
         String city = preferences.getString("city", "");
 
         txtName.setText("Name: " + name);
@@ -44,7 +46,7 @@ public class ProfileActivity extends AppCompatActivity {
         txtEmail.setText("Email: " + email);
         txtPhone_number.setText("Phone Number: " + phone_number);
         txtBio.setText("Bio: " + bio);
-        Log.d("bio profileactivity", bio);
+        txtCounty.setText("County: " + county);
         txtCity.setText("City: " + city);
 
         editProfileButton.setOnClickListener(new View.OnClickListener() {

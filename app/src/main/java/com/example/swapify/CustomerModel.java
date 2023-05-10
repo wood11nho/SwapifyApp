@@ -14,6 +14,7 @@ public class CustomerModel {
     private String profilePicture;
     private String phoneNumber;
     private String bio;
+    private String county;
     private String city;
 
     public CustomerModel(String name, String username, String email, String passwordHash) {
@@ -25,6 +26,7 @@ public class CustomerModel {
         this.profilePicture = "";
         this.phoneNumber = "";
         this.bio = "";
+        this.county = "";
         this.city = "";
         idCounter++;
     }
@@ -54,6 +56,10 @@ public class CustomerModel {
 
     public String getBio() {
         return bio;
+    }
+
+    public String getCounty() {
+        return county;
     }
 
     public String getCity() {
@@ -87,6 +93,7 @@ public class CustomerModel {
                 ", profilePicture='" + profilePicture + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", bio='" + bio + '\'' +
+                ", county='" + county + '\'' +
                 ", city='" + city + '\'' +
                 '}';
     }

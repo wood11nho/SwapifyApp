@@ -10,6 +10,7 @@ public class SessionManager {
     private static final String KEY_NAME = "name";
     private static final String KEY_BIO = "bio";
     private static final String KEY_PROFILE_PIC = "profile_pic";
+    private static final String KEY_COUNTY = "county";
     private static final String KEY_CITY = "city";
     private static final String KEY_PHONE_NUMBER = "phone_number";
 
@@ -45,6 +46,9 @@ public class SessionManager {
         return sharedPreferences.getString(KEY_PROFILE_PIC, "");
     }
 
+    public String getCounty() {
+        return sharedPreferences.getString(KEY_COUNTY, "");
+    }
     public String getCity() {
         return sharedPreferences.getString(KEY_CITY, "");
     }

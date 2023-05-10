@@ -20,10 +20,11 @@ public class DBObject extends SQLiteOpenHelper {
     public static final String COLUMN_PROFILE_PICTURE = "PROFILE_PICTURE";
     public static final String COLUMN_PHONE_NUMBER = "PHONE_NUMBER";
     public static final String COLUMN_BIO = "BIO";
+    public static final String COLUMN_COUNTY = "COUNTY";
     public static final String COLUMN_CITY = "CITY";
 
     public DBObject(@Nullable Context context) {
-        super(context, "swapify.db", null, 2);
+        super(context, "swapify.db", null, 3);
     }
 
     @Override
@@ -35,17 +36,9 @@ public class DBObject extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(oldVersion < 2){
-            String alterTableStatement = "ALTER TABLE " + USERS_TABLE + " ADD COLUMN " + COLUMN_PROFILE_PICTURE + " TEXT";
-            db.execSQL(alterTableStatement);
+        if(oldVersion < 3){
 
-            alterTableStatement = "ALTER TABLE " + USERS_TABLE + " ADD COLUMN " + COLUMN_PHONE_NUMBER + " TEXT";
-            db.execSQL(alterTableStatement);
-
-            alterTableStatement = "ALTER TABLE " + USERS_TABLE + " ADD COLUMN " + COLUMN_BIO + " TEXT";
-            db.execSQL(alterTableStatement);
-
-            alterTableStatement = "ALTER TABLE " + USERS_TABLE + " ADD COLUMN " + COLUMN_CITY + " TEXT";
+            String alterTableStatement = "ALTER TABLE " + USERS_TABLE + " ADD COLUMN " + COLUMN_COUNTY + " TEXT";
             db.execSQL(alterTableStatement);
         }
     }
@@ -61,6 +54,7 @@ public class DBObject extends SQLiteOpenHelper {
         cv.put(COLUMN_PROFILE_PICTURE, customerModel.getProfilePicture());
         cv.put(COLUMN_PHONE_NUMBER, customerModel.getPhoneNumber());
         cv.put(COLUMN_BIO, customerModel.getBio());
+        cv.put(COLUMN_COUNTY, customerModel.getCounty());
         cv.put(COLUMN_CITY, customerModel.getCity());
 
         db.beginTransaction();
@@ -177,6 +171,28 @@ public class DBObject extends SQLiteOpenHelper {
                 cursor.close();
                 db.close();
                 return phone;
+            }
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
+        return "";
+    }
+
+    public String getCounty(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + USERS_TABLE + " WHERE " + COLUMN_EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int countyColumnIndex = cursor.getColumnIndex(COLUMN_COUNTY);
+            if (countyColumnIndex >= 0) {
+                String county = cursor.getString(countyColumnIndex);
+                cursor.close();
+                db.close();
+                return county;
             }
         }
 

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -105,7 +106,8 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putString("email", email);
                 editor.putString("username", db.getUsername(email));
                 editor.putString("name", db.getName(email));
-                editor.putString("phone", db.getPhone(email));
+                editor.putString("phone_number", db.getPhone(email));
+                Log.d(db.getPhone(email), "merge: ");
                 editor.putString("county", db.getCounty(email));
                 editor.putString("city", db.getCity(email));
                 editor.putString("bio", db.getBio(email));

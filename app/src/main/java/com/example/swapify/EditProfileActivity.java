@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -195,6 +197,22 @@ public class EditProfileActivity extends AppCompatActivity {
         saveButton.setOnClickListener(v -> {
             SQLiteDatabase db = new DBObject(this).getWritableDatabase();
 
+            String newEmail = emailEdtText.getText().toString();
+            String newPhoneNumber = phone_numberEdtText.getText().toString();
+
+            // Check if the new email is already taken
+            boolean isEmailTaken = isEmailTaken(newEmail, username);
+            if (isEmailTaken) {
+                return;
+            }
+
+            // Check if the new phone number is already taken
+            boolean isPhoneNumberTaken = isPhoneNumberTaken(newPhoneNumber, username);
+            if (isPhoneNumberTaken) {
+
+                return;
+            }
+
             SharedPreferences.Editor editor = userPreferences.edit();
             editor.putString("name", nameEdtText.getText().toString());
             editor.putString("username", usernameEdtText.getText().toString());
@@ -222,5 +240,25 @@ public class EditProfileActivity extends AppCompatActivity {
             finish();
         });
 
+    }
+
+    private boolean isPhoneNumberTaken(String newPhoneNumber, String currentUsername) {
+        SQLiteDatabase db = new DBObject(this).getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE phone_number = ? AND username != ?", new String[]{newPhoneNumber, currentUsername});
+        if (cursor.getCount() > 0) {
+            Toast.makeText(this, "This phone number is already taken", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isEmailTaken(String newEmail, String currentUsername) {
+        SQLiteDatabase db = new DBObject(this).getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE email = ? AND username != ?", new String[]{newEmail, currentUsername});
+        if (cursor.getCount() > 0) {
+            Toast.makeText(this, "This email is already taken", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
     }
 }

@@ -43,6 +43,12 @@ public class DBObject extends SQLiteOpenHelper {
         }
     }
 
+    public void deleteAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(USERS_TABLE, null, null);
+        db.close();
+    }
+
     public boolean addOne(CustomerModel customerModel){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -245,5 +251,23 @@ public class DBObject extends SQLiteOpenHelper {
         }
         db.close();
         return "";
+    }
+
+    public boolean emailExists(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + USERS_TABLE + " WHERE " + COLUMN_EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            cursor.close();
+            db.close();
+            return true;
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
+        return false;
     }
 }

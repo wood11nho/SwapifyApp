@@ -86,11 +86,21 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }
 
+        // Verify if the email already exists
+        if (emailAlreadyExists(email)) {
+            Toast.makeText(RegisterActivity.this, "Email already exists", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
         return true;
     }
 
     private boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private boolean emailAlreadyExists(String email) {
+        return db.emailExists(email);
     }
 
     private class CreateCustomerTask extends AsyncTask<Void, Void, CustomerModel> {

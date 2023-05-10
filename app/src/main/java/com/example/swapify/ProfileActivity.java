@@ -11,10 +11,13 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.button.MaterialButton;
+
 public class ProfileActivity extends AppCompatActivity {
     private ImageView imgProfilePic;
     private TextView txtName, txtUsername, txtEmail, txtPhone_number, txtBio, txtCity, txtCounty;
     private Button editProfileButton;
+    private MaterialButton logoutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
         txtCounty = findViewById(R.id.county_text);
         txtCity = findViewById(R.id.city_text);
         editProfileButton = findViewById(R.id.edit_profile_button);
+        logoutButton = findViewById(R.id.logout_button);
 
         SharedPreferences preferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
         Log.d("profileactivity", preferences.toString());
@@ -56,5 +60,22 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Clear the user preferences
+                SharedPreferences preferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.apply();
+
+                // Redirect the user to the login screen
+                Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+
     }
 }

@@ -96,4 +96,17 @@
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true" />
 
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:id="@+id/logout_button"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/white"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        />
+
+
 </RelativeLayout>

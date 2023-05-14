@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
 
         db = new DBObject(this);
+        Log.d("Database version: ", String.valueOf(db.getReadableDatabase().getVersion()));
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +59,15 @@ public class LoginActivity extends AppCompatActivity {
                 finish(); // finish the current activity to remove it from the stack
             }
         });
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
     }
 
     private boolean validateInput(String email, String password) {

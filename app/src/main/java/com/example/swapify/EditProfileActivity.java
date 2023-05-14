@@ -209,7 +209,6 @@ public class EditProfileActivity extends AppCompatActivity {
             // Check if the new phone number is already taken
             boolean isPhoneNumberTaken = isPhoneNumberTaken(newPhoneNumber, username);
             if (isPhoneNumberTaken) {
-
                 return;
             }
 

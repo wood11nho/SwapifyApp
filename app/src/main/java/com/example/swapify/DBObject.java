@@ -7,11 +7,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 public class DBObject extends SQLiteOpenHelper {
-
+    // constants for users table
     public static final String USERS_TABLE = "USERS";
     public static final String COLUMN_NAME = "NAME";
     public static final String COLUMN_USERNAME = "USERNAME";
@@ -23,8 +24,20 @@ public class DBObject extends SQLiteOpenHelper {
     public static final String COLUMN_COUNTY = "COUNTY";
     public static final String COLUMN_CITY = "CITY";
 
+    // constants for items table
+    public static final String ITEMS_TABLE = "ITEMS";
+    public static final String COLUMN_ITEM_NAME = "ITEM_NAME";
+    public static final String COLUMN_ITEM_DESCRIPTION = "ITEM_DESCRIPTION";
+    public static final String COLUMN_ITEM_CATEGORY = "ITEM_CATEGORY";
+    public static final String COLUMN_ITEM_IS_FOR_TRADE = "ITEM_IS_FOR_TRADE";
+    public static final String COLUMN_ITEM_IS_FOR_SALE = "ITEM_IS_FOR_SALE";
+    public static final String COLUMN_ITEM_IS_FOR_AUCTION = "ITEM_IS_FOR_AUCTION";
+    public static final String COLUMN_ITEM_USER_ID = "ITEM_USER_ID";
+    public static final String COLUMN_ITEM_IMAGE = "ITEM_IMAGE";
+    public static final String COLUMN_ITEM_PRICE = "ITEM_PRICE";
+
     public DBObject(@Nullable Context context) {
-        super(context, "swapify.db", null, 3);
+        super(context, "swapify.db", null, 4);
     }
 
     @Override
@@ -32,15 +45,15 @@ public class DBObject extends SQLiteOpenHelper {
         String createTableStatement = "CREATE TABLE " + USERS_TABLE + "(ID INTEGER PRIMARY KEY, " + COLUMN_NAME + " TEXT, " + COLUMN_USERNAME + " TEXT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PASSWORD + " TEXT)";
 
         db.execSQL(createTableStatement);
+
+        String createItemsTableStatement = "CREATE TABLE " + ITEMS_TABLE + "(ID INTEGER PRIMARY KEY, " + COLUMN_ITEM_NAME + " TEXT, " + COLUMN_ITEM_DESCRIPTION + " TEXT, " + COLUMN_ITEM_CATEGORY + " TEXT, " + COLUMN_ITEM_IS_FOR_TRADE + " INTEGER, " + COLUMN_ITEM_IS_FOR_SALE + " INTEGER, " + COLUMN_ITEM_IS_FOR_AUCTION + " INTEGER, " + COLUMN_ITEM_USER_ID + " INTEGER, " + COLUMN_ITEM_IMAGE + " TEXT, " + COLUMN_ITEM_PRICE + " INTEGER)";
+
+        db.execSQL(createItemsTableStatement);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(oldVersion < 3){
 
-            String alterTableStatement = "ALTER TABLE " + USERS_TABLE + " ADD COLUMN " + COLUMN_COUNTY + " TEXT";
-            db.execSQL(alterTableStatement);
-        }
     }
 
     public void deleteAll() {

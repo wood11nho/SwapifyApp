@@ -10,11 +10,14 @@ import android.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.button.MaterialButton;
+
 public class HomePageActivity extends AppCompatActivity {
 
     private TextView tvWelcomeMessage;
     private ImageButton menuButton;
     private ImageButton profileButton;
+    private MaterialButton addItemButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class HomePageActivity extends AppCompatActivity {
 
         menuButton = findViewById(R.id.menu_button);
         profileButton = findViewById(R.id.profile_button);
+        addItemButton = findViewById(R.id.addItemButton);
 
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +65,14 @@ public class HomePageActivity extends AppCompatActivity {
                 // Change background tint of menu button to grey
                 menuButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.grey));
                 Intent intent = new Intent(HomePageActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        addItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomePageActivity.this, AddItemActivity.class);
                 startActivity(intent);
             }
         });

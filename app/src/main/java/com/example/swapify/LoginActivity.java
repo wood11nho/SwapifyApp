@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     ImageButton btnBack;
     private DBObject db;
     private ProgressBar progressBar;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +44,8 @@ public class LoginActivity extends AppCompatActivity {
                 String email = edtEmail.getText().toString();
                 String password = edtPassword.getText().toString();
                 if (validateInput(email, password)) {
-                    AuthenticateUserTask task = new AuthenticateUserTask();
-                    task.execute(email, password);
+                    showProgressDialog();
+                    authenticateUser(email, password);
                 }
             }
         });
@@ -59,15 +59,6 @@ public class LoginActivity extends AppCompatActivity {
                 finish(); // finish the current activity to remove it from the stack
             }
         });
-    }
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.apply();
     }
 
     private boolean validateInput(String email, String password) {
@@ -86,60 +77,62 @@ public class LoginActivity extends AppCompatActivity {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    private class AuthenticateUserTask extends AsyncTask<String, Void, Boolean> {
+    private void showProgressDialog() {
+        progressDialog = new ProgressDialog(LoginActivity.this);
+        progressDialog.setMessage("Authenticating...");
+        progressDialog.show();
+    }
 
-        ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
-            progressDialog.setMessage("Authenticating...");
-            progressDialog.show();
-        }
+    private void authenticateUser(final String email, final String password) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // Authenticate the user
+                boolean success = db.authenticate(email, password);
+                if (success) {
+                    // Save the user details to SharedPreferences
+                    SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("email", email);
+                    editor.putString("username", db.getUsername(email));
+                    editor.putString("name", db.getName(email));
+                    editor.putString("phone_number", db.getPhone(email));
+                    Log.d(db.getPhone(email), "merge: ");
+                    editor.putString("county", db.getCounty(email));
+                    editor.putString("city", db.getCity(email));
+                    editor.putString("bio", db.getBio(email));
+                    editor.putString("profile_picture", null);
+                    editor.apply();
+                }
 
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-            progressDialog.setMessage("Authenticating...");
-        }
-
-        @Override
-        protected Boolean doInBackground(String... credentials) {
-            String email = credentials[0];
-            String password = credentials[1];
-            // Authenticate the user
-            boolean success = db.authenticate(email, password);
-            if (success) {
-                // Save the user details to SharedPreferences
-                SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("email", email);
-                editor.putString("username", db.getUsername(email));
-                editor.putString("name", db.getName(email));
-                editor.putString("phone_number", db.getPhone(email));
-                Log.d(db.getPhone(email), "merge: ");
-                editor.putString("county", db.getCounty(email));
-                editor.putString("city", db.getCity(email));
-                editor.putString("bio", db.getBio(email));
-                editor.putString("profile_picture", null);
-                editor.apply();
+                final boolean finalSuccess = success;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dismissProgressDialog();
+                        updateUI(finalSuccess);
+                    }
+                });
             }
-            return success;
-        }
+        });
+        thread.start();
+    }
 
-        @Override
-        protected void onPostExecute(Boolean success) {
-            super.onPostExecute(success);
-            progressBar.setVisibility(View.GONE);
+    private void dismissProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
-            if (success) {
-                // navigate to the home activity
-                Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
-                startActivity(intent);
-                finish(); // finish the current activity to remove it from the stack
-            } else {
-                Toast.makeText(LoginActivity.this, "Incorrect email or password", Toast.LENGTH_LONG).show();
-            }
+        }
+    }
+
+    private void updateUI(boolean success) {
+        progressBar.setVisibility(View.GONE);
+        if (success) {
+            // navigate to the home activity
+            Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
+            startActivity(intent);
+            finish(); // finish the current activity to remove it from the stack
+        } else {
+            Toast.makeText(LoginActivity.this, "Incorrect email or password", Toast.LENGTH_LONG).show();
         }
     }
 }

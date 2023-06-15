@@ -31,6 +31,20 @@ public class CustomerModel {
         idCounter++;
     }
 
+    public CustomerModel() {
+        this.id = idCounter;
+        this.name = "";
+        this.username = "";
+        this.email = "";
+        this.passwordHash = "";
+        this.profilePicture = "";
+        this.phoneNumber = "";
+        this.bio = "";
+        this.county = "";
+        this.city = "";
+        idCounter++;
+    }
+
     public String getName() {
         return name;
     }
@@ -96,5 +110,53 @@ public class CustomerModel {
                 ", county='" + county + '\'' +
                 ", city='" + city + '\'' +
                 '}';
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public void setCounty(String county) {
+        this.county = county;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public static void setIdCounter(int idCounter) {
+        CustomerModel.idCounter = idCounter;
+    }
+
+    public int getId() {
+        return id;
     }
 }

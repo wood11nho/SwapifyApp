@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView txtName, txtUsername, txtEmail, txtPhone_number, txtBio, txtCity, txtCounty;
     private Button editProfileButton;
     private MaterialButton logoutButton;
+    private ImageButton btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
         txtCity = findViewById(R.id.city_text);
         editProfileButton = findViewById(R.id.edit_profile_button);
         logoutButton = findViewById(R.id.logout_button);
+        btnBack = findViewById(R.id.btnBack);
 
         SharedPreferences preferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
         Log.d("profileactivity", preferences.toString());
@@ -53,11 +56,22 @@ public class ProfileActivity extends AppCompatActivity {
         txtCounty.setText("County: " + county);
         txtCity.setText("City: " + city);
 
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, HomePageActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         editProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 

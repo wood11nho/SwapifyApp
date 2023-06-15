@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@mipmap/default_profile_picture"
+            android:background="@drawable/circle_background"
+            android:padding="10dp"
+            android:cropToPadding="true"
+            android:scaleType="centerCrop" />
+
+        <Button
+            android:id="@+id/change_picture_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Picture"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/circle_background"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp" />
+
+        <EditText
+            android:id="@+id/editText_itemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Item Name"
+            android:inputType="text"
+            android:maxLines="1"
+            android:padding="8dp"
+            android:textSize="16sp"
+            android:backgroundTint="#3F51B5"
+            android:textColorHint="#757575" />
+
+        <EditText
+            android:id="@+id/editText_itemDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Item Description"
+            android:inputType="text"
+            android:maxLines="1"
+            android:padding="8dp"
+            android:textSize="16sp"
+            android:backgroundTint="#3F51B5"
+            android:textColorHint="#757575" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose the category:"
+            android:padding="8dp"
+            android:textSize="16sp"
+            android:textColor="#212121" />
+
+        <Spinner
+            android:id="@+id/spinner_itemCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Item Category"
+            android:padding="8dp"
+            android:textSize="16sp"
+            android:backgroundTint="#3F51B5"
+            android:textColor="#757575" />
+
+        <EditText
+            android:id="@+id/editText_itemPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Item Price"
+            android:inputType="numberDecimal"
+            android:maxLines="1"
+            android:padding="8dp"
+            android:textSize="16sp"
+            android:backgroundTint="#3F51B5"
+            android:textColorHint="#757575" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup_itemType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <RadioButton
+                android:id="@+id/radioButton_trade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trade"
+                android:textSize="16sp"
+                android:textColor="#212121"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/radioButton_sale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sale"
+                android:textSize="16sp"
+                android:textColor="#212121" />
+
+            <RadioButton
+                android:id="@+id/radioButton_auction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Auction"
+                android:textSize="16sp"
+                android:textColor="#212121" />
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/rectangle_background"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp" />
+
+    </LinearLayout>
+</ScrollView>

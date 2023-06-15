@@ -15,6 +15,10 @@ import com.google.android.material.button.MaterialButton;
 
 import android.content.Intent;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 public class RegisterActivity extends AppCompatActivity {
 
     MaterialButton btnRegister;
@@ -22,6 +26,9 @@ public class RegisterActivity extends AppCompatActivity {
     ListView lstCustomers;
     private DBObject db;
     ImageButton btnBack;
+
+    private ExecutorService executorService;
+    private Future<?> createCustomerTaskFuture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +47,15 @@ public class RegisterActivity extends AppCompatActivity {
 
         db = new DBObject(this);
 
+        executorService = Executors.newSingleThreadExecutor();
+
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
                 if (validateInput()) {
-                    CreateCustomerTask task = new CreateCustomerTask();
-                    task.execute();
+                    if(createCustomerTaskFuture == null || createCustomerTaskFuture.isDone()){
+                        createCustomerTaskFuture = executorService.submit(new CreateCustomerTask());
+                    }
                 }
             }
         });
@@ -103,33 +113,36 @@ public class RegisterActivity extends AppCompatActivity {
         return db.emailExists(email);
     }
 
-    private class CreateCustomerTask extends AsyncTask<Void, Void, CustomerModel> {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        executorService.shutdownNow();
+    }
 
-        @Override
-        protected CustomerModel doInBackground(Void... voids) {
-            String name = edtName.getText().toString();
-            String username = edtUsername.getText().toString();
-            String email = edtEmail.getText().toString();
-            String password = edtPassword.getText().toString();
+    private class CreateCustomerTask implements Runnable{
 
-            // Create a new customer
-            return new CustomerModel(name, username, email, password);
-        }
+            @Override
+            public void run() {
+                String name = edtName.getText().toString();
+                String username = edtUsername.getText().toString();
+                String email = edtEmail.getText().toString();
+                String password = edtPassword.getText().toString();
 
-        @Override
-        protected void onPostExecute(CustomerModel customer) {
-            // Add the customer to the database
-            boolean success = db.addOne(customer);
-            // Show the customer in a toast message
-            if (success) {
-                // navigate to login activity
-                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish(); // finish the current activity to remove it from the stack
-            } else {
-                Toast.makeText(RegisterActivity.this, "Error adding customer", Toast.LENGTH_LONG).show();
+                // Create a new customer
+                CustomerModel customer = new CustomerModel(name, username, email, password);
+
+                // Add the customer to the database
+                boolean success = db.addOne(customer);
+
+                // Show the customer in a toast message
+                if (success) {
+                    // navigate to login activity
+                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish(); // finish the current activity to remove it from the stack
+                } else {
+                    Toast.makeText(RegisterActivity.this, "Error adding customer", Toast.LENGTH_LONG).show();
+                }
             }
-        }
-
     }
 }

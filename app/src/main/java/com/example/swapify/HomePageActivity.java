@@ -1,5 +1,6 @@
 package com.example.swapify;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,8 +10,12 @@ import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+
+import java.util.ArrayList;
 
 public class HomePageActivity extends AppCompatActivity {
 
@@ -18,7 +23,8 @@ public class HomePageActivity extends AppCompatActivity {
     private ImageButton menuButton;
     private ImageButton profileButton;
     private MaterialButton addItemButton;
-
+    private ArrayList<ItemModel> items;
+    private DBObject db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +49,10 @@ public class HomePageActivity extends AppCompatActivity {
         menuButton = findViewById(R.id.menu_button);
         profileButton = findViewById(R.id.profile_button);
         addItemButton = findViewById(R.id.addItemButton);
+
+        db = new DBObject(this);
+
+        items = db.getAllItems();
 
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +86,19 @@ public class HomePageActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        RecyclerView recommendationRecyclerView = findViewById(R.id.recommendationRecyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recommendationRecyclerView.setLayoutManager(layoutManager);
+
+//        RecommendationAdapter recommendationAdapter = new RecommendationAdapter();
+//        recommendationRecyclerView.setAdapter(recommendationAdapter);
+//
+//        // Get the recommended items from the database or any other source
+//        ArrayList<ItemModel> recommendedItems = new ArrayList<>();
+//
+//        // Set the recommended items on the adapter
+//        recommendationAdapter.setItems(recommendedItems);
     }
 
 }

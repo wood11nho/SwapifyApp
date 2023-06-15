@@ -11,9 +11,13 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class DBObject extends SQLiteOpenHelper {
     // constants for users table
     public static final String USERS_TABLE = "USERS";
+    public static final String COLUMN_ID = "ID";
     public static final String COLUMN_NAME = "NAME";
     public static final String COLUMN_USERNAME = "USERNAME";
     public static final String COLUMN_EMAIL = "EMAIL";
@@ -26,6 +30,7 @@ public class DBObject extends SQLiteOpenHelper {
 
     // constants for items table
     public static final String ITEMS_TABLE = "ITEMS";
+    public static final String COLUMN_ITEM_ID = "ID";
     public static final String COLUMN_ITEM_NAME = "ITEM_NAME";
     public static final String COLUMN_ITEM_DESCRIPTION = "ITEM_DESCRIPTION";
     public static final String COLUMN_ITEM_CATEGORY = "ITEM_CATEGORY";
@@ -39,7 +44,6 @@ public class DBObject extends SQLiteOpenHelper {
     public DBObject(@Nullable Context context) {
         super(context, "swapify.db", null, 4);
     }
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createTableStatement = "CREATE TABLE " + USERS_TABLE + "(ID INTEGER PRIMARY KEY, " + COLUMN_NAME + " TEXT, " + COLUMN_USERNAME + " TEXT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PASSWORD + " TEXT)";
@@ -282,5 +286,95 @@ public class DBObject extends SQLiteOpenHelper {
         }
         db.close();
         return false;
+    }
+
+    public int getId(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + USERS_TABLE + " WHERE " + COLUMN_EMAIL + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int idColumnIndex = cursor.getColumnIndex(COLUMN_ID);
+            if (idColumnIndex >= 0) {
+                int id = cursor.getInt(idColumnIndex);
+                cursor.close();
+                db.close();
+                return id;
+            }
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
+        return -1;
+    }
+
+    public void addItem(ItemModel itemModel) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_ITEM_NAME, itemModel.getItemName());
+        cv.put(COLUMN_ITEM_DESCRIPTION, itemModel.getItemDescription());
+        cv.put(COLUMN_ITEM_PRICE, itemModel.getItemPrice());
+        cv.put(COLUMN_ITEM_CATEGORY, itemModel.getItemCategory());
+        cv.put(COLUMN_ITEM_IMAGE, itemModel.getItemImage());
+        cv.put(COLUMN_ITEM_USER_ID, itemModel.getItemUserId());
+        cv.put(COLUMN_ITEM_IS_FOR_TRADE, itemModel.getItemIsForTrade());
+        cv.put(COLUMN_ITEM_IS_FOR_SALE, itemModel.getItemIsForSale());
+        cv.put(COLUMN_ITEM_IS_FOR_AUCTION, itemModel.getItemIsForAuction());
+
+
+        db.beginTransaction();
+        try{
+            long insert = db.insert(ITEMS_TABLE, null, cv);
+            if (insert != -1) {
+                db.setTransactionSuccessful();
+            }
+        }finally {
+            db.endTransaction();
+        }
+        db.close();
+    }
+
+    public ArrayList<ItemModel> getAllItems() {
+        ArrayList<ItemModel> itemModelArrayList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + ITEMS_TABLE;
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int idColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_ID);
+                int nameColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_NAME);
+                int descriptionColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_DESCRIPTION);
+                int priceColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_PRICE);
+                int categoryColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_CATEGORY);
+                int imageColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_IMAGE);
+                int userIdColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_USER_ID);
+                int isForTradeColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_IS_FOR_TRADE);
+                int isForSaleColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_IS_FOR_SALE);
+                int isForAuctionColumnIndex = cursor.getColumnIndex(COLUMN_ITEM_IS_FOR_AUCTION);
+
+                String name = cursor.getString(nameColumnIndex);
+                String description = cursor.getString(descriptionColumnIndex);
+                int price = cursor.getInt(priceColumnIndex);
+                String category = cursor.getString(categoryColumnIndex);
+                String image = cursor.getString(imageColumnIndex);
+                int userId = cursor.getInt(userIdColumnIndex);
+                int isForTrade = cursor.getInt(isForTradeColumnIndex);
+                int isForSale = cursor.getInt(isForSaleColumnIndex);
+                int isForAuction = cursor.getInt(isForAuctionColumnIndex);
+
+                ItemModel itemModel = new ItemModel(name, description, category, price, isForTrade, isForSale, isForAuction, userId);
+                itemModelArrayList.add(itemModel);
+            } while (cursor.moveToNext());
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
+        return itemModelArrayList;
     }
 }

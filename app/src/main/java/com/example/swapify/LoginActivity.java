@@ -15,6 +15,10 @@ import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 public class LoginActivity extends AppCompatActivity {
 
     MaterialButton btnLogin;
@@ -23,6 +27,9 @@ public class LoginActivity extends AppCompatActivity {
     private DBObject db;
     private ProgressBar progressBar;
     private ProgressDialog progressDialog;
+
+    private ExecutorService executorService;
+    private Future<?> authenticationTaskFuture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +45,15 @@ public class LoginActivity extends AppCompatActivity {
         db = new DBObject(this);
         Log.d("Database version: ", String.valueOf(db.getReadableDatabase().getVersion()));
 
+        executorService = Executors.newSingleThreadExecutor();
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = edtEmail.getText().toString();
                 String password = edtPassword.getText().toString();
                 if (validateInput(email, password)) {
-                    showProgressDialog();
-                    authenticateUser(email, password);
+                    startAuthentication(email, password);
                 }
             }
         });
@@ -77,51 +85,32 @@ public class LoginActivity extends AppCompatActivity {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    private void showProgressDialog() {
-        progressDialog = new ProgressDialog(LoginActivity.this);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
-    }
-
-    private void authenticateUser(final String email, final String password) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Authenticate the user
+    private void startAuthentication(String email, String password) {
+        if (authenticationTaskFuture == null || authenticationTaskFuture.isDone()) {
+            authenticationTaskFuture = executorService.submit(() -> {
                 boolean success = db.authenticate(email, password);
                 if (success) {
-                    // Save the user details to SharedPreferences
-                    SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("email", email);
-                    editor.putString("username", db.getUsername(email));
-                    editor.putString("name", db.getName(email));
-                    editor.putString("phone_number", db.getPhone(email));
-                    Log.d(db.getPhone(email), "merge: ");
-                    editor.putString("county", db.getCounty(email));
-                    editor.putString("city", db.getCity(email));
-                    editor.putString("bio", db.getBio(email));
-                    editor.putString("profile_picture", null);
-                    editor.apply();
+                    saveUserDetailsToSharedPreferences(email);
                 }
-
-                final boolean finalSuccess = success;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        dismissProgressDialog();
-                        updateUI(finalSuccess);
-                    }
-                });
-            }
-        });
-        thread.start();
+                updateUI(success);
+            });
+        }
     }
 
-    private void dismissProgressDialog() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
+    private void saveUserDetailsToSharedPreferences(String email) {
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("id", db.getId(email));
+        editor.putString("email", email);
+        editor.putString("username", db.getUsername(email));
+        editor.putString("name", db.getName(email));
+        editor.putString("phone_number", db.getPhone(email));
+        Log.d(db.getPhone(email), "merge: ");
+        editor.putString("county", db.getCounty(email));
+        editor.putString("city", db.getCity(email));
+        editor.putString("bio", db.getBio(email));
+        editor.putString("profile_picture", null);
+        editor.apply();
     }
 
     private void updateUI(boolean success) {
@@ -134,5 +123,11 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             Toast.makeText(LoginActivity.this, "Incorrect email or password", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        executorService.shutdown();
     }
 }

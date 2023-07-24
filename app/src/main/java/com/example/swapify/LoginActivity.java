@@ -14,6 +14,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,7 +28,6 @@ public class LoginActivity extends AppCompatActivity {
     MaterialButton btnLogin;
     EditText edtEmail, edtPassword;
     ImageButton btnBack;
-    private DBObject db;
     private ProgressBar progressBar;
     private ProgressDialog progressDialog;
 
@@ -41,9 +44,6 @@ public class LoginActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.edtPassword);
         btnBack = findViewById(R.id.btnBack);
         progressBar = findViewById(R.id.progressBar);
-
-        db = new DBObject(this);
-        Log.d("Database version: ", String.valueOf(db.getReadableDatabase().getVersion()));
 
         executorService = Executors.newSingleThreadExecutor();
 
@@ -87,30 +87,67 @@ public class LoginActivity extends AppCompatActivity {
 
     private void startAuthentication(String email, String password) {
         if (authenticationTaskFuture == null || authenticationTaskFuture.isDone()) {
-            authenticationTaskFuture = executorService.submit(() -> {
-                boolean success = db.authenticate(email, password);
-                if (success) {
-                    saveUserDetailsToSharedPreferences(email);
-                }
-                updateUI(success);
-            });
+            progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", true);
+
+            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+            firebaseAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, task -> {
+                        progressDialog.dismiss();
+
+                        if (task.isSuccessful()) {
+                            // Authentication successful, update UI with the signed-in user's information
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            if (user != null) {
+                                saveUserDetailsToSharedPreferences(user.getUid(), email);
+                                updateUI(true);
+                            } else {
+                                // Unexpected error: User is null
+                                updateUI(false);
+                            }
+                        } else {
+                            // Authentication failed
+                            Toast.makeText(LoginActivity.this, "Incorrect email or password", Toast.LENGTH_LONG).show();
+                            updateUI(false);
+                        }
+                    });
         }
     }
 
-    private void saveUserDetailsToSharedPreferences(String email) {
-        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("id", db.getId(email));
-        editor.putString("email", email);
-        editor.putString("username", db.getUsername(email));
-        editor.putString("name", db.getName(email));
-        editor.putString("phone_number", db.getPhone(email));
-        Log.d(db.getPhone(email), "merge: ");
-        editor.putString("county", db.getCounty(email));
-        editor.putString("city", db.getCity(email));
-        editor.putString("bio", db.getBio(email));
-        editor.putString("profile_picture", null);
-        editor.apply();
+    private void saveUserDetailsToSharedPreferences(String userId, String email) {
+        FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
+        DocumentReference userDocRef = firestoreDB.collection("USERS").document(userId);
+
+        userDocRef.get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Fetch user details from Firestore
+                        String name = documentSnapshot.getString("NAME");
+                        String username = documentSnapshot.getString("USERNAME");
+                        String phone = documentSnapshot.getString("PHONE_NUMBER");
+                        String county = documentSnapshot.getString("COUNTY");
+                        String city = documentSnapshot.getString("CITY");
+                        String bio = documentSnapshot.getString("BIO");
+
+                        // Save user details to SharedPreferences
+                        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("email", email);
+                        editor.putString("name", name);
+                        editor.putString("username", username);
+                        editor.putString("phone_number", phone);
+                        editor.putString("county", county);
+                        editor.putString("city", city);
+                        editor.putString("bio", bio);
+                        editor.putString("profile_picture", null);
+                        editor.apply();
+                    } else {
+                        // Unexpected error: User document doesn't exist
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle any errors that occur during the Firestore query
+                    Toast.makeText(LoginActivity.this, "Error fetching user details", Toast.LENGTH_LONG).show();
+                });
     }
 
     private void updateUI(boolean success) {

@@ -2,7 +2,6 @@ package com.example.swapify;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -11,7 +10,11 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import android.content.Intent;
 
@@ -24,7 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
     MaterialButton btnRegister;
     EditText edtName, edtUsername, edtEmail, edtPassword, edtConfirmPassword;
     ListView lstCustomers;
-    private DBObject db;
+    private FirebaseFirestore firestoreDB;
     ImageButton btnBack;
 
     private ExecutorService executorService;
@@ -45,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         lstCustomers = findViewById(R.id.lvCustomerList);
         btnBack = findViewById(R.id.btnBack);
 
-        db = new DBObject(this);
+        firestoreDB = FirebaseFirestore.getInstance();
 
         executorService = Executors.newSingleThreadExecutor();
 
@@ -110,7 +113,23 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean emailAlreadyExists(String email) {
-        return db.emailExists(email);
+        // Create a reference to the "USERS" collection
+        CollectionReference usersCollection = firestoreDB.collection("USERS");
+
+        // Create a query against the collection
+        Task<QuerySnapshot> query = usersCollection.whereEqualTo("email", email).get();
+
+        // Get the result of the query
+        while (!query.isComplete()) {
+            // Wait for the query to complete
+        }
+
+        // Check if the query returned any results
+        if (query.getResult().size() > 0) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -132,17 +151,15 @@ public class RegisterActivity extends AppCompatActivity {
                 CustomerModel customer = new CustomerModel(name, username, email, password);
 
                 // Add the customer to the database
-                boolean success = db.addOne(customer);
-
-                // Show the customer in a toast message
-                if (success) {
-                    // navigate to login activity
-                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish(); // finish the current activity to remove it from the stack
-                } else {
-                    Toast.makeText(RegisterActivity.this, "Error adding customer", Toast.LENGTH_LONG).show();
-                }
+                CollectionReference usersCollection = firestoreDB.collection("USERS");
+                usersCollection.add(customer).
+                        addOnSuccessListener(documentReference -> {
+                            Toast.makeText(RegisterActivity.this, "User added successfully", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }).
+                        addOnFailureListener(e -> Toast.makeText(RegisterActivity.this, "Error adding user", Toast.LENGTH_LONG).show());
             }
     }
 }

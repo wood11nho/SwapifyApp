@@ -42,11 +42,11 @@ public class DBObject extends SQLiteOpenHelper {
     public static final String COLUMN_ITEM_PRICE = "ITEM_PRICE";
 
     public DBObject(@Nullable Context context) {
-        super(context, "swapify.db", null, 4);
+        super(context, "swapify.db", null, 1);
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableStatement = "CREATE TABLE " + USERS_TABLE + "(ID INTEGER PRIMARY KEY, " + COLUMN_NAME + " TEXT, " + COLUMN_USERNAME + " TEXT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PASSWORD + " TEXT)";
+        String createTableStatement = "CREATE TABLE " + USERS_TABLE + "(ID INTEGER PRIMARY KEY, " + COLUMN_NAME + " TEXT, " + COLUMN_USERNAME + " TEXT, " + COLUMN_EMAIL + " TEXT, " + COLUMN_PASSWORD + " TEXT, " + COLUMN_PROFILE_PICTURE + " TEXT, " + COLUMN_PHONE_NUMBER + " TEXT, " + COLUMN_BIO + " TEXT, " + COLUMN_COUNTY + " TEXT, " + COLUMN_CITY + " TEXT)";
 
         db.execSQL(createTableStatement);
 

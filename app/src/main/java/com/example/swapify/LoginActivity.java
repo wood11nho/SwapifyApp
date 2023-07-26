@@ -21,7 +21,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class LoginActivity extends AppCompatActivity {
-
     MaterialButton btnLogin;
     EditText edtEmail, edtPassword;
     ImageButton btnBack;
@@ -125,8 +124,8 @@ public class LoginActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("email", email);
             editor.putString("name", name);
-            editor.putString("phone_number", phoneNumber);
-            editor.putString("profile_picture", null);
+            editor.putString("phonenumber", phoneNumber);
+            editor.putString("profilepicture", null);
             editor.apply();
         }
     }

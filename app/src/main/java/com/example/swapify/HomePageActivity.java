@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -26,29 +27,27 @@ public class HomePageActivity extends AppCompatActivity {
     private ArrayList<ItemModel> items;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestoreDB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-        SessionManager sessionManager = new SessionManager(this);
+        firebaseAuth = FirebaseAuth.getInstance();
+        firestoreDB = FirebaseFirestore.getInstance();
 
-        if (!sessionManager.isLoggedIn()) {
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if (currentUser == null) {
+            // User not authenticated, redirect to login page
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish(); // finish the current activity to remove it from the stack
             return;
         }
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        firestoreDB = FirebaseFirestore.getInstance();
-
-        // Get the username from the session manager
-        String userId = firebaseAuth.getCurrentUser().getUid();
-
         // Set the welcome message with the username
         tvWelcomeMessage = findViewById(R.id.tvWelcomeMessage);
-        fetchUserData(userId);
+        fetchUserData(currentUser.getUid());
 
         menuButton = findViewById(R.id.menu_button);
         profileButton = findViewById(R.id.profile_button);

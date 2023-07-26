@@ -16,15 +16,15 @@ public class DBObject extends SQLiteOpenHelper {
     // constants for users table
     public static final String USERS_TABLE = "USERS";
     public static final String COLUMN_ID = "ID";
-    public static final String COLUMN_NAME = "NAME";
-    public static final String COLUMN_USERNAME = "USERNAME";
-    public static final String COLUMN_EMAIL = "EMAIL";
-    public static final String COLUMN_PASSWORD = "PASSWORD";
-    public static final String COLUMN_PROFILE_PICTURE = "PROFILE_PICTURE";
-    public static final String COLUMN_PHONE_NUMBER = "PHONE_NUMBER";
-    public static final String COLUMN_BIO = "BIO";
-    public static final String COLUMN_COUNTY = "COUNTY";
-    public static final String COLUMN_CITY = "CITY";
+    public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_USERNAME = "username";
+    public static final String COLUMN_EMAIL = "email";
+    public static final String COLUMN_PASSWORD = "password";
+    public static final String COLUMN_PROFILE_PICTURE = "profilepicture";
+    public static final String COLUMN_PHONE_NUMBER = "phonenumber";
+    public static final String COLUMN_BIO = "bio";
+    public static final String COLUMN_COUNTY = "county";
+    public static final String COLUMN_CITY = "city";
 
     // constants for items table
     public static final String ITEMS_TABLE = "ITEMS";
@@ -71,8 +71,8 @@ public class DBObject extends SQLiteOpenHelper {
         cv.put(COLUMN_NAME, customerModel.getName());
         cv.put(COLUMN_USERNAME, customerModel.getUsername());
         cv.put(COLUMN_EMAIL, customerModel.getEmail());
-        cv.put(COLUMN_PROFILE_PICTURE, customerModel.getProfilePicture());
-        cv.put(COLUMN_PHONE_NUMBER, customerModel.getPhoneNumber());
+        cv.put(COLUMN_PROFILE_PICTURE, customerModel.getProfilepicture());
+        cv.put(COLUMN_PHONE_NUMBER, customerModel.getPhonenumber());
         cv.put(COLUMN_BIO, customerModel.getBio());
         cv.put(COLUMN_COUNTY, customerModel.getCounty());
         cv.put(COLUMN_CITY, customerModel.getCity());

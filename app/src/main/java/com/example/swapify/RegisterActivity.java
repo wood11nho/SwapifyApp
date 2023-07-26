@@ -3,6 +3,7 @@ package com.example.swapify;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -25,7 +26,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class RegisterActivity extends AppCompatActivity {
-
     MaterialButton btnRegister;
     EditText edtName, edtUsername, edtEmail, edtPassword, edtConfirmPassword;
     ListView lstCustomers;

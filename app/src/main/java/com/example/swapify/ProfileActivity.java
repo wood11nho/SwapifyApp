@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileActivity extends AppCompatActivity {
     private ImageView imgProfilePic;
@@ -21,10 +23,16 @@ public class ProfileActivity extends AppCompatActivity {
     private MaterialButton logoutButton;
     private ImageButton btnBack;
 
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firestoreDB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firestoreDB = FirebaseFirestore.getInstance();
 
         imgProfilePic = findViewById(R.id.profile_picture);
         txtName = findViewById(R.id.name_text);
@@ -38,23 +46,8 @@ public class ProfileActivity extends AppCompatActivity {
         logoutButton = findViewById(R.id.logout_button);
         btnBack = findViewById(R.id.btnBack);
 
-        SharedPreferences preferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
-        Log.d("profileactivity", preferences.toString());
-        String name = preferences.getString("name", "");
-        String username = preferences.getString("username", "");
-        String email = preferences.getString("email", "");
-        String phone_number = preferences.getString("phone_number", "");
-        String bio = preferences.getString("bio", "");
-        String county = preferences.getString("county", "");
-        String city = preferences.getString("city", "");
-
-        txtName.setText("Name: " + name);
-        txtUsername.setText("Username: " + username);
-        txtEmail.setText("Email: " + email);
-        txtPhone_number.setText("Phone Number: " + phone_number);
-        txtBio.setText("Bio: " + bio);
-        txtCounty.setText("County: " + county);
-        txtCity.setText("City: " + city);
+        String userId = firebaseAuth.getCurrentUser().getUid();
+        fetchUserData(userId);
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,4 +85,34 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
     }
+
+    private void fetchUserData(String userId) {
+        firestoreDB.collection("USERS").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Fetch user data from Firestore document
+                        String name = documentSnapshot.getString("name");
+                        String username = documentSnapshot.getString("username");
+                        String email = documentSnapshot.getString("email");
+                        String phone_number = documentSnapshot.getString("phonenumber");
+                        String bio = documentSnapshot.getString("bio");
+                        String county = documentSnapshot.getString("county");
+                        String city = documentSnapshot.getString("city");
+
+                        // Update the UI with fetched user data
+                        txtName.setText("Name: " + name);
+                        txtUsername.setText("Username: " + username);
+                        txtEmail.setText("Email: " + email);
+                        txtPhone_number.setText("Phone Number: " + phone_number);
+                        txtBio.setText("Bio: " + bio);
+                        txtCounty.setText("County: " + county);
+                        txtCity.setText("City: " + city);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ProfileActivity", "Error fetching user data: " + e.getMessage());
+                });
+    }
+
+
 }

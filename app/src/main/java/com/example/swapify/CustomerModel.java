@@ -10,32 +10,19 @@ public class CustomerModel {
     private String name;
     private String username;
     private String email;
-    private String profilePicture;
-    private String phoneNumber;
+    private String profilepicture;
+    private String phonenumber;
     private String bio;
     private String county;
     private String city;
-
-    public CustomerModel(String name, String username, String email) {
-        this.id = idCounter;
-        this.name = name;
-        this.username = username;
-        this.email = email;
-        this.profilePicture = "";
-        this.phoneNumber = "";
-        this.bio = "";
-        this.county = "";
-        this.city = "";
-        idCounter++;
-    }
 
     public CustomerModel() {
         this.id = idCounter;
         this.name = "";
         this.username = "";
         this.email = "";
-        this.profilePicture = "";
-        this.phoneNumber = "";
+        this.profilepicture = "";
+        this.phonenumber = "";
         this.bio = "";
         this.county = "";
         this.city = "";
@@ -54,12 +41,12 @@ public class CustomerModel {
         return email;
     }
 
-    public String getProfilePicture() {
-        return profilePicture;
+    public String getProfilepicture() {
+        return profilepicture;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhonenumber() {
+        return phonenumber;
     }
 
     public String getBio() {
@@ -97,8 +84,8 @@ public class CustomerModel {
                 ", name='" + name + '\'' +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", profilePicture='" + profilePicture + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
+                ", profilepicture='" + profilepicture + '\'' +
+                ", phonenumber='" + phonenumber + '\'' +
                 ", bio='" + bio + '\'' +
                 ", county='" + county + '\'' +
                 ", city='" + city + '\'' +
@@ -117,12 +104,12 @@ public class CustomerModel {
         this.email = email;
     }
 
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
+    public void setProfilepicture(String profilepicture) {
+        this.profilepicture = profilepicture;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
     }
 
     public void setBio(String bio) {

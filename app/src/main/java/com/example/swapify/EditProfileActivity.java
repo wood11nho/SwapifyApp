@@ -1,11 +1,5 @@
 package com.example.swapify;
 
-import android.content.ContentValues;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -19,16 +13,17 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class EditProfileActivity extends AppCompatActivity {
@@ -41,13 +36,14 @@ public class EditProfileActivity extends AppCompatActivity {
     private Spinner countySpinner;
     private Spinner citySpinner;
 
-    private SharedPreferences userPreferences;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firestoreDB;
 
     private List<Pair<String, String>> countiesGlobal = new ArrayList<>();
     private List<String> citiesGlobal = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedIstanceState){
+    protected void onCreate(Bundle savedIstanceState) {
         super.onCreate(savedIstanceState);
         setContentView(R.layout.activity_edit_profile);
 
@@ -59,27 +55,11 @@ public class EditProfileActivity extends AppCompatActivity {
         countySpinner = findViewById(R.id.county_spinner);
         citySpinner = findViewById(R.id.city_spinner);
 
-        userPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        firebaseAuth = FirebaseAuth.getInstance();
+        firestoreDB = FirebaseFirestore.getInstance();
 
-        String name = userPreferences.getString("name", "");
-        String username = userPreferences.getString("username", "");
-        String email = userPreferences.getString("email", "");
-        String phone_number = userPreferences.getString("phone_number", "");
-        String bio = userPreferences.getString("bio", "");
-        String county = userPreferences.getString("county", "");
-        String city = userPreferences.getString("city", "");
-
-        if(!name.isEmpty())
-            nameEdtText.setText(name);
-        if(!username.isEmpty())
-            usernameEdtText.setText(username);
-        if(!email.isEmpty())
-            emailEdtText.setText(email);
-        if(!phone_number.isEmpty())
-            phone_numberEdtText.setText(phone_number);
-        if(!bio.isEmpty())
-            bioEdtText.setText(bio);
-
+        String userId = firebaseAuth.getCurrentUser().getUid();
+        fetchUserData(userId);
 
         new Thread(new Runnable() {
             @Override
@@ -120,6 +100,7 @@ public class EditProfileActivity extends AppCompatActivity {
                             countyAdapter.notifyDataSetChanged();
 
                             // Set the selected county
+                            String county = countySpinner.getSelectedItem().toString();
                             if (!county.isEmpty()) {
                                 int countyIndex = countyNames.indexOf(county);
                                 countySpinner.setSelection(countyIndex);
@@ -174,6 +155,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                     cityAdapter.notifyDataSetChanged();
 
                                     // set the selected city
+                                    String city = citySpinner.getSelectedItem().toString();
                                     if (!city.isEmpty()) {
                                         int cityIndex = cities.indexOf(city);
                                         citySpinner.setSelection(cityIndex);
@@ -195,69 +177,138 @@ public class EditProfileActivity extends AppCompatActivity {
 
         Button saveButton = findViewById(R.id.save_button);
         saveButton.setOnClickListener(v -> {
-            SQLiteDatabase db = new DBObject(this).getWritableDatabase();
-
-            String newEmail = emailEdtText.getText().toString();
             String newPhoneNumber = phone_numberEdtText.getText().toString();
-
-            // Check if the new email is already taken
-            boolean isEmailTaken = isEmailTaken(newEmail, username);
-            if (isEmailTaken) {
-                return;
-            }
+            String username = usernameEdtText.getText().toString();
 
             // Check if the new phone number is already taken
-            boolean isPhoneNumberTaken = isPhoneNumberTaken(newPhoneNumber, username);
-            if (isPhoneNumberTaken) {
-                return;
-            }
+            isPhoneNumberTaken(newPhoneNumber, username);
 
-            SharedPreferences.Editor editor = userPreferences.edit();
-            editor.putString("name", nameEdtText.getText().toString());
-            editor.putString("username", usernameEdtText.getText().toString());
-            editor.putString("email", emailEdtText.getText().toString());
-            editor.putString("phone_number", phone_numberEdtText.getText().toString());
-            editor.putString("bio", bioEdtText.getText().toString());
-            editor.putString("county", countySpinner.getSelectedItem().toString());
-            editor.putString("city", citySpinner.getSelectedItem().toString());
-            editor.apply();
-
-            ContentValues values = new ContentValues();
-            values.put("name", nameEdtText.getText().toString());
-            values.put("username", usernameEdtText.getText().toString());
-            values.put("email", emailEdtText.getText().toString());
-            values.put("phone_number", phone_numberEdtText.getText().toString());
-            values.put("bio", bioEdtText.getText().toString());
-            values.put("county", countySpinner.getSelectedItem().toString());
-            values.put("city", citySpinner.getSelectedItem().toString());
-            db.update("users", values, "username = ?", new String[]{username});
-
-            db.close();
-
-            Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
-            startActivity(intent);
-            finish();
         });
 
     }
 
-    private boolean isPhoneNumberTaken(String newPhoneNumber, String currentUsername) {
-        SQLiteDatabase db = new DBObject(this).getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE phone_number = ? AND username != ?", new String[]{newPhoneNumber, currentUsername});
-        if (cursor.getCount() > 0) {
-            Toast.makeText(this, "This phone number is already taken", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        return false;
+    private void isPhoneNumberTaken(String newPhoneNumber, String currentUsername) {
+        firestoreDB.collection("USERS")
+                .whereEqualTo("phonenumber", newPhoneNumber)
+                .whereNotEqualTo("username", currentUsername)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        // The phone number is already taken
+                        Toast.makeText(EditProfileActivity.this, "This phone number is already taken", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // The phone number is available, check if the email is taken
+                        isEmailTaken(emailEdtText.getText().toString(), currentUsername);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle any errors that occur during the Firestore query
+                    Log.e("FirestoreQueryError", "Failed to check phone number. Error: " + e.getMessage());
+                    Toast.makeText(EditProfileActivity.this, "Failed to check phone number. Please try again.", Toast.LENGTH_SHORT).show();
+                });
     }
 
-    private boolean isEmailTaken(String newEmail, String currentUsername) {
-        SQLiteDatabase db = new DBObject(this).getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM users WHERE email = ? AND username != ?", new String[]{newEmail, currentUsername});
-        if (cursor.getCount() > 0) {
-            Toast.makeText(this, "This email is already taken", Toast.LENGTH_SHORT).show();
-            return true;
+    private void isEmailTaken(String newEmail, String currentUsername) {
+        firestoreDB.collection("USERS")
+                .whereEqualTo("email", newEmail)
+                .whereNotEqualTo("username", currentUsername)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        // The email is already taken
+                        Toast.makeText(EditProfileActivity.this, "This email is already taken", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Both email and phone number are available, update user data
+                        updateUserFirestoreData();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle any errors that occur during the Firestore query
+                    Log.e("FirestoreQueryError", "Failed to check email. Error: " + e.getMessage());
+                    Toast.makeText(EditProfileActivity.this, "Failed to check email. Please try again.", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void updateUserFirestoreData() {
+        String name = nameEdtText.getText().toString();
+        String username = usernameEdtText.getText().toString();
+        String email = emailEdtText.getText().toString();
+        String phone_number = phone_numberEdtText.getText().toString();
+        String bio = bioEdtText.getText().toString();
+        String county = countySpinner.getSelectedItem().toString();
+        String city = citySpinner.getSelectedItem().toString();
+
+        String userId = firebaseAuth.getCurrentUser().getUid();
+        firestoreDB.collection("USERS").document(userId).update(
+                        "name", name,
+                        "username", username,
+                        "email", email,
+                        "phonenumber", phone_number,
+                        "bio", bio,
+                        "county", county,
+                        "city", city
+                )
+                .addOnSuccessListener(aVoid -> {
+                    // Update the UI with the updated user data
+                    Toast.makeText(EditProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    // Handle any errors that occur during the Firestore query
+                    Toast.makeText(EditProfileActivity.this, "Failed to update profile. Please try again.", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void fetchUserData(String userId) {
+        firestoreDB.collection("USERS").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String name = documentSnapshot.getString("name");
+                        String username = documentSnapshot.getString("username");
+                        String email = documentSnapshot.getString("email");
+                        String phone_number = documentSnapshot.getString("phonenumber");
+                        String bio = documentSnapshot.getString("bio");
+                        String county = documentSnapshot.getString("county");
+                        String city = documentSnapshot.getString("city");
+
+                        // Update the UI with fetched user data
+                        nameEdtText.setText(name);
+                        usernameEdtText.setText(username);
+                        emailEdtText.setText(email);
+                        phone_numberEdtText.setText(phone_number);
+                        bioEdtText.setText(bio);
+
+                        // Set the selected county and city in the spinners
+                        setCountyAndCitySelection(county, city);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle any errors that occur during the Firestore query
+                    // For simplicity, we won't handle the error here. You can add appropriate error handling.
+                });
+    }
+
+    private void setCountyAndCitySelection(String county, String city) {
+        // Set the selected county in the spinner
+        int countyIndex = 0;
+        for (int i = 0; i < countiesGlobal.size(); i++) {
+            Pair<String, String> countyPair = countiesGlobal.get(i);
+            if (countyPair.first.equals(county)) {
+                countyIndex = i;
+                break;
+            }
         }
-        return false;
+        countySpinner.setSelection(countyIndex);
+
+        // Set the selected city in the spinner
+        int cityIndex = 0;
+        for (int i = 0; i < citiesGlobal.size(); i++) {
+            String cityString = citiesGlobal.get(i);
+            if (cityString.equals(city)) {
+                cityIndex = i;
+                break;
+            }
+        }
+        citySpinner.setSelection(cityIndex);
     }
 }

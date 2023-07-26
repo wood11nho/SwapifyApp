@@ -1,12 +1,10 @@
 package com.example.swapify;
 
-import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -14,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -24,7 +24,8 @@ public class HomePageActivity extends AppCompatActivity {
     private ImageButton profileButton;
     private MaterialButton addItemButton;
     private ArrayList<ItemModel> items;
-    private DBObject db;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firestoreDB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,20 +40,21 @@ public class HomePageActivity extends AppCompatActivity {
             return;
         }
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        firestoreDB = FirebaseFirestore.getInstance();
+
         // Get the username from the session manager
-        String username = sessionManager.getUsername();
+        String userId = firebaseAuth.getCurrentUser().getUid();
 
         // Set the welcome message with the username
         tvWelcomeMessage = findViewById(R.id.tvWelcomeMessage);
-        tvWelcomeMessage.setText("Hi, " + username + " \uD83D\uDE03!");
+        fetchUserData(userId);
 
         menuButton = findViewById(R.id.menu_button);
         profileButton = findViewById(R.id.profile_button);
         addItemButton = findViewById(R.id.addItemButton);
 
-        db = new DBObject(this);
-
-        items = db.getAllItems();
+        items = new ArrayList<>();
 
         menuButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +101,21 @@ public class HomePageActivity extends AppCompatActivity {
 //
 //        // Set the recommended items on the adapter
 //        recommendationAdapter.setItems(recommendedItems);
+
+    }
+
+    private void fetchUserData(String userId) {
+        firestoreDB.collection("USERS").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String name = documentSnapshot.getString("name");
+                        tvWelcomeMessage.setText("Hi, " + name + " \uD83D\uDE03!");
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle any errors that occur during the Firestore query
+                    // For simplicity, we won't handle the error here. You can add appropriate error handling.
+                });
     }
 
 }

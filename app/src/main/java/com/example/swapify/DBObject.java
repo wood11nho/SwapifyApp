@@ -7,12 +7,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class DBObject extends SQLiteOpenHelper {
     // constants for users table
@@ -73,7 +71,6 @@ public class DBObject extends SQLiteOpenHelper {
         cv.put(COLUMN_NAME, customerModel.getName());
         cv.put(COLUMN_USERNAME, customerModel.getUsername());
         cv.put(COLUMN_EMAIL, customerModel.getEmail());
-        cv.put(COLUMN_PASSWORD, customerModel.getPasswordHash());
         cv.put(COLUMN_PROFILE_PICTURE, customerModel.getProfilePicture());
         cv.put(COLUMN_PHONE_NUMBER, customerModel.getPhoneNumber());
         cv.put(COLUMN_BIO, customerModel.getBio());

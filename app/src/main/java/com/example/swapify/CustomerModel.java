@@ -10,19 +10,17 @@ public class CustomerModel {
     private String name;
     private String username;
     private String email;
-    private String passwordHash;
     private String profilePicture;
     private String phoneNumber;
     private String bio;
     private String county;
     private String city;
 
-    public CustomerModel(String name, String username, String email, String passwordHash) {
+    public CustomerModel(String name, String username, String email) {
         this.id = idCounter;
         this.name = name;
         this.username = username;
         this.email = email;
-        this.passwordHash = encryptPassword(passwordHash);
         this.profilePicture = "";
         this.phoneNumber = "";
         this.bio = "";
@@ -36,7 +34,6 @@ public class CustomerModel {
         this.name = "";
         this.username = "";
         this.email = "";
-        this.passwordHash = "";
         this.profilePicture = "";
         this.phoneNumber = "";
         this.bio = "";
@@ -57,9 +54,6 @@ public class CustomerModel {
         return email;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
-    }
     public String getProfilePicture() {
         return profilePicture;
     }
@@ -103,7 +97,6 @@ public class CustomerModel {
                 ", name='" + name + '\'' +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", passwordHash='" + passwordHash + '\'' +
                 ", profilePicture='" + profilePicture + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", bio='" + bio + '\'' +
@@ -122,10 +115,6 @@ public class CustomerModel {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
     }
 
     public void setProfilePicture(String profilePicture) {

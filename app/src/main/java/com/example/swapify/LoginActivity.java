@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -16,8 +15,6 @@ import android.widget.Toast;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -114,40 +111,24 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void saveUserDetailsToSharedPreferences(String userId, String email) {
-        FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
-        DocumentReference userDocRef = firestoreDB.collection("USERS").document(userId);
+        // Here, we don't need to fetch additional user details from Firestore.
+        // We can directly access the user's information from the FirebaseUser object.
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        userDocRef.get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        // Fetch user details from Firestore
-                        String name = documentSnapshot.getString("NAME");
-                        String username = documentSnapshot.getString("USERNAME");
-                        String phone = documentSnapshot.getString("PHONE_NUMBER");
-                        String county = documentSnapshot.getString("COUNTY");
-                        String city = documentSnapshot.getString("CITY");
-                        String bio = documentSnapshot.getString("BIO");
+        if (user != null) {
+            String name = user.getDisplayName();
+            String phoneNumber = user.getPhoneNumber();
+            // You can access other user details using user.getEmail(), user.getPhotoUrl(), etc.
 
-                        // Save user details to SharedPreferences
-                        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("email", email);
-                        editor.putString("name", name);
-                        editor.putString("username", username);
-                        editor.putString("phone_number", phone);
-                        editor.putString("county", county);
-                        editor.putString("city", city);
-                        editor.putString("bio", bio);
-                        editor.putString("profile_picture", null);
-                        editor.apply();
-                    } else {
-                        // Unexpected error: User document doesn't exist
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    // Handle any errors that occur during the Firestore query
-                    Toast.makeText(LoginActivity.this, "Error fetching user details", Toast.LENGTH_LONG).show();
-                });
+            // Save user details to SharedPreferences
+            SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("email", email);
+            editor.putString("name", name);
+            editor.putString("phone_number", phoneNumber);
+            editor.putString("profile_picture", null);
+            editor.apply();
+        }
     }
 
     private void updateUI(boolean success) {
@@ -168,3 +149,4 @@ public class LoginActivity extends AppCompatActivity {
         executorService.shutdown();
     }
 }
+

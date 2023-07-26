@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -28,6 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText edtName, edtUsername, edtEmail, edtPassword, edtConfirmPassword;
     ListView lstCustomers;
     private FirebaseFirestore firestoreDB;
+    private FirebaseAuth firebaseAuth;
     ImageButton btnBack;
 
     private ExecutorService executorService;
@@ -49,16 +52,19 @@ public class RegisterActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.btnBack);
 
         firestoreDB = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         executorService = Executors.newSingleThreadExecutor();
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
-                if (validateInput()) {
-                    if(createCustomerTaskFuture == null || createCustomerTaskFuture.isDone()){
-                        createCustomerTaskFuture = executorService.submit(new CreateCustomerTask());
-                    }
+            public void onClick(View v) {
+                String name = edtName.getText().toString();
+                String username = edtUsername.getText().toString();
+                String email = edtEmail.getText().toString();
+                String password = edtPassword.getText().toString();
+                if (validateInput(name, username, email, password)) {
+                    registerUserWithEmailAndPassword(name, username, email, password);
                 }
             }
         });
@@ -74,22 +80,10 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private boolean validateInput() {
-        String name = edtName.getText().toString();
-        String username = edtUsername.getText().toString();
-        String email = edtEmail.getText().toString();
-        String password = edtPassword.getText().toString();
-        String confirmPassword = edtConfirmPassword.getText().toString();
-
+    private boolean validateInput(String name, String username, String email, String password) {
         // Validate input fields
-        if (name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+        if (name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
             Toast.makeText(RegisterActivity.this, "Please fill in all fields", Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        // Verify if the password and confirm password are the same
-        if (!password.equals(confirmPassword)) {
-            Toast.makeText(RegisterActivity.this, "Passwords do not match", Toast.LENGTH_LONG).show();
             return false;
         }
 
@@ -132,34 +126,50 @@ public class RegisterActivity extends AppCompatActivity {
         return false;
     }
 
+    private void registerUserWithEmailAndPassword(String name, String username, String email, String password) {
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // User registration successful, save additional user data in Firestore
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        if (user != null) {
+                            saveUserDataToFirestore(name, username, email, user.getUid());
+                        } else {
+                            // Unexpected error: User is null
+                            Toast.makeText(RegisterActivity.this, "Error during user registration", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        // User registration failed
+                        Toast.makeText(RegisterActivity.this, "Error during user registration", Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void saveUserDataToFirestore(String name, String username, String email, String userId) {
+        // Create a new customer
+        CustomerModel customer = new CustomerModel();
+        customer.setName(name);
+        customer.setUsername(username);
+        customer.setEmail(email);
+
+        // Add the customer to the "USERS" collection in Firestore
+        CollectionReference usersCollection = firestoreDB.collection("USERS");
+        usersCollection.document(userId)
+                .set(customer)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(RegisterActivity.this, "User registration successful", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(RegisterActivity.this, "Error adding user to Firestore", Toast.LENGTH_LONG).show();
+                });
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         executorService.shutdownNow();
-    }
-
-    private class CreateCustomerTask implements Runnable{
-
-            @Override
-            public void run() {
-                String name = edtName.getText().toString();
-                String username = edtUsername.getText().toString();
-                String email = edtEmail.getText().toString();
-                String password = edtPassword.getText().toString();
-
-                // Create a new customer
-                CustomerModel customer = new CustomerModel(name, username, email, password);
-
-                // Add the customer to the database
-                CollectionReference usersCollection = firestoreDB.collection("USERS");
-                usersCollection.add(customer).
-                        addOnSuccessListener(documentReference -> {
-                            Toast.makeText(RegisterActivity.this, "User added successfully", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }).
-                        addOnFailureListener(e -> Toast.makeText(RegisterActivity.this, "Error adding user", Toast.LENGTH_LONG).show());
-            }
     }
 }

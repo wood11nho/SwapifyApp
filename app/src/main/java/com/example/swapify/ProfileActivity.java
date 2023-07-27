@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -98,6 +99,8 @@ public class ProfileActivity extends AppCompatActivity {
                         String bio = documentSnapshot.getString("bio");
                         String county = documentSnapshot.getString("county");
                         String city = documentSnapshot.getString("city");
+                        String profile_picture = documentSnapshot.getString("profilepicture");
+
 
                         // Update the UI with fetched user data
                         txtName.setText("Name: " + name);
@@ -107,6 +110,14 @@ public class ProfileActivity extends AppCompatActivity {
                         txtBio.setText("Bio: " + bio);
                         txtCounty.setText("County: " + county);
                         txtCity.setText("City: " + city);
+
+                        if (profile_picture != null && !profile_picture.isEmpty()) {
+                            Glide.with(this)
+                                    .load(profile_picture)
+                                    .placeholder(R.mipmap.default_profile_picture)
+                                    .error(R.mipmap.default_profile_picture)
+                                    .into(imgProfilePic);
+                        }
                     }
                 })
                 .addOnFailureListener(e -> {

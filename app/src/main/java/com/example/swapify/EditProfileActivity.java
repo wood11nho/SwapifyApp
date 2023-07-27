@@ -1,18 +1,23 @@
 package com.example.swapify;
 
+import android.app.AlertDialog;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -24,10 +29,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class EditProfileActivity extends AppCompatActivity {
 
+    private String profilePictureUrl = "";
+    private ImageView imgProfilePic;
     private EditText nameEdtText;
     private EditText usernameEdtText;
     private EditText emailEdtText;
@@ -47,6 +55,7 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedIstanceState);
         setContentView(R.layout.activity_edit_profile);
 
+        imgProfilePic = findViewById(R.id.profile_picture);
         nameEdtText = findViewById(R.id.name_edit_text);
         usernameEdtText = findViewById(R.id.username_edit_text);
         emailEdtText = findViewById(R.id.email_edit_text);
@@ -246,7 +255,8 @@ public class EditProfileActivity extends AppCompatActivity {
                         "phonenumber", phone_number,
                         "bio", bio,
                         "county", county,
-                        "city", city
+                        "city", city,
+                        "profilepicture", profilePictureUrl
                 )
                 .addOnSuccessListener(aVoid -> {
                     // Update the UI with the updated user data
@@ -257,6 +267,44 @@ public class EditProfileActivity extends AppCompatActivity {
                     // Handle any errors that occur during the Firestore query
                     Toast.makeText(EditProfileActivity.this, "Failed to update profile. Please try again.", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    public void openAvatarSelectionDialog(View view) {
+        // In this method, you can show a dialog or start an activity to display a list of classic avatars.
+        // When the user selects an avatar, call the updateUserFirestoreData method with the selected avatar's URL.
+
+        // For simplicity, let's assume we have a list of avatar URLs
+        List<String> classicAvatars = Arrays.asList(
+                "https://robohash.org/8ad07233fd5e288ed6ed2c997e4590b1?set=set4&bgset=bg1&size=200x200",
+                "https://robohash.org/92ddbe68f1eb993d27733087b3c0feea?set=set4&bgset=bg1&size=200x200",
+                "https://robohash.org/5adb1181664f6be7034e845fc7cba87b?set=set4&bgset=bg1&size=200x200",
+                "https://robohash.org/3047b2f6f2c4207d360c858cd8fd0559?set=set4&bgset=bg1&size=200x200",
+                "https://robohash.org/3047b2f6f2c4207d360c858cd8fd0559?set=set2&bgset=bg1&size=200x200",
+                "https://robohash.org/0f8fcb99ac925f90a401bd6e3456478e?set=set2&bgset=bg1&size=200x200",
+                "https://robohash.org/1d8e186be25a806084c1bc385218f57b?set=set2&bgset=bg1&size=200x200",
+                "https://robohash.org/2e4612a69e112dcab64026c9ca85f049?set=set3&bgset=bg1&size=200x200",
+                "https://robohash.org/98ce7bb20baca8864ead1313b700b3d4?set=set3&bgset=bg1&size=200x200",
+                "https://robohash.org/9c5615494d9d9cfa79dfa45cb6a4cad1?set=set1&bgset=bg1&size=200x200",
+                "https://robohash.org/654d51bf7f78228b268bd9e8e2f2d063?set=set1&bgset=bg1&size=200x200",
+                "https://robohash.org/110befb4bd5e353c2ba86dd195ddc91d?set=set1&bgset=bg1&size=200x200"
+        );
+
+        // Show a dialog with classic avatars to choose from
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Avatar");
+
+        // Use the custom adapter to display the avatars
+        AvatarAdapter avatarAdapter = new AvatarAdapter(this, classicAvatars);
+        builder.setAdapter(avatarAdapter, (dialog, which) -> {
+            // The 'which' argument contains the index position of the selected item
+            profilePictureUrl = classicAvatars.get(which);
+            Glide.with(this)
+                    .load(profilePictureUrl)
+                    .placeholder(R.mipmap.default_profile_picture)
+                    .error(R.mipmap.default_profile_picture)
+                    .into(imgProfilePic);
+        });
+        builder.show();
     }
 
     private void fetchUserData(String userId) {
@@ -270,6 +318,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         String bio = documentSnapshot.getString("bio");
                         String county = documentSnapshot.getString("county");
                         String city = documentSnapshot.getString("city");
+                        String profilePicture = documentSnapshot.getString("profilepicture");
 
                         // Update the UI with fetched user data
                         nameEdtText.setText(name);
@@ -280,6 +329,14 @@ public class EditProfileActivity extends AppCompatActivity {
 
                         // Set the selected county and city in the spinners
                         setCountyAndCitySelection(county, city);
+
+                        if(profilePicture != null && !profilePicture.isEmpty()) {
+                            Glide.with(this)
+                                    .load(profilePicture)
+                                    .placeholder(R.mipmap.default_profile_picture)
+                                    .error(R.mipmap.default_profile_picture)
+                                    .into(imgProfilePic);
+                        }
                     }
                 })
                 .addOnFailureListener(e -> {

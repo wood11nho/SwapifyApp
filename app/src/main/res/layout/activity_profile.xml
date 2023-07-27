@@ -36,7 +36,7 @@
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:src="@mipmap/default_profile_picture"
-        android:background="@drawable/circle_background"
+        android:background="@drawable/square_background"
         android:padding="10dp"
         android:cropToPadding="true"
         android:scaleType="centerCrop"

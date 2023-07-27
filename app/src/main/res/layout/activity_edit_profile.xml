@@ -15,7 +15,7 @@
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
             android:src="@mipmap/default_profile_picture"
-            android:background="@drawable/circle_background"
+            android:background="@drawable/square_background"
             android:padding="10dp"
             android:cropToPadding="true"
             android:scaleType="centerCrop" />
@@ -26,7 +26,8 @@
             android:layout_height="wrap_content"
             android:text="Change profile picture"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:onClick="openAvatarSelectionDialog" />
 
         <EditText
             android:id="@+id/name_edit_text"

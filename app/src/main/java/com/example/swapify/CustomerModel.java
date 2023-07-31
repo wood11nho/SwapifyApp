@@ -5,8 +5,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class CustomerModel {
-    private static int idCounter = 1;
-    private int id;
     private String name;
     private String username;
     private String email;
@@ -17,7 +15,6 @@ public class CustomerModel {
     private String city;
 
     public CustomerModel() {
-        this.id = idCounter;
         this.name = "";
         this.username = "";
         this.email = "";
@@ -26,7 +23,6 @@ public class CustomerModel {
         this.bio = "";
         this.county = "";
         this.city = "";
-        idCounter++;
     }
 
     public String getName() {
@@ -80,8 +76,7 @@ public class CustomerModel {
     @Override
     public String toString() {
         return "CustomerModel{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", profilepicture='" + profilepicture + '\'' +
@@ -122,17 +117,5 @@ public class CustomerModel {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public static void setIdCounter(int idCounter) {
-        CustomerModel.idCounter = idCounter;
-    }
-
-    public int getId() {
-        return id;
     }
 }

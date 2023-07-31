@@ -64,6 +64,14 @@ public class RegisterActivity extends AppCompatActivity {
                 String email = edtEmail.getText().toString();
                 String password = edtPassword.getText().toString();
                 if (validateInput(name, username, email, password)) {
+                    // if the name for example was written in all caps, or all lowercase, i want to change it to first letter uppercase for each word
+                    String[] nameArray = name.split(" ");
+                    String nameFormatted = "";
+                    for (String word : nameArray) {
+                        nameFormatted += word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase() + " ";
+                    }
+                    nameFormatted = nameFormatted.trim();
+                    name = nameFormatted;
                     registerUserWithEmailAndPassword(name, username, email, password);
                 }
             }
@@ -96,6 +104,27 @@ public class RegisterActivity extends AppCompatActivity {
         // Verify if the email already exists
         if (emailAlreadyExists(email)) {
             Toast.makeText(RegisterActivity.this, "Email already exists", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        // Verify regex for name: "^[A-Za-z]+(?:\s+[A-Za-z]+)*$"
+        String namePattern = "^[A-Za-z]+(?:\\s+[A-Za-z]+)*$";
+        if (!name.matches(namePattern)) {
+            Toast.makeText(RegisterActivity.this, "Please enter a valid full name (only alphabetical characters are allowed)", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        // Verify if password and confirm password match
+        String confirmPassword = edtConfirmPassword.getText().toString();
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(RegisterActivity.this, "Passwords do not match", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        // Verify regex for password: "^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}$"
+        String passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()])[A-Za-z\\d!@#$%^&*()]{8,}$";
+        if (!password.matches(passwordPattern)) {
+            Toast.makeText(RegisterActivity.this, "Password must be at least 8 characters long and contain at least one letter, one number and one special character (!@#$%^&*())", Toast.LENGTH_LONG).show();
             return false;
         }
 

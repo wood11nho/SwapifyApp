@@ -1,100 +1,123 @@
 package com.example.swapify;
 
 public class ItemModel {
-    private static int idCounter = 1;
-    private int id;
-    private String item_name;
-    private String item_description;
-    private String item_category;
-    private int item_price;
-    private String item_image;
-    private int item_is_for_trade;
-    private int item_is_for_sale;
-    private int item_is_for_auction;
-    private int item_user_id;
+    private String itemName;
+    private String itemDescription;
+    private String itemCategory;
+    private int itemPrice;
+    private String itemImage;
+    private boolean itemIsForTrade;
+    private boolean itemIsForSale;
+    private boolean itemIsForAuction;
+    private String itemUserId;
 
-    public ItemModel(String item_name, String item_description, String item_category, int item_price, int item_is_for_trade, int item_is_for_sale, int item_is_for_auction, int item_user_id) {
-        this.id = idCounter;
-        this.item_name = item_name;
-        this.item_description = item_description;
-        this.item_category = item_category;
-        this.item_price = item_price;
-        this.item_is_for_trade = item_is_for_trade;
-        this.item_is_for_sale = item_is_for_sale;
-        this.item_is_for_auction = item_is_for_auction;
-        this.item_user_id = item_user_id;
-        idCounter++;
+    public ItemModel() {
+        // Default constructor required for Firestore deserialization
+    }
+
+    // Add the existing constructor that you have in the ItemModel class
+    public ItemModel(String name, String image, int price) {
+        this.itemName = name;
+        this.itemPrice = price;
+        this.itemImage = image;
+    }
+
+    public ItemModel(String itemName, String itemDescription, String itemCategory, int itemPrice, String itemImage, boolean itemIsForTrade, boolean itemIsForSale, boolean itemIsForAuction, String itemUserId) {
+        this.itemName = itemName;
+        this.itemDescription = itemDescription;
+        this.itemCategory = itemCategory;
+        this.itemPrice = itemPrice;
+        this.itemImage = itemImage;
+        this.itemIsForTrade = itemIsForTrade;
+        this.itemIsForSale = itemIsForSale;
+        this.itemIsForAuction = itemIsForAuction;
+        this.itemUserId = itemUserId;
     }
 
     public String getItemName() {
-        return item_name;
+        return itemName;
     }
 
     public String getItemDescription() {
-        return item_description;
+        return itemDescription;
     }
 
     public String getItemCategory() {
-        return item_category;
+        return itemCategory;
     }
 
     public int getItemPrice() {
-        return item_price;
+        return itemPrice;
     }
 
     public String getItemImage() {
-        return item_image;
+        return itemImage;
     }
 
-    public int getItemIsForTrade() {
-        return item_is_for_trade;
+    public boolean isItemForTrade() {
+        return itemIsForTrade;
     }
 
-    public int getItemIsForSale() {
-        return item_is_for_sale;
+    public boolean isItemForSale() {
+        return itemIsForSale;
     }
 
-    public int getItemIsForAuction() {
-        return item_is_for_auction;
+    public boolean isItemForAuction() {
+        return itemIsForAuction;
     }
 
-    public int getItemUserId() {
-        return item_user_id;
+    public String getItemUserId() {
+        return itemUserId;
     }
 
-    public void setItemName(String item_name) {
-        this.item_name = item_name;
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 
-    public void setItemDescription(String item_description) {
-        this.item_description = item_description;
+    public void setItemDescription(String itemDescription) {
+        this.itemDescription = itemDescription;
     }
 
-    public void setItemCategory(String item_category) {
-        this.item_category = item_category;
+    public void setItemCategory(String itemCategory) {
+        this.itemCategory = itemCategory;
     }
 
-    public void setItemPrice(int item_price) {
-        this.item_price = item_price;
+    public void setItemPrice(int itemPrice) {
+        this.itemPrice = itemPrice;
     }
 
-    public void setItemImage(String item_image) {
-        this.item_image = item_image;
+    public void setItemImage(String itemImage) {
+        this.itemImage = itemImage;
     }
 
-    public void setItemIsForTrade(int item_is_for_trade) {
-        this.item_is_for_trade = item_is_for_trade;
+    public void setItemIsForTrade(boolean itemIsForTrade) {
+        this.itemIsForTrade = itemIsForTrade;
     }
 
-    public void setItemIsForSale(int item_is_for_sale) {
-        this.item_is_for_sale = item_is_for_sale;
+    public void setItemIsForSale(boolean itemIsForSale) {
+        this.itemIsForSale = itemIsForSale;
     }
 
-    public void setItemIsForAuction(int item_is_for_auction) {
-        this.item_is_for_auction = item_is_for_auction;
+    public void setItemIsForAuction(boolean itemIsForAuction) {
+        this.itemIsForAuction = itemIsForAuction;
     }
 
-    public void setItemUserId(int item_user_id) {
-        this.item_user_id = item_user_id;
+    public void setItemUserId(String itemUserId) {
+        this.itemUserId = itemUserId;
+    }
+
+    @Override
+    public String toString() {
+        return "ItemModel{" +
+                "itemName='" + itemName + '\'' +
+                ", itemDescription='" + itemDescription + '\'' +
+                ", itemCategory='" + itemCategory + '\'' +
+                ", itemPrice=" + itemPrice +
+                ", itemImage='" + itemImage + '\'' +
+                ", itemIsForTrade=" + itemIsForTrade +
+                ", itemIsForSale=" + itemIsForSale +
+                ", itemIsForAuction=" + itemIsForAuction +
+                ", itemUserId='" + itemUserId + '\'' +
+                '}';
     }
 }

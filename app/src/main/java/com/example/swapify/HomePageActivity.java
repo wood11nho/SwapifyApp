@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,9 +12,11 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.swapify.ItemModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -27,6 +30,8 @@ public class HomePageActivity extends AppCompatActivity {
     private ArrayList<ItemModel> items;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestoreDB;
+    private RecyclerView recyclerView;
+    private ItemAdapter itemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,19 +93,14 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
 
-        RecyclerView recommendationRecyclerView = findViewById(R.id.recommendationRecyclerView);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        recommendationRecyclerView.setLayoutManager(layoutManager);
+        // Initialize the RecyclerView and its adapter with horizontal layout
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        itemAdapter = new ItemAdapter(items); // Pass the items list to the adapter
+        recyclerView.setAdapter(itemAdapter);
 
-//        RecommendationAdapter recommendationAdapter = new RecommendationAdapter();
-//        recommendationRecyclerView.setAdapter(recommendationAdapter);
-//
-//        // Get the recommended items from the database or any other source
-//        ArrayList<ItemModel> recommendedItems = new ArrayList<>();
-//
-//        // Set the recommended items on the adapter
-//        recommendationAdapter.setItems(recommendedItems);
-
+        // Fetch items from Firestore
+        fetchItemsFromFirestore();
     }
 
     private void fetchUserData(String userId) {
@@ -117,4 +117,20 @@ public class HomePageActivity extends AppCompatActivity {
                 });
     }
 
+    private void fetchItemsFromFirestore() {
+        firestoreDB.collection("ITEMS").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    items.clear(); // Clear the items list to avoid duplicates when updating the UI
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        ItemModel item = documentSnapshot.toObject(ItemModel.class);
+                        items.add(item);
+                    }
+                    // Notify the adapter that the data has changed
+                    itemAdapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> {
+                    // Handle any errors that occur during the Firestore query
+                    // For simplicity, we won't handle the error here. You can add appropriate error handling.
+                });
+    }
 }

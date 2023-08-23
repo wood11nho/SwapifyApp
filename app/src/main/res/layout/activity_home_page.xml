@@ -177,7 +177,7 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <ImageButton
-            android:id="@+id/menu_button"
+            android:id="@+id/reloadPageButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="start"
@@ -185,6 +185,7 @@
             android:padding="12dp"
             android:src="@drawable/ic_menu"
             android:layout_marginBottom="18dp"
+            android:contentDescription="@string/reload_page"
             />
 
         <ImageButton
@@ -197,6 +198,7 @@
             android:src="@drawable/ic_profile"
             android:layout_marginBottom="18dp"
             app:tint="@color/grey"
+            android:contentDescription="@string/profile"
             />
 
     </androidx.appcompat.widget.Toolbar>

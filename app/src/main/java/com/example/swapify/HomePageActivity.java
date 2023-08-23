@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class HomePageActivity extends AppCompatActivity {
 
     private TextView tvWelcomeMessage;
-    private ImageButton menuButton;
+    private ImageButton reloadButton;
     private ImageButton profileButton;
     private MaterialButton addItemButton;
     private MaterialButton seeAllItemsButton;
@@ -38,6 +38,11 @@ public class HomePageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Start quickly the LoadingScreenActivity
+        Intent loadingScreenIntent = new Intent(this, LoadingScreenActivity.class);
+        startActivity(loadingScreenIntent);
+
         setContentView(R.layout.activity_home_page);
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -56,7 +61,7 @@ public class HomePageActivity extends AppCompatActivity {
         tvWelcomeMessage = findViewById(R.id.tvWelcomeMessage);
         fetchUserData(currentUser.getUid());
 
-        menuButton = findViewById(R.id.menu_button);
+        reloadButton = findViewById(R.id.reloadPageButton);
         profileButton = findViewById(R.id.profile_button);
         addItemButton = findViewById(R.id.addItemButton);
         seeAllItemsButton = findViewById(R.id.seeAllItemsButton);
@@ -64,48 +69,36 @@ public class HomePageActivity extends AppCompatActivity {
         items = new ArrayList<>();
         categories = new ArrayList<>();
 
-        menuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Change background tint of menu button to purple
-                menuButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.purple));
-                // Change background tint of profile button to grey
-                profileButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.grey));
-                Intent intent = new Intent(HomePageActivity.this, HomePageActivity.class);
-                startActivity(intent);
-                finish(); // finish the current activity to remove it from the stack
-            }
+        reloadButton.setOnClickListener(v -> {
+            // Change background tint of menu button to purple
+            reloadButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.purple));
+            // Change background tint of profile button to grey
+            profileButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.grey));
+            Intent intent = new Intent(HomePageActivity.this, HomePageActivity.class);
+            startActivity(intent);
+            finish(); // finish the current activity to remove it from the stack
         });
 
-        profileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Change background tint of profile button to purple
-                profileButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.purple));
-                // Change background tint of menu button to grey
-                menuButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.grey));
-                Intent intent = new Intent(HomePageActivity.this, ProfileActivity.class);
-                startActivity(intent);
-                finish(); // finish the current activity to remove it from the stack
-            }
+        profileButton.setOnClickListener(v -> {
+            // Change background tint of profile button to purple
+            profileButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.purple));
+            // Change background tint of menu button to grey
+            reloadButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.grey));
+            Intent intent = new Intent(HomePageActivity.this, ProfileActivity.class);
+            startActivity(intent);
+            finish(); // finish the current activity to remove it from the stack
         });
 
-        addItemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomePageActivity.this, AddItemActivity.class);
-                startActivity(intent);
-                finish(); // finish the current activity to remove it from the stack
-            }
+        addItemButton.setOnClickListener(v -> {
+            Intent intent = new Intent(HomePageActivity.this, AddItemActivity.class);
+            startActivity(intent);
+            finish(); // finish the current activity to remove it from the stack
         });
 
-        seeAllItemsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HomePageActivity.this, SeeAllItemsActivity.class);
-                startActivity(intent);
-                finish(); // finish the current activity to remove it from the stack
-            }
+        seeAllItemsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(HomePageActivity.this, SeeAllItemsActivity.class);
+            startActivity(intent);
+            finish(); // finish the current activity to remove it from the stack
         });
 
         // Initialize the RecyclerView for items and its adapter with horizontal layout
@@ -150,7 +143,7 @@ public class HomePageActivity extends AppCompatActivity {
                         items.add(item);
                     }
                     // Notify the adapter that the data has changed
-                    itemAdapter.notifyDataSetChanged();
+                    itemAdapter.notifyItemChanged(items.size());
                 })
                 .addOnFailureListener(e -> {
                     // Handle any errors that occur during the Firestore query
@@ -167,7 +160,7 @@ public class HomePageActivity extends AppCompatActivity {
                         categories.add(category);
                     }
                     // Notify the adapter that the data has changed
-                    categoryAdapter.notifyDataSetChanged();
+                    categoryAdapter.notifyItemChanged(categories.size());
                 })
                 .addOnFailureListener(e -> {
                     // Handle any errors that occur during the Firestore query

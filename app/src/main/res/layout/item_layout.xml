@@ -1,6 +1,6 @@
 <LinearLayout
     android:layout_width="150dp"
-    android:layout_height="wrap_content"
+    android:layout_height="220dp"
     android:layout_marginEnd="16dp"
     android:background="@drawable/item_box"
     android:orientation="vertical"
@@ -10,22 +10,26 @@
     <ImageView
         android:id="@+id/itemImage"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_question_mark" />
+        android:src="@drawable/ic_question_mark"
+        android:contentDescription="@string/item_image"
+        />
 
     <!-- Item Name -->
     <TextView
         android:id="@+id/itemName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Item Name"
+        android:text="@string/item_name"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         android:padding="8dp"
         android:gravity="center"
         android:textStyle="bold"
-
+        android:ellipsize="end"
+        android:maxLines="1"
         />
 
     <!-- Item Price -->
@@ -33,12 +37,13 @@
         android:id="@+id/itemPrice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Item Price"
+        android:text="@string/item_price"
         android:textSize="14sp"
         android:padding="4dp"
         android:gravity="center"
         android:textStyle="bold"
         android:textColor="@color/purple"
+        android:ellipsize="end"
+        android:maxLines="1"
         />
-
 </LinearLayout>

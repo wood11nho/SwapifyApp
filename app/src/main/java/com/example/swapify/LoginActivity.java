@@ -44,35 +44,26 @@ public class LoginActivity extends AppCompatActivity {
 
         executorService = Executors.newSingleThreadExecutor();
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = edtEmail.getText().toString();
-                String password = edtPassword.getText().toString();
-                if (validateInput(email, password)) {
-                    startAuthentication(email, password);
-                }
+        btnLogin.setOnClickListener(v -> {
+            String email = edtEmail.getText().toString();
+            String password = edtPassword.getText().toString();
+            if (validateInput(email, password)) {
+                startAuthentication(email, password);
             }
         });
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // navigate to the entry activity
-                Intent intent = new Intent(LoginActivity.this, EntryActivity.class);
-                startActivity(intent);
-                finish(); // finish the current activity to remove it from the stack
-            }
+        btnBack.setOnClickListener(v -> {
+            // navigate to the entry activity
+            Intent intent = new Intent(LoginActivity.this, EntryActivity.class);
+            startActivity(intent);
+            finish(); // finish the current activity to remove it from the stack
         });
 
-        btnForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // navigate to the forgot password activity
-                Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-                startActivity(intent);
-                finish(); // finish the current activity to remove it from the stack
-            }
+        btnForgotPassword.setOnClickListener(v -> {
+            // navigate to the forgot password activity
+            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
+            finish(); // finish the current activity to remove it from the stack
         });
     }
 
@@ -144,9 +135,9 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUI(boolean success) {
         progressBar.setVisibility(View.GONE);
         if (success) {
-            // navigate to the home activity
-            Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
-            startActivity(intent);
+            // Navigate to the home page
+            Intent homePageIntent = new Intent(LoginActivity.this, HomePageActivity.class);
+            startActivity(homePageIntent);
             finish(); // finish the current activity to remove it from the stack
         } else {
             Toast.makeText(LoginActivity.this, "Incorrect email or password", Toast.LENGTH_LONG).show();

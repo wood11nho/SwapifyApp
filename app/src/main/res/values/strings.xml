@@ -16,4 +16,12 @@
 
     <string name="select_city_prompt">Select a city</string>
     <string name="select_county_prompt">Select a county</string>
+    <string name="item_image">Item Image</string>
+    <string name="item_name">Item Name</string>
+    <string name="item_price">Item Price</string>
+    <string name="reload_page">Reload Current Page</string>
+    <string name="profile">Go To Profile</string>
+    <string name="item_description">Item Description</string>
+    <string name="add_to_cart">Add Item To Cart</string>
+    <string name="add_to_wishlist">Add Item To Wishlist</string>
 </resources>

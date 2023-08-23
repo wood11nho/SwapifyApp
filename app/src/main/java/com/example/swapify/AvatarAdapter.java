@@ -23,7 +23,7 @@ public class AvatarAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.avatar_dialog_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.avatar_dialog_item, parent, false); //
         }
 
         ImageView imageView = convertView.findViewById(R.id.avatarImageView);

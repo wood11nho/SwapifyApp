@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class LoginActivity extends AppCompatActivity {
-    MaterialButton btnLogin;
+    MaterialButton btnLogin, btnForgotPassword;
     EditText edtEmail, edtPassword;
     ImageButton btnBack;
     private ProgressBar progressBar;
@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         btnLogin = findViewById(R.id.btnLogin);
+        btnForgotPassword = findViewById(R.id.btnForgotPassword);
         edtEmail = findViewById(R.id.edtEmail);
         edtPassword = findViewById(R.id.edtPassword);
         btnBack = findViewById(R.id.btnBack);
@@ -59,6 +60,16 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // navigate to the entry activity
                 Intent intent = new Intent(LoginActivity.this, EntryActivity.class);
+                startActivity(intent);
+                finish(); // finish the current activity to remove it from the stack
+            }
+        });
+
+        btnForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // navigate to the forgot password activity
+                Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
                 startActivity(intent);
                 finish(); // finish the current activity to remove it from the stack
             }

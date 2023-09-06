@@ -139,9 +139,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent homePageIntent = new Intent(LoginActivity.this, HomePageActivity.class);
             startActivity(homePageIntent);
             finish(); // finish the current activity to remove it from the stack
-        } else {
-            Toast.makeText(LoginActivity.this, "Incorrect email or password", Toast.LENGTH_LONG).show();
-        }
+        }  // Stay on the login page
     }
 
     @Override

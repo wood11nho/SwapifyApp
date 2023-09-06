@@ -1,11 +1,10 @@
 package com.example.swapify;
 
 import android.app.AlertDialog;
-import android.media.Image;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -214,6 +213,8 @@ public class EditProfileActivity extends AppCompatActivity {
                     // Handle any errors that occur during the Firestore query
                     Log.e("FirestoreQueryError", "Failed to check phone number. Error: " + e.getMessage());
                     Toast.makeText(EditProfileActivity.this, "Failed to check phone number. Please try again.", Toast.LENGTH_SHORT).show();
+                    // Log request.auth.uid to see the user who triggered the function
+                    Log.e("USER", FirebaseAuth.getInstance().getCurrentUser().getUid());
                 });
     }
 
@@ -261,6 +262,9 @@ public class EditProfileActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     // Update the UI with the updated user data
                     Toast.makeText(EditProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                     finish();
                 })
                 .addOnFailureListener(e -> {

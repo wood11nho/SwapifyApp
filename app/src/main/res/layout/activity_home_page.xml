@@ -176,31 +176,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-        <ImageButton
-            android:id="@+id/reloadPageButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="start"
-            android:background="?attr/selectableItemBackground"
-            android:padding="12dp"
-            android:src="@drawable/ic_menu"
-            android:layout_marginBottom="18dp"
-            android:contentDescription="@string/reload_page"
-            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
 
-        <ImageButton
-            android:id="@+id/profile_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="end"
-            android:background="?attr/selectableItemBackground"
-            android:padding="12dp"
-            android:src="@drawable/ic_profile"
-            android:layout_marginBottom="18dp"
-            app:tint="@color/grey"
-            android:contentDescription="@string/profile"
-            />
+            <ImageButton
+                android:id="@+id/reloadPageButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:padding="12dp"
+                android:src="@drawable/ic_menu"
+                android:contentDescription="@string/reload_page" />
+
+            <ImageButton
+                android:id="@+id/chat_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:padding="12dp"
+                android:src="@drawable/ic_chat"
+                android:contentDescription="Go to chat"
+                app:tint="@color/grey" />
+
+            <ImageButton
+                android:id="@+id/profile_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:padding="12dp"
+                android:src="@drawable/ic_profile"
+                android:contentDescription="@string/profile"
+                app:tint="@color/grey" />
+        </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

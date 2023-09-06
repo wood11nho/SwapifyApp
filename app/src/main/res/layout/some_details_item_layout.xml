@@ -2,10 +2,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:background="#F6F5F5"
     android:padding="8dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    >
 
     <!-- Item Image -->
     <androidx.cardview.widget.CardView
@@ -128,15 +129,15 @@
 
                 <!-- Add to Cart Button -->
                 <ImageButton
-                    android:id="@+id/addToCartButton"
+                    android:id="@+id/sendMessageButton"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_add_to_cart"
+                    android:src="@drawable/ic_send_message"
                     android:background="@android:color/transparent"
                     android:scaleType="centerInside"
                     android:padding="16dp"
-                    android:contentDescription="@string/add_to_cart"
+                    android:contentDescription="@string/send_message"
                     />
 
                 <!-- Add to Wishlist Button -->

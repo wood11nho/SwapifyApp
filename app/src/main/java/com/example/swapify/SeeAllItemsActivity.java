@@ -93,7 +93,7 @@ public class SeeAllItemsActivity extends AppCompatActivity{
 //        });
 
         recyclerViewItems.setLayoutManager(new LinearLayoutManager(this));
-        itemAdapter = new SomeDetailedItemAdapter(items);
+        itemAdapter = new SomeDetailedItemAdapter(this, items);
         recyclerViewItems.setAdapter(itemAdapter);
 
         fetchItems();
@@ -105,6 +105,10 @@ public class SeeAllItemsActivity extends AppCompatActivity{
                     items.clear();
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         ItemModel item = documentSnapshot.toObject(ItemModel.class);
+                        assert item != null;
+                        if (item.getItemUserId().equals(firebaseAuth.getCurrentUser().getUid())) {
+                            continue;
+                        }
                         items.add(item);
                     }
                     itemAdapter.notifyItemChanged(items.size());

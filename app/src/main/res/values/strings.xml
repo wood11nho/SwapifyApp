@@ -24,4 +24,5 @@
     <string name="item_description">Item Description</string>
     <string name="add_to_cart">Add Item To Cart</string>
     <string name="add_to_wishlist">Add Item To Wishlist</string>
+    <string name="send_message">Send Message</string>
 </resources>

@@ -24,6 +24,7 @@ public class HomePageActivity extends AppCompatActivity {
     private TextView tvWelcomeMessage;
     private ImageButton reloadButton;
     private ImageButton profileButton;
+    private ImageButton chatButton;
     private MaterialButton addItemButton;
     private MaterialButton seeAllItemsButton;
     private ArrayList<ItemModel> items;
@@ -62,6 +63,7 @@ public class HomePageActivity extends AppCompatActivity {
         fetchUserData(currentUser.getUid());
 
         reloadButton = findViewById(R.id.reloadPageButton);
+        chatButton = findViewById(R.id.chat_button);
         profileButton = findViewById(R.id.profile_button);
         addItemButton = findViewById(R.id.addItemButton);
         seeAllItemsButton = findViewById(R.id.seeAllItemsButton);
@@ -75,6 +77,12 @@ public class HomePageActivity extends AppCompatActivity {
             // Change background tint of profile button to grey
             profileButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.grey));
             Intent intent = new Intent(HomePageActivity.this, HomePageActivity.class);
+            startActivity(intent);
+            finish(); // finish the current activity to remove it from the stack
+        });
+
+        chatButton.setOnClickListener(v -> {
+            Intent intent = new Intent(HomePageActivity.this, AllChatsActivity.class);
             startActivity(intent);
             finish(); // finish the current activity to remove it from the stack
         });
@@ -140,6 +148,11 @@ public class HomePageActivity extends AppCompatActivity {
                     items.clear(); // Clear the items list to avoid duplicates when updating the UI
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         ItemModel item = documentSnapshot.toObject(ItemModel.class);
+                        // I should get only the items that are not mine
+                        assert item != null;
+                        if (item.getItemUserId().equals(firebaseAuth.getCurrentUser().getUid())) {
+                            continue;
+                        }
                         items.add(item);
                     }
                     // Notify the adapter that the data has changed

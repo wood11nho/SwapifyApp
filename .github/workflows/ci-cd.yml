@@ -17,12 +17,15 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 11
-          distribution: 'adopt'
+          distribution: 'adopt' # Specify the distribution you want (e.g., 'adopt', 'openjdk')
+
+      - name: Make ./gradlew executable
+        run: chmod +x ./gradlew
 
       - name: Build and run tests
         run: |
           # Replace these commands with your actual build and test commands
-          ./gradlew build
+          ./gradlew assemble
           ./gradlew test
 
       - name: Upload coverage reports to Codecov

@@ -25,8 +25,8 @@ jobs:
       - name: Build and run tests
         run: |
           # Replace these commands with your actual build and test commands
-          ./gradlew build
-          ./gradlew test
+          gradle build
+          gradle test
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3

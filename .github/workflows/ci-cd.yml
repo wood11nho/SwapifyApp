@@ -16,7 +16,8 @@ jobs:
       - name: Set up JDK 17
         run: |
           sudo apt-get install openjdk-17-jdk
-          echo "JAVA_HOME=$(which java)" >> $GITHUB_ENV
+          echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
+          echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
           java -version
           
       - name: Make ./gradlew executable

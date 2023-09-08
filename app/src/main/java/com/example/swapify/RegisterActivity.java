@@ -5,10 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import android.util.Patterns;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
@@ -23,18 +21,15 @@ import android.content.Intent;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class RegisterActivity extends AppCompatActivity {
     MaterialButton btnRegister;
     EditText edtName, edtUsername, edtEmail, edtPassword, edtConfirmPassword;
-    ListView lstCustomers;
     private FirebaseFirestore firestoreDB;
     private FirebaseAuth firebaseAuth;
     ImageButton btnBack;
 
     private ExecutorService executorService;
-    private Future<?> createCustomerTaskFuture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +43,6 @@ public class RegisterActivity extends AppCompatActivity {
         edtEmail = findViewById(R.id.edtEmail);
         edtPassword = findViewById(R.id.edtPassword);
         edtConfirmPassword = findViewById(R.id.edtConfirmPassword);
-        lstCustomers = findViewById(R.id.lvCustomerList);
         btnBack = findViewById(R.id.btnBack);
 
         firestoreDB = FirebaseFirestore.getInstance();
@@ -56,35 +50,29 @@ public class RegisterActivity extends AppCompatActivity {
 
         executorService = Executors.newSingleThreadExecutor();
 
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String name = edtName.getText().toString();
-                String username = edtUsername.getText().toString();
-                String email = edtEmail.getText().toString();
-                String password = edtPassword.getText().toString();
-                if (validateInput(name, username, email, password)) {
-                    // if the name for example was written in all caps, or all lowercase, i want to change it to first letter uppercase for each word
-                    String[] nameArray = name.split(" ");
-                    String nameFormatted = "";
-                    for (String word : nameArray) {
-                        nameFormatted += word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase() + " ";
-                    }
-                    nameFormatted = nameFormatted.trim();
-                    name = nameFormatted;
-                    registerUserWithEmailAndPassword(name, username, email, password);
+        btnRegister.setOnClickListener(v -> {
+            String name = edtName.getText().toString();
+            String username = edtUsername.getText().toString();
+            String email = edtEmail.getText().toString();
+            String password = edtPassword.getText().toString();
+            if (validateInput(name, username, email, password)) {
+                // if the name for example was written in all caps, or all lowercase, i want to change it to first letter uppercase for each word
+                String[] nameArray = name.split(" ");
+                StringBuilder nameFormatted = new StringBuilder();
+                for (String word : nameArray) {
+                    nameFormatted.append(word.substring(0, 1).toUpperCase()).append(word.substring(1).toLowerCase()).append(" ");
                 }
+                nameFormatted = new StringBuilder(nameFormatted.toString().trim());
+                name = nameFormatted.toString();
+                registerUserWithEmailAndPassword(name, username, email, password);
             }
         });
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // navigate to the entry activity
-                Intent intent = new Intent(RegisterActivity.this, EntryActivity.class);
-                startActivity(intent);
-                finish(); // finish the current activity to remove it from the stack
-            }
+        btnBack.setOnClickListener(v -> {
+            // navigate to the entry activity
+            Intent intent = new Intent(RegisterActivity.this, EntryActivity.class);
+            startActivity(intent);
+            finish(); // finish the current activity to remove it from the stack
         });
     }
 
@@ -148,11 +136,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         // Check if the query returned any results
-        if (query.getResult().size() > 0) {
-            return true;
-        }
-
-        return false;
+        return query.getResult().size() > 0;
     }
 
     private void registerUserWithEmailAndPassword(String name, String username, String email, String password) {
@@ -191,9 +175,7 @@ public class RegisterActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(RegisterActivity.this, "Error adding user to Firestore", Toast.LENGTH_LONG).show();
-                });
+                .addOnFailureListener(e -> Toast.makeText(RegisterActivity.this, "Error adding user to Firestore", Toast.LENGTH_LONG).show());
     }
 
     @Override

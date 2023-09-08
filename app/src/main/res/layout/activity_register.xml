@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F6F5F5"
+    android:background="@color/light_white"
     tools:context=".RegisterActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -40,6 +40,7 @@
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="@string/CustomerName"
+        android:textColorHint="@color/dark_grey"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -55,10 +56,12 @@
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="@string/CustomerUsername"
+        android:textColorHint="@color/dark_grey"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtName" />
+        app:layout_constraintTop_toBottomOf="@+id/edtName"
+        android:autofillHints="username" />
 
     <EditText
         android:id="@+id/edtEmail"
@@ -69,10 +72,12 @@
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="@string/CustomerEmail"
+        android:textColorHint="@color/dark_grey"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtUsername" />
+        app:layout_constraintTop_toBottomOf="@+id/edtUsername"
+        android:autofillHints="email" />
 
     <EditText
         android:id="@+id/edtPassword"
@@ -83,10 +88,12 @@
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="@string/CustomerPassword"
+        android:textColorHint="@color/dark_grey"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/edtEmail"
+        android:autofillHints="password" />
 
     <EditText
         android:id="@+id/edtConfirmPassword"
@@ -97,10 +104,12 @@
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="@string/ConfirmPassword"
+        android:textColorHint="@color/dark_grey"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/edtPassword"
+        android:autofillHints="password" />
 
     <com.google.android.material.button.MaterialButton
         android:layout_width="wrap_content"
@@ -114,15 +123,4 @@
         app:layout_constraintTop_toBottomOf="@+id/edtConfirmPassword"
         app:layout_constraintEnd_toEndOf="parent" />
 
-
-
-    <ListView
-        android:id="@+id/lvCustomerList"
-        android:layout_width="409dp"
-        android:layout_height="344dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnRegister" />
 </androidx.constraintlayout.widget.ConstraintLayout>

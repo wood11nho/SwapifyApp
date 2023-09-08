@@ -2,12 +2,11 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp"
-    app:cardBackgroundColor="@android:color/white"
+    app:cardBackgroundColor="@color/purple_500"
     android:layout_margin="8dp">
 
     <LinearLayout
@@ -21,9 +20,9 @@
             android:id="@+id/otherPersonNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/purple_500"
+            android:textColor="@color/light_white"
             android:textStyle="bold"
-            android:text="Other Person's Name"
+            android:text="@string/other_person_s_name"
             android:textSize="18sp"/>
 
     </LinearLayout>

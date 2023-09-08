@@ -41,12 +41,26 @@ public class SomeDetailedItemAdapter extends RecyclerView.Adapter<SomeDetailedIt
         holder.itemPrice.setText(String.valueOf(item.getItemPrice()));
         holder.itemDescription.setText(item.getItemDescription());
 
-        holder.btnSendMsg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Open a chat with the user associated with this item
-                openChatWithUser(item.getItemUserId());
-            }
+        // Set an OnClickListener for going to the item's details page
+        holder.itemView.setOnClickListener(view -> {
+            // Open the item's details page
+            Intent intent = new Intent(context, FullDetailItemActivity.class);
+            intent.putExtra("itemCategory", item.getItemCategory());
+            intent.putExtra("itemName", item.getItemName());
+            intent.putExtra("itemDescription", item.getItemDescription());
+            intent.putExtra("itemPrice", item.getItemPrice());
+            intent.putExtra("itemImage", item.getItemImage());
+            intent.putExtra("itemIsForTrade", item.getItemIsForTrade());
+            intent.putExtra("itemIsForSale", item.getItemIsForSale());
+            intent.putExtra("itemIsForAuction", item.getItemIsForAuction());
+            intent.putExtra("itemUserId", item.getItemUserId());
+            context.startActivity(intent);
+        });
+
+        // Set an OnClickListener for going to chat with the user
+        holder.btnSendMsg.setOnClickListener(view -> {
+            // Open a chat with the user associated with this item
+            openChatWithUser(item.getItemUserId());
         });
     }
 

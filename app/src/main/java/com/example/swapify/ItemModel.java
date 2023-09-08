@@ -123,5 +123,4 @@ public class ItemModel {
                 ", itemUserId='" + itemUserId + '\'' +
                 '}';
     }
-
 }

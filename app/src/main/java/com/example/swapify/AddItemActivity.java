@@ -5,10 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -24,6 +24,7 @@ public class AddItemActivity extends AppCompatActivity {
 
     private ImageView itemPictureImageView;
     private Button changePictureButton;
+    private ImageButton backButton;
     private EditText itemNameEditText;
     private EditText itemDescriptionEditText;
     private Spinner itemCategorySpinner;
@@ -38,6 +39,7 @@ public class AddItemActivity extends AppCompatActivity {
 
         // Initialize views
         itemPictureImageView = findViewById(R.id.item_picture);
+        backButton = findViewById(R.id.btnBack_add_item);
         changePictureButton = findViewById(R.id.change_picture_button);
         itemNameEditText = findViewById(R.id.editText_itemName);
         itemDescriptionEditText = findViewById(R.id.editText_itemDescription);
@@ -48,49 +50,54 @@ public class AddItemActivity extends AppCompatActivity {
 
         fetchCategoriesFromFirestore();
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateInput()) {
-                    // Get the input values
-                    String itemName = itemNameEditText.getText().toString();
-                    String itemDescription = itemDescriptionEditText.getText().toString();
-                    String itemCategory;
-                    if (itemCategorySpinner.getSelectedItem() == null) {
-                        itemCategory = "";
-                    } else {
-                        itemCategory = itemCategorySpinner.getSelectedItem().toString();
-                    }
-                    int itemPrice = Integer.parseInt(itemPriceEditText.getText().toString());
-                    int selectedItemTypeId = itemTypeRadioGroup.getCheckedRadioButtonId();
-                    Log.d("Selected item type id: ", String.valueOf(selectedItemTypeId));
-                    boolean itemForTrade = selectedItemTypeId == R.id.radioButton_trade;
-                    boolean itemForSale = selectedItemTypeId == R.id.radioButton_sale;
-                    boolean itemForAuction = selectedItemTypeId == R.id.radioButton_auction;
+        // Set up the back button
+        backButton.setOnClickListener(v -> {
+            // Go back to the previous activity
+            Intent intent = new Intent(AddItemActivity.this, HomePageActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
-                    // Get the current user's ID from FirebaseAuth
-                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                    if (currentUser == null) {
-                        // Handle the case when the user is not logged in
-                        return;
-                    }
-                    String userId = currentUser.getUid();
-
-                    // Add the data to Firestore
-                    FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
-                    ItemModel item = new ItemModel(itemName, itemDescription, itemCategory, itemPrice, "", itemForTrade, itemForSale, itemForAuction, userId);
-                    firestoreDB.collection("ITEMS").add(item)
-                            .addOnSuccessListener(documentReference -> {
-                                // Data added successfully, go back to the previous activity
-                                Intent intent = new Intent(AddItemActivity.this, HomePageActivity.class);
-                                startActivity(intent);
-                                finish();
-                            })
-                            .addOnFailureListener(e -> {
-                                // Handle any errors that occur during data upload
-                                Log.e("AddItemActivity", "Error adding item: " + e.getMessage());
-                            });
+        saveButton.setOnClickListener(v -> {
+            if (validateInput()) {
+                // Get the input values
+                String itemName = itemNameEditText.getText().toString();
+                String itemDescription = itemDescriptionEditText.getText().toString();
+                String itemCategory;
+                if (itemCategorySpinner.getSelectedItem() == null) {
+                    itemCategory = "";
+                } else {
+                    itemCategory = itemCategorySpinner.getSelectedItem().toString();
                 }
+                int itemPrice = Integer.parseInt(itemPriceEditText.getText().toString());
+                int selectedItemTypeId = itemTypeRadioGroup.getCheckedRadioButtonId();
+                Log.d("Selected item type id: ", String.valueOf(selectedItemTypeId));
+                boolean itemForTrade = selectedItemTypeId == R.id.radioButton_trade;
+                boolean itemForSale = selectedItemTypeId == R.id.radioButton_sale;
+                boolean itemForAuction = selectedItemTypeId == R.id.radioButton_auction;
+
+                // Get the current user's ID from FirebaseAuth
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (currentUser == null) {
+                    // Handle the case when the user is not logged in
+                    return;
+                }
+                String userId = currentUser.getUid();
+
+                // Add the data to Firestore
+                FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
+                ItemModel item = new ItemModel(itemName, itemDescription, itemCategory, itemPrice, "", itemForTrade, itemForSale, itemForAuction, userId);
+                firestoreDB.collection("ITEMS").add(item)
+                        .addOnSuccessListener(documentReference -> {
+                            // Data added successfully, go back to the previous activity
+                            Intent intent = new Intent(AddItemActivity.this, HomePageActivity.class);
+                            startActivity(intent);
+                            finish();
+                        })
+                        .addOnFailureListener(e -> {
+                            // Handle any errors that occur during data upload
+                            Log.e("AddItemActivity", "Error adding item: " + e.getMessage());
+                        });
             }
         });
     }

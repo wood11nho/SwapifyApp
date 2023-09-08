@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_white"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -49,14 +50,17 @@
             android:id="@+id/editTextMessageInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Type a message" />
+            android:hint="Type a message"
+            android:textColorHint="@color/dark_grey"
+            android:textColor="@color/black"
+            android:inputType="text"
+            />
 
         <Button
             android:id="@+id/buttonSendMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Send"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
 </RelativeLayout>

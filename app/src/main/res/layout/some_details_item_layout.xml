@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
-    android:background="#F6F5F5"
+    android:background="@color/light_white"
     android:padding="8dp"
     >
 
@@ -127,7 +127,7 @@
                 android:background="@color/white"
                 android:backgroundTint="@color/white">
 
-                <!-- Add to Cart Button -->
+                <!-- Send Message Button -->
                 <ImageButton
                     android:id="@+id/sendMessageButton"
                     android:layout_width="0dp"

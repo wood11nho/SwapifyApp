@@ -25,4 +25,27 @@
     <string name="add_to_cart">Add Item To Cart</string>
     <string name="add_to_wishlist">Add Item To Wishlist</string>
     <string name="send_message">Send Message</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="change_profile_picture">Change profile picture</string>
+    <string name="name">Name</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone number</string>
+    <string name="bio">Bio</string>
+    <string name="choose_your_county">Choose your county:</string>
+    <string name="choose_your_city">Choose your city:</string>
+    <string name="save">Save</string>
+    <string name="app_logo">App Logo</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="other_person_s_name">Other Person\'s Name</string>
+    <string name="hi_user">Hi, User! 😃</string>
+    <string name="welcome_to_swapify">Welcome to Swapify!</string>
+    <string name="our_recommandations">Our Recommandations</string>
+    <string name="see_all_items">See All Items</string>
+    <string name="popular_categories">Popular Categories</string>
+    <string name="see_all_categories">See All Categories</string>
+    <string name="add_item">Add Item</string>
+    <string name="go_to_chat">Go to chat</string>
+    <string name="all_items">All Items</string>
 </resources>

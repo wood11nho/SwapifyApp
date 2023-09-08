@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@color/light_white"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -18,13 +19,14 @@
             android:background="@drawable/square_background"
             android:padding="10dp"
             android:cropToPadding="true"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/profile_picture" />
 
         <Button
             android:id="@+id/change_picture_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Change profile picture"
+            android:text="@string/change_profile_picture"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
             android:onClick="openAvatarSelectionDialog" />
@@ -33,58 +35,79 @@
             android:id="@+id/name_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name"
+            android:hint="@string/name"
+            android:textColorHint="@color/dark_grey"
             android:inputType="textPersonName"
             android:maxLines="1"
             android:padding="8dp"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:autofillHints="Name"
+            />
 
         <EditText
             android:id="@+id/username_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Username"
+            android:hint="@string/username"
+            android:textColorHint="@color/dark_grey"
             android:inputType="text"
             android:maxLines="1"
             android:padding="8dp"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:autofillHints="Username"
+            />
 
         <EditText
             android:id="@+id/email_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
+            android:hint="@string/email"
+            android:textColorHint="@color/dark_grey"
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:padding="8dp"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:autofillHints="Email"
+            />
 
         <EditText
             android:id="@+id/phone_number_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Phone number"
+            android:hint="@string/phone_number"
+            android:textColorHint="@color/dark_grey"
             android:inputType="phone"
             android:maxLines="1"
             android:padding="8dp"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:autofillHints="Phone Number"
+            />
 
         <EditText
             android:id="@+id/bio_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Bio"
+            android:hint="@string/bio"
+            android:textColorHint="@color/dark_grey"
             android:inputType="textMultiLine"
             android:lines="3"
             android:padding="8dp"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:autofillHints="Bio"
+            />
 
         <TextView
             android:id="@+id/county_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="Choose your county:"
+            android:text="@string/choose_your_county"
+            android:textColor="?attr/colorPrimary"
             android:textSize="16sp" />
 
         <Spinner
@@ -94,6 +117,8 @@
             android:entries="@array/counties_array"
             android:prompt="@string/select_county_prompt"
             android:padding="8dp"
+            android:background="?attr/colorPrimary"
+            android:backgroundTint="?attr/colorPrimary"
             android:textSize="16sp" />
 
         <TextView
@@ -101,7 +126,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="Choose your city:"
+            android:text="@string/choose_your_city"
+            android:textColor="?attr/colorPrimary"
             android:textSize="16sp" />
 
 
@@ -112,6 +138,8 @@
             android:entries="@array/cities_array"
             android:prompt="@string/select_city_prompt"
             android:padding="8dp"
+            android:background="?attr/colorPrimary"
+            android:backgroundTint="?attr/colorPrimary"
             android:textSize="16sp"
             />
 
@@ -119,7 +147,7 @@
             android:id="@+id/save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save"
+            android:text="@string/save"
             android:layout_gravity="center_horizontal"
 
             android:layout_marginTop="16dp" />

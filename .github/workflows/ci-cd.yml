@@ -1,0 +1,30 @@
+name: CI/CD with Codecov
+
+on:
+  push:
+    branches:
+      - main # Replace with the name of your main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+
+      - name: Build and run tests
+        run: |
+          # Replace these commands with your actual build and test commands
+          ./gradlew build
+          ./gradlew test
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

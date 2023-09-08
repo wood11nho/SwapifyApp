@@ -13,11 +13,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up JDK
+      - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
-          java-version: 11
-          distribution: 'adopt' # Specify the distribution you want (e.g., 'adopt', 'openjdk')
+          java-version: 17
 
       - name: Make ./gradlew executable
         run: chmod +x ./gradlew
@@ -25,7 +24,7 @@ jobs:
       - name: Build and run tests
         run: |
           # Replace these commands with your actual build and test commands
-          ./gradlew assemble
+          ./gradlew build
           ./gradlew test
 
       - name: Upload coverage reports to Codecov

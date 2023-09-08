@@ -3,7 +3,7 @@ name: CI/CD with Codecov
 on:
   push:
     branches:
-      - main # Replace with the name of your main branch
+      - main # Înlocuiește cu numele branch-ului principal al tău
 
 jobs:
   build:
@@ -15,17 +15,16 @@ jobs:
 
       - name: Set up JDK 17
         run: |
-          sudo apt-get install openjdk-17-jdk
-          echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
-          echo "PATH=$JAVA_HOME/bin:$PATH" >> $GITHUB_ENV
+          echo "JAVA_HOME=C:\\Program Files\\Java\\jdk-17" >> $GITHUB_ENV
+          echo "PATH=\$JAVA_HOME\\bin:\$PATH" >> $GITHUB_ENV
           java -version
-          
+
       - name: Make ./gradlew executable
         run: chmod +x ./gradlew
 
       - name: Build and run tests
         run: |
-          # Replace these commands with your actual build and test commands
+          # Înlocuiește aceste comenzi cu comenzile tale reale de build și test
           ./gradlew build
           ./gradlew test
 

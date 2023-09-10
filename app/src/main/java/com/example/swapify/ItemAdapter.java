@@ -8,7 +8,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -31,8 +34,16 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         ItemModel item = items.get(position);
 
-        // Set the item image, name, and price
-        holder.itemImage.setImageResource(R.drawable.ic_question_mark);
+        // Set the item's image
+        String itemImage = item.getItemImage();
+        // If the item doesn't have an image the String will look like "" or maybe null
+        if (itemImage != null && !itemImage.equals("")) {
+            Picasso.get().load(itemImage).into(holder.itemImage);
+        } else {
+            holder.itemImage.setImageResource(R.drawable.ic_question_mark);
+        }
+
+        // Set the item's name and price
         holder.itemName.setText(item.getItemName());
         holder.itemPrice.setText(String.valueOf(item.getItemPrice()));
 

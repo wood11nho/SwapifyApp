@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 public class FullDetailItemActivity extends AppCompatActivity{
     private FirebaseAuth firebaseAuth;
@@ -70,6 +71,14 @@ public class FullDetailItemActivity extends AppCompatActivity{
         itemCategory.setText(itemCateogryString);
         itemPrice.setText(String.valueOf(itemPriceInt));
         itemDescription.setText(itemDescriptionString);
+
+        // If the item doesn't have an image the String will look like "" or maybe null
+        if (itemImageUrl != null && !itemImageUrl.equals("")) {
+            Picasso.get().load(itemImageUrl).into(itemImage);
+        } else {
+            itemImage.setImageResource(R.drawable.ic_question_mark);
+        }
+
         setUserFullName(itemOwnerId);
         setUserCounty(itemOwnerId);
 

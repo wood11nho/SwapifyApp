@@ -27,6 +27,7 @@ public class HomePageActivity extends AppCompatActivity {
     private ImageButton chatButton;
     private MaterialButton addItemButton;
     private MaterialButton seeAllItemsButton;
+    private MaterialButton seeAllCategoriesButton;
     private ArrayList<ItemModel> items;
     private ArrayList<String> categories;
     private FirebaseAuth firebaseAuth;
@@ -67,6 +68,7 @@ public class HomePageActivity extends AppCompatActivity {
         profileButton = findViewById(R.id.profile_button);
         addItemButton = findViewById(R.id.addItemButton);
         seeAllItemsButton = findViewById(R.id.seeAllItemsButton);
+        seeAllCategoriesButton = findViewById(R.id.seeAllCategoriesButton);
 
         items = new ArrayList<>();
         categories = new ArrayList<>();
@@ -105,6 +107,12 @@ public class HomePageActivity extends AppCompatActivity {
 
         seeAllItemsButton.setOnClickListener(v -> {
             Intent intent = new Intent(HomePageActivity.this, SeeAllItemsActivity.class);
+            startActivity(intent);
+            finish(); // finish the current activity to remove it from the stack
+        });
+
+        seeAllCategoriesButton.setOnClickListener(v -> {
+            Intent intent = new Intent(HomePageActivity.this, SeeAllCategoriesActivity.class);
             startActivity(intent);
             finish(); // finish the current activity to remove it from the stack
         });

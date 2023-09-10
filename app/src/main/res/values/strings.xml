@@ -48,4 +48,7 @@
     <string name="add_item">Add Item</string>
     <string name="go_to_chat">Go to chat</string>
     <string name="all_items">All Items</string>
+    <string name="all_categories">All Categories</string>
+    <string name="category_image">Category Image</string>
+    <string name="category_name">Category Name</string>
 </resources>

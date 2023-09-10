@@ -1,10 +1,15 @@
 package com.example.swapify;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,11 +22,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class AddItemActivity extends AppCompatActivity {
-
+    private static final int GALLERY_REQUEST_CODE = 101;
+    private String itemPictureUrl;
     private ImageView itemPictureImageView;
     private Button changePictureButton;
     private ImageButton backButton;
@@ -71,7 +80,6 @@ public class AddItemActivity extends AppCompatActivity {
                 }
                 int itemPrice = Integer.parseInt(itemPriceEditText.getText().toString());
                 int selectedItemTypeId = itemTypeRadioGroup.getCheckedRadioButtonId();
-                Log.d("Selected item type id: ", String.valueOf(selectedItemTypeId));
                 boolean itemForTrade = selectedItemTypeId == R.id.radioButton_trade;
                 boolean itemForSale = selectedItemTypeId == R.id.radioButton_sale;
                 boolean itemForAuction = selectedItemTypeId == R.id.radioButton_auction;
@@ -85,25 +93,81 @@ public class AddItemActivity extends AppCompatActivity {
                 String userId = currentUser.getUid();
 
                 // Add the data to Firestore
-                FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
-                ItemModel item = new ItemModel(itemName, itemDescription, itemCategory, itemPrice, "", itemForTrade, itemForSale, itemForAuction, userId);
-                firestoreDB.collection("ITEMS").add(item)
-                        .addOnSuccessListener(documentReference -> {
-                            // Data added successfully, go back to the previous activity
-                            Intent intent = new Intent(AddItemActivity.this, HomePageActivity.class);
-                            startActivity(intent);
-                            finish();
-                        })
-                        .addOnFailureListener(e -> {
-                            // Handle any errors that occur during data upload
-                            Log.e("AddItemActivity", "Error adding item: " + e.getMessage());
-                        });
+                uploadItemToFirestore(itemName, itemDescription, itemCategory, itemPrice, itemPictureUrl, itemForTrade, itemForSale, itemForAuction, userId);
+            }
+        });
+
+        changePictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery();
             }
         });
     }
 
+    private void openGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, GALLERY_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            Uri selectedImageUri = data.getData();
+            // Display the image in itemPictureImageView
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
+                itemPictureImageView.setImageBitmap(bitmap);
+
+                // Call uploadImageToFirebaseStorage to upload the selected image
+                uploadImageToFirebaseStorage(selectedImageUri);
+
+                // Save the image URL in itemPictureUrl
+                assert selectedImageUri != null;
+                itemPictureUrl = selectedImageUri.toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private boolean validateInput() {
-        // TODO: Implement input validation logic here
+        // Validate the item name
+        String itemName = itemNameEditText.getText().toString();
+        if (itemName.isEmpty()) {
+            itemNameEditText.setError("Please enter an item name");
+            return false;
+        }
+
+        // Validate the item description
+        String itemDescription = itemDescriptionEditText.getText().toString();
+        if (itemDescription.isEmpty()) {
+            itemDescriptionEditText.setError("Please enter an item description");
+            return false;
+        }
+
+        // Validate the item category
+        String itemCategory = itemCategorySpinner.getSelectedItem().toString();
+        if (itemCategory.isEmpty()) {
+            itemCategorySpinner.requestFocus();
+            return false;
+        }
+
+        // Validate the item price
+        String itemPrice = itemPriceEditText.getText().toString();
+        if (itemPrice.isEmpty()) {
+            itemPriceEditText.setError("Please enter an item price");
+            return false;
+        }
+
+        // Validate the item type
+        if (itemTypeRadioGroup.getCheckedRadioButtonId() == -1) {
+            itemTypeRadioGroup.requestFocus();
+            return false;
+        }
+
         return true;
     }
 
@@ -132,5 +196,45 @@ public class AddItemActivity extends AppCompatActivity {
         itemCategorySpinner.setAdapter(adapter);
     }
 
+    private void uploadImageToFirebaseStorage(Uri imageUri) {
+        // Get a reference to the Firebase Storage location
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("item_images");
 
+        // Create a unique filename for the image (e.g., using a timestamp)
+        String filename = "item_image_" + System.currentTimeMillis() + ".jpg";
+        StorageReference imageRef = storageRef.child(filename);
+
+        // Upload the image
+        imageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    // Image uploaded successfully, get the download URL
+                    imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        String imageUrl = uri.toString();
+                        // Now, you have the imageUrl; you can do something with it or save it to Firestore
+                        itemPictureUrl = imageUrl;
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    // Handle any errors that occur during the upload
+                    Log.e("AddItemActivity", "Error uploading image: " + e.getMessage());
+                });
+    }
+
+    private void uploadItemToFirestore(String itemName, String itemDescription, String itemCategory, int itemPrice, String itemPictureUrl, boolean itemForTrade, boolean itemForSale, boolean itemForAuction, String userId) {
+        FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
+        firestoreDB.collection("ITEMS")
+                .add(new ItemModel(itemName, itemDescription, itemCategory, itemPrice, itemPictureUrl, itemForTrade, itemForSale, itemForAuction, userId))
+                .addOnSuccessListener(documentReference -> {
+                    // Item added successfully
+                    Log.d("AddItemActivity", "Item added successfully");
+                    // Go back to the previous activity
+                    Intent intent = new Intent(AddItemActivity.this, HomePageActivity.class);
+                    startActivity(intent);
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    // Handle any errors that occur during the Firestore query
+                    Log.e("AddItemActivity", "Error adding item: " + e.getMessage());
+                });
+    }
 }

@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 public class SomeDetailedItemAdapter extends RecyclerView.Adapter<SomeDetailedItemAdapter.SomeDetailedItemViewHolder> {
@@ -36,7 +38,15 @@ public class SomeDetailedItemAdapter extends RecyclerView.Adapter<SomeDetailedIt
         ItemModel item = items.get(position);
 
         // Set the item image, name, and price
-        holder.itemImage.setImageResource(R.drawable.ic_question_mark);
+        String itemImage = item.getItemImage();
+
+        // If the item doesn't have an image the String will look like "" or maybe null
+        if (itemImage != null && !itemImage.equals("")) {
+            Picasso.get().load(itemImage).into(holder.itemImage);
+        } else {
+            holder.itemImage.setImageResource(R.drawable.ic_question_mark);
+        }
+
         holder.itemName.setText(item.getItemName());
         holder.itemPrice.setText(String.valueOf(item.getItemPrice()));
         holder.itemDescription.setText(item.getItemDescription());

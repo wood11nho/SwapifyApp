@@ -1,6 +1,7 @@
 package com.example.swapify;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -67,6 +68,7 @@ public class AllChatsActivity extends AppCompatActivity{
                         for (DocumentSnapshot document : documents) {
                             ChatModel chat = document.toObject(ChatModel.class);
                             chats.add(chat);
+                            Log.d("Chat", chat.getUser1() + " " + chat.getUser2());
                         }
                         chatAdapter.notifyDataSetChanged();
                     }
@@ -81,6 +83,7 @@ public class AllChatsActivity extends AppCompatActivity{
                         for (DocumentSnapshot document : documents) {
                             ChatModel chat = document.toObject(ChatModel.class);
                             chats.add(chat);
+                            Log.d("Chat", chat.getUser1() + " " + chat.getUser2());
                         }
                         chatAdapter.notifyDataSetChanged();
                     }

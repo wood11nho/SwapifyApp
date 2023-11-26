@@ -2,6 +2,7 @@ package com.example.swapify;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -21,12 +22,21 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,8 +60,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private List<String> citiesGlobal = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedIstanceState) {
-        super.onCreate(savedIstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
         imgProfilePic = findViewById(R.id.profile_picture);
@@ -73,27 +83,31 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    URL url = new URL("https://roloca.coldfuse.io/judete"); // Replace with your API endpoint URL
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("GET");
-                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    String inputLine;
-                    StringBuffer response = new StringBuffer();
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                    in.close();
+                    AssetManager assetManager = getAssets();
+                    String filePath = "counties_and_cities/counties.json";
+                    InputStream is = assetManager.open(filePath);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
 
-                    JSONArray jsonArray = new JSONArray(response.toString());
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(line);
+                    }
+                    bufferedReader.close();
+                    is.close();
+
+                    String jsonContent = stringBuilder.toString();
+
+                    JSONArray jsonArray = new JSONArray(jsonContent);
+
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         String countyName = jsonObject.getString("nume");
                         String countyCode = jsonObject.getString("auto");
                         countiesGlobal.add(new Pair<>(countyName, countyCode));
-                        Log.d("COUNTY", countiesGlobal.get(i).first + " " + countiesGlobal.get(i).second);
+                        Log.d("County", countyName + " " + countyCode);
                     }
 
-                    // Update spinner adapter after adding all counties
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -132,44 +146,53 @@ public class EditProfileActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        try {
-                            URL url = new URL("https://roloca.coldfuse.io/orase/" + selectedCounty.second);
-                            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                            conn.setRequestMethod("GET");
-                            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                            String inputLine;
-                            StringBuffer response = new StringBuffer();
-                            while ((inputLine = in.readLine()) != null) {
-                                response.append(inputLine);
-                            }
-                            in.close();
+                        try{
+                            AssetManager assetManager = getAssets();
+                            String filePath = "counties_and_cities/cities" + selectedCounty.second + ".json";
+                            InputStream is = assetManager.open(filePath);
+                            StringBuilder stringBuilder = new StringBuilder();
+                            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
 
-                            JSONArray jsonArray = new JSONArray(response.toString());
-                            final List<String> cities = new ArrayList<>();
+                            String line;
+                            while ((line = bufferedReader.readLine()) != null) {
+                                stringBuilder.append(line);
+                            }
+                            bufferedReader.close();
+                            is.close();
+
+                            String jsonContent = stringBuilder.toString();
+
+                            JSONObject jsonObject = new JSONObject(jsonContent);
+                            JSONArray jsonArray = jsonObject.getJSONArray("cities");
+                            citiesGlobal.clear();
+
                             for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                String cityName = jsonObject.getString("nume");
-                                cities.add(cityName);
+                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                String cityName = jsonObject1.getString("nume");
                                 citiesGlobal.add(cityName);
+                                Log.d("City", cityName);
                             }
 
-                            // update the city spinner with the fetched data
+                            // Update the UI with the fetched cities
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(EditProfileActivity.this, android.R.layout.simple_spinner_item, cities);
+                                    final List<String> cityNames = new ArrayList<>(citiesGlobal);
+
+                                    ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(EditProfileActivity.this, android.R.layout.simple_spinner_item, cityNames);
                                     cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                     citySpinner.setAdapter(cityAdapter);
                                     cityAdapter.notifyDataSetChanged();
 
-                                    // set the selected city
+                                    // Set the selected city
                                     String city = citySpinner.getSelectedItem().toString();
                                     if (!city.isEmpty()) {
-                                        int cityIndex = cities.indexOf(city);
+                                        int cityIndex = cityNames.indexOf(city);
                                         citySpinner.setSelection(cityIndex);
                                     }
                                 }
                             });
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,6 +20,8 @@ import android.content.Intent;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
     MaterialButton btnRegister;
@@ -28,14 +29,14 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseFirestore firestoreDB;
     private FirebaseAuth firebaseAuth;
     ImageButton btnBack;
-
     private ExecutorService executorService;
+    private static final Pattern NAME_PATTERN = Pattern.compile("^[A-Za-z]+(?:\\s+[A-Za-z]+)*$");
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()])[A-Za-z\\d!@#$%^&*()]{8,}$");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
 
         btnRegister = findViewById(R.id.btnRegister);
         edtName = findViewById(R.id.edtName);
@@ -96,8 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         // Verify regex for name: "^[A-Za-z]+(?:\s+[A-Za-z]+)*$"
-        String namePattern = "^[A-Za-z]+(?:\\s+[A-Za-z]+)*$";
-        if (!name.matches(namePattern)) {
+        if (!name.matches(NAME_PATTERN.pattern())) {
             Toast.makeText(RegisterActivity.this, "Please enter a valid full name (only alphabetical characters are allowed)", Toast.LENGTH_LONG).show();
             return false;
         }
@@ -110,8 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         // Verify regex for password: "^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}$"
-        String passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()])[A-Za-z\\d!@#$%^&*()]{8,}$";
-        if (!password.matches(passwordPattern)) {
+        if (!password.matches(PASSWORD_PATTERN.pattern())) {
             Toast.makeText(RegisterActivity.this, "Password must be at least 8 characters long and contain at least one letter, one number and one special character (!@#$%^&*())", Toast.LENGTH_LONG).show();
             return false;
         }
@@ -126,17 +125,23 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean emailAlreadyExists(String email) {
         // Create a reference to the "USERS" collection
         CollectionReference usersCollection = firestoreDB.collection("USERS");
+        AtomicBoolean emailExists = new AtomicBoolean(false);
 
-        // Create a query against the collection
-        Task<QuerySnapshot> query = usersCollection.whereEqualTo("email", email).get();
+        usersCollection.whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                            emailExists.set(true);
+                        }
+                    }
+                    else{
+                        Toast.makeText(RegisterActivity.this, "Error checking if email already exists", Toast.LENGTH_LONG).show();
+                    }
+                });
 
-        // Get the result of the query
-        while (!query.isComplete()) {
-            // Wait for the query to complete
-        }
-
-        // Check if the query returned any results
-        return query.getResult().size() > 0;
+        return emailExists.get();
     }
 
     private void registerUserWithEmailAndPassword(String name, String username, String email, String password) {

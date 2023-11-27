@@ -385,14 +385,62 @@ public class EditProfileActivity extends AppCompatActivity {
         countySpinner.setSelection(countyIndex);
 
         // Set the selected city in the spinner
-        int cityIndex = 0;
-        for (int i = 0; i < citiesGlobal.size(); i++) {
-            String cityString = citiesGlobal.get(i);
-            if (cityString.equals(city)) {
-                cityIndex = i;
-                break;
-            }
+        // First, fetch the cities for the selected county
+        Pair<String, String> selectedCounty = countiesGlobal.get(countyIndex);
+        if (selectedCounty == null) {
+            return;
         }
-        citySpinner.setSelection(cityIndex);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    AssetManager assetManager = getAssets();
+                    String filePath = "counties_and_cities/cities" + selectedCounty.second + ".json";
+                    InputStream is = assetManager.open(filePath);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(line);
+                    }
+                    bufferedReader.close();
+                    is.close();
+
+                    String jsonContent = stringBuilder.toString();
+
+                    JSONObject jsonObject = new JSONObject(jsonContent);
+                    JSONArray jsonArray = jsonObject.getJSONArray("cities");
+                    citiesGlobal.clear();
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                        String cityName = jsonObject1.getString("nume");
+                        citiesGlobal.add(cityName);
+                        Log.d("City", cityName);
+                    }
+
+                    // Update the UI with the fetched cities
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final List<String> cityNames = new ArrayList<>(citiesGlobal);
+
+                            ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(EditProfileActivity.this, android.R.layout.simple_spinner_item, cityNames);
+                            cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            citySpinner.setAdapter(cityAdapter);
+                            cityAdapter.notifyDataSetChanged();
+
+                            // Set the selected city
+                            int cityIndex = cityNames.indexOf(city);
+                            citySpinner.setSelection(cityIndex);
+                        }
+                    });
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

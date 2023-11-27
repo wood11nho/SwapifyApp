@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_white"
-    >
+    android:theme="@style/Theme.Swapify"
+    android:background="?android:attr/windowBackground">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/back_toolbar_all_chats"

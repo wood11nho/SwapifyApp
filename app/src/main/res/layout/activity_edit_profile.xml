@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/light_white"
+    android:theme="@style/Theme.Swapify"
+    android:background="?android:attr/windowBackground"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -36,12 +37,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/name"
-            android:textColorHint="@color/dark_grey"
             android:inputType="textPersonName"
             android:maxLines="1"
             android:padding="8dp"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSecondary"
             android:autofillHints="Name"
             />
 
@@ -50,12 +50,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/username"
-            android:textColorHint="@color/dark_grey"
             android:inputType="text"
             android:maxLines="1"
             android:padding="8dp"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSecondary"
             android:autofillHints="Username"
             />
 
@@ -64,12 +63,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
-            android:textColorHint="@color/dark_grey"
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:padding="8dp"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSecondary"
             android:autofillHints="Email"
             />
 
@@ -78,12 +76,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/phone_number"
-            android:textColorHint="@color/dark_grey"
             android:inputType="phone"
             android:maxLines="1"
             android:padding="8dp"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSecondary"
             android:autofillHints="Phone Number"
             />
 
@@ -92,12 +89,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/bio"
-            android:textColorHint="@color/dark_grey"
             android:inputType="textMultiLine"
             android:lines="3"
             android:padding="8dp"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSecondary"
             android:autofillHints="Bio"
             />
 
@@ -118,7 +114,6 @@
             android:prompt="@string/select_county_prompt"
             android:padding="8dp"
             android:background="?attr/colorPrimary"
-            android:backgroundTint="?attr/colorPrimary"
             android:textSize="16sp" />
 
         <TextView
@@ -139,7 +134,6 @@
             android:prompt="@string/select_city_prompt"
             android:padding="8dp"
             android:background="?attr/colorPrimary"
-            android:backgroundTint="?attr/colorPrimary"
             android:textSize="16sp"
             />
 

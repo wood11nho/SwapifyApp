@@ -70,4 +70,9 @@ public class SomeDetailedCategoryAdapter extends RecyclerView.Adapter<SomeDetail
         }
     }
 
+    public void filterList(ArrayList<CategoryModel> filteredList) {
+        categories.clear();
+        categories.addAll(filteredList);
+        notifyDataSetChanged();
+    }
 }

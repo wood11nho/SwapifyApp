@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class SeeAllCategoriesActivity extends AppCompatActivity {
     private ImageButton btnBack;
@@ -51,6 +52,19 @@ public class SeeAllCategoriesActivity extends AppCompatActivity {
 
         categories = new ArrayList<>();
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterCategories(newText.toLowerCase(Locale.getDefault()));
+                return true;
+            }
+        });
+
         btnBack.setOnClickListener(v -> {
             Intent intent = new Intent(SeeAllCategoriesActivity.this, HomePageActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -87,6 +101,16 @@ public class SeeAllCategoriesActivity extends AppCompatActivity {
                         categoryAdapter.notifyDataSetChanged();
                     }
                 });
+    }
+
+    private void filterCategories(String text) {
+        ArrayList<CategoryModel> filteredCategories = new ArrayList<>();
+        for (CategoryModel category : categories) {
+            if (category.getName().toLowerCase(Locale.getDefault()).contains(text)) {
+                filteredCategories.add(category);
+            }
+        }
+        categoryAdapter.filterList(filteredCategories);
     }
 
 }

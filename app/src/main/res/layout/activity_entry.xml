@@ -6,6 +6,7 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Theme.Swapify"
     android:background="@mipmap/library">
 
     <com.google.android.material.card.MaterialCardView
@@ -17,14 +18,17 @@
         android:layout_marginBottom="-40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:theme="@style/Theme.Swapify.Dark"
+        app:cardBackgroundColor="?attr/colorOnPrimary"
+        >
 
         <LinearLayout
             android:id="@+id/linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:background="#F0FFF3F3"
+            android:background="?attr/colorOnPrimary"
             android:paddingBottom="40dp"
             android:orientation="vertical">
 
@@ -45,7 +49,7 @@
                 android:text="Swapify"
                 android:textSize="30sp"
                 android:textStyle="bold"
-                android:textColor="@color/purple"
+                android:textColor="?attr/colorPrimaryVariant"
                 />
 
             <TextView
@@ -56,7 +60,7 @@
                 android:padding="16dp"
                 android:text="@string/a_short_description_of_4_rows"
                 android:textSize="16sp"
-                android:textColor="@color/grey"
+                android:textColor="?attr/colorSecondaryVariant"
                 android:textStyle="bold"
                 />
 
@@ -69,8 +73,8 @@
                 android:layout_marginEnd="20dp"
                 android:text="CREATE NEW ACCOUNT"
                 android:textStyle="bold"
-                android:textColor="@color/grey"
-                android:backgroundTint="@color/purple"
+                android:textColor="?attr/colorSecondary"
+                android:backgroundTint="?attr/colorPrimaryVariant"
                 />
 
             <Button
@@ -80,8 +84,8 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:textColor="@color/purple"
-                android:backgroundTint="@color/grey"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:backgroundTint="?attr/colorSecondary"
                 android:text="LOG INTO EXISTING ACCOUNT"
                 android:textStyle="bold"
                 />

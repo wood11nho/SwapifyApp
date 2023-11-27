@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 public class EntryActivity extends AppCompatActivity {
     Button registerButton;
@@ -14,6 +15,13 @@ public class EntryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Set theme
+        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            setTheme(R.style.Theme_Swapify_Dark);
+        }
+        else {
+            setTheme(R.style.Theme_Swapify);
+        }
         setContentView(R.layout.activity_entry);
 
         registerButton = findViewById(R.id.sign_up_button);
@@ -23,7 +31,6 @@ public class EntryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                 startActivity(intent);
-
                 finish();
             }
         });
@@ -33,7 +40,6 @@ public class EntryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
-
                 finish();
             }
         });

@@ -2,6 +2,7 @@ package com.example.swapify;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageButton;
 import androidx.appcompat.widget.SearchView;
 
@@ -41,6 +42,9 @@ public class SeeAllCategoriesActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firestoreDB = FirebaseFirestore.getInstance();
 
+        categories = new ArrayList<>();
+        fetchCategories();
+
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser == null) {
             // User not authenticated, redirect to login page
@@ -50,8 +54,6 @@ public class SeeAllCategoriesActivity extends AppCompatActivity {
             return;
         }
 
-        categories = new ArrayList<>();
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -60,8 +62,9 @@ public class SeeAllCategoriesActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                Log.d("SeeCategoriesActivity", "onQueryTextChange: " + newText);
                 filterCategories(newText.toLowerCase(Locale.getDefault()));
-                return true;
+                return false;
             }
         });
 
@@ -82,12 +85,6 @@ public class SeeAllCategoriesActivity extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         });
-
-        recyclerViewCategories.setLayoutManager(new LinearLayoutManager(this));
-        categoryAdapter = new SomeDetailedCategoryAdapter(this, categories);
-        recyclerViewCategories.setAdapter(categoryAdapter);
-
-        fetchCategories();
     }
 
     private void fetchCategories() {
@@ -97,21 +94,31 @@ public class SeeAllCategoriesActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         for (int i = 0; i < task.getResult().size(); i++) {
                             categories.add(task.getResult().getDocuments().get(i).toObject(CategoryModel.class));
+                            Log.d("SeeCategoriesActivity", "fetchCategories: " + categories.get(i).getName());
                         }
+                        // Set the RecyclerView
+                        recyclerViewCategories.setLayoutManager(new LinearLayoutManager(this));
+                        //        Log.d("SeeCategoriesActivity", "onCreate: recyclerViewCategories");
+                        categoryAdapter = new SomeDetailedCategoryAdapter(this, categories);
+                        //        Log.d("SeeCategoriesActivity", "onCreate: categoryAdapter");
+                        recyclerViewCategories.setAdapter(categoryAdapter);
+                        //        Log.d("SeeCategoriesActivity", "onCreate: setAdapter");
                         categoryAdapter.notifyDataSetChanged();
+                    } else {
+                        Log.d("SeeCategoriesActivity", "Error getting documents: ", task.getException());
                     }
                 });
     }
 
     private void filterCategories(String text) {
-        ArrayList<CategoryModel> filteredCategories = new ArrayList<>();
+        Log.d("SeeCategoriesActivity", "filterCategories: " + text);
+        ArrayList<CategoryModel> filteredList = new ArrayList<>();
         for (CategoryModel category : categories) {
             if (category.getName().toLowerCase(Locale.getDefault()).contains(text)) {
-                filteredCategories.add(category);
+                filteredList.add(category);
             }
         }
-        categoryAdapter.filterList(filteredCategories);
+        categoryAdapter.filterList(filteredList);
     }
-
 }
 

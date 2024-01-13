@@ -22,7 +22,7 @@ public class SomeDetailedItemAdapter extends RecyclerView.Adapter<SomeDetailedIt
 
     public SomeDetailedItemAdapter(Context context, ArrayList<ItemModel> items) {
         this.context = context;
-        this.items = items;
+        this.items = new ArrayList<>(items);
     }
 
 
@@ -105,6 +105,12 @@ public class SomeDetailedItemAdapter extends RecyclerView.Adapter<SomeDetailedIt
 
         // Start the chat activity
         context.startActivity(chatIntent);
+    }
+
+    public void filterList(ArrayList<ItemModel> filteredList) {
+        items.clear();
+        items.addAll(filteredList);
+        notifyDataSetChanged();
     }
 
 }

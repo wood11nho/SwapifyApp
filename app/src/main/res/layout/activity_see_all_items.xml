@@ -126,7 +126,6 @@
             android:src="@drawable/ic_profile"
             tools:ignore="TouchTargetSizeCheck"
             android:layout_marginBottom="18dp"
-            app:tint="@color/grey"
             android:contentDescription="@string/profile"
             />
 

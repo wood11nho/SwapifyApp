@@ -48,18 +48,39 @@
                 app:layout_constraintTop_toBottomOf="@id/tvWelcomeMessage"
                 />
 
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/searchView"
-                android:layout_width="0dp"
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvWelcomeMessage2"
-                android:layout_marginHorizontal="16dp"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="32dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/search_view_border"
-                android:textColor="?attr/colorOnSecondary"
-                app:iconifiedByDefault="false"/>
+                app:layout_constraintTop_toBottomOf="@id/tvWelcomeMessage2"
+                android:id="@+id/linearLayoutSearch"
+                >
+
+                <EditText
+                    android:id="@+id/editTextSearch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/search_view_border"
+                    android:textColor="?attr/colorOnSecondary"
+                    android:hint="Search"/>
+
+                <ImageButton
+                    android:id="@+id/imageButtonSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_search"
+                    android:background="?attr/selectableItemBackground"
+                    android:layout_gravity="center_vertical"
+
+                    />
+
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/recommandationText"
@@ -71,7 +92,7 @@
                 android:layout_marginStart="32dp"
                 android:textColor="?attr/colorPrimaryVariant"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/searchView"
+                app:layout_constraintTop_toBottomOf="@id/linearLayoutSearch"
                 android:layout_marginTop="16dp"
                 />
 

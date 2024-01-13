@@ -2,11 +2,13 @@ package com.example.swapify;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 
@@ -36,6 +39,8 @@ public class HomePageActivity extends AppCompatActivity {
     private RecyclerView recyclerViewCategories;
     private ItemAdapter itemAdapter;
     private CategoryAdapter categoryAdapter;
+    private EditText editTextSearch;
+    private ImageButton imageButtonSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,15 +74,17 @@ public class HomePageActivity extends AppCompatActivity {
         addItemButton = findViewById(R.id.addItemButton);
         seeAllItemsButton = findViewById(R.id.seeAllItemsButton);
         seeAllCategoriesButton = findViewById(R.id.seeAllCategoriesButton);
+        editTextSearch = findViewById(R.id.editTextSearch);
+        imageButtonSearch = findViewById(R.id.imageButtonSearch);
 
         items = new ArrayList<>();
         categories = new ArrayList<>();
 
         reloadButton.setOnClickListener(v -> {
-            // Change background tint of menu button to purple
-            reloadButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.purple));
-            // Change background tint of profile button to grey
-            profileButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.grey));
+//            // Change background tint of menu button to purple
+//            reloadButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.purple));
+//            // Change background tint of profile button to grey
+//            profileButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.grey));
             Intent intent = new Intent(HomePageActivity.this, HomePageActivity.class);
             startActivity(intent);
             finish(); // finish the current activity to remove it from the stack
@@ -90,10 +97,10 @@ public class HomePageActivity extends AppCompatActivity {
         });
 
         profileButton.setOnClickListener(v -> {
-            // Change background tint of profile button to purple
-            profileButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.purple));
-            // Change background tint of menu button to grey
-            reloadButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.grey));
+//            // Change background tint of profile button to purple
+//            profileButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.purple));
+//            // Change background tint of menu button to grey
+//            reloadButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.grey));
             Intent intent = new Intent(HomePageActivity.this, ProfileActivity.class);
             startActivity(intent);
             finish(); // finish the current activity to remove it from the stack
@@ -116,6 +123,21 @@ public class HomePageActivity extends AppCompatActivity {
             startActivity(intent);
             finish(); // finish the current activity to remove it from the stack
         });
+
+        imageButtonSearch.setOnClickListener(
+                v -> {
+                    String query = editTextSearch.getText().toString();
+                    if (query.isEmpty()) {
+                        Toast.makeText(HomePageActivity.this, "Please enter a search query", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Intent intent = new Intent(HomePageActivity.this, SeeAllItemsActivity.class);
+                        intent.putExtra("query", query);
+                        startActivity(intent);
+                        finish(); // finish the current activity to remove it from the stack
+                    }
+                }
+        );
 
         // Initialize the RecyclerView for items and its adapter with horizontal layout
         recyclerViewItems = findViewById(R.id.recyclerViewItems);
@@ -173,12 +195,21 @@ public class HomePageActivity extends AppCompatActivity {
     }
 
     private void fetchCategoriesFromFirestore(){
-        firestoreDB.collection("CATEGORIES").get()
+        final int[] count = {0};
+
+        firestoreDB.collection("CATEGORIES")
+                .orderBy("numberOfItems", Query.Direction.DESCENDING)
+                .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     categories.clear(); // Clear the categories list to avoid duplicates when updating the UI
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        String category = documentSnapshot.getString("name");
-                        categories.add(category);
+                        CategoryModel category = documentSnapshot.toObject(CategoryModel.class);
+                        assert category != null;
+                        if (count[0] == 3) {
+                            break;
+                        }
+                        categories.add(category.getName());
+                        count[0]++;
                     }
                     // Notify the adapter that the data has changed
                     categoryAdapter.notifyItemChanged(categories.size());
@@ -188,4 +219,5 @@ public class HomePageActivity extends AppCompatActivity {
                     // For simplicity, we won't handle the error here. You can add appropriate error handling.
                 });
     }
+
 }

@@ -227,6 +227,7 @@ public class AddItemActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentReference -> {
                     // Item added successfully
                     Log.d("AddItemActivity", "Item added successfully");
+                    Log.d("Item category", itemCategory);
                     // Get the document from CATEGORIES with the field 'name' equal to 'itemCategory' and update the field 'numberOfItems' with 1
                     firestoreDB.collection("CATEGORIES")
                             .whereEqualTo("name", itemCategory)
@@ -235,7 +236,9 @@ public class AddItemActivity extends AppCompatActivity {
                                 if (queryDocumentSnapshots.size() == 1) {
                                     DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                                     String documentId = documentSnapshot.getId();
+                                    Log.d("AddItemActivity", "Category ID: " + documentId);
                                     int numberOfItems = documentSnapshot.getLong("numberOfItems").intValue();
+                                    Log.d("AddItemActivity", "Number of items: " + numberOfItems);
                                     firestoreDB.collection("CATEGORIES").document(documentId).update("numberOfItems", numberOfItems + 1);
                                 }
                             })

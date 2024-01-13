@@ -103,9 +103,8 @@ public class FullDetailItemActivity extends AppCompatActivity{
 
 
         backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(FullDetailItemActivity.this, SeeAllItemsActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            // Go back to the previous activity
+            finish();
         });
 
         chatButton.setOnClickListener(v -> {

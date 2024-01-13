@@ -22,4 +22,13 @@
     <color name="grey_500">#9E9E9E</color>
     <color name="grey_700">#616161</color>
     <color name="grey_900">#212121</color>
+    <color name="red_200">#FF9494</color>
+    <color name="red_500">#FF0000</color>
+    <color name="red_700">#B30000</color>
+    <color name="green_200">#A5FF94</color>
+    <color name="green_500">#00FF00</color>
+    <color name="green_700">#00B300</color>
+    <color name="yellow_200">#FFFF94</color>
+    <color name="yellow_500">#FFFF00</color>
+    <color name="yellow_700">#B3B300</color>
 </resources>

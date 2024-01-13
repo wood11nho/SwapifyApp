@@ -4,9 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Patterns;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
@@ -26,6 +32,7 @@ import java.util.regex.Pattern;
 public class RegisterActivity extends AppCompatActivity {
     MaterialButton btnRegister;
     EditText edtName, edtUsername, edtEmail, edtPassword, edtConfirmPassword;
+    TextView tvPasswordLength, tvPasswordSpecialChar, tvPasswordNumber, tvPasswordLetter, tvPasswordMatch;
     private FirebaseFirestore firestoreDB;
     private FirebaseAuth firebaseAuth;
     ImageButton btnBack;
@@ -45,6 +52,11 @@ public class RegisterActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.edtPassword);
         edtConfirmPassword = findViewById(R.id.edtConfirmPassword);
         btnBack = findViewById(R.id.btnBack);
+        tvPasswordLength = findViewById(R.id.tvPasswordLength);
+        tvPasswordSpecialChar = findViewById(R.id.tvPasswordSpecialChar);
+        tvPasswordNumber = findViewById(R.id.tvPasswordNumber);
+        tvPasswordLetter = findViewById(R.id.tvPasswordLetter);
+        tvPasswordMatch = findViewById(R.id.tvPasswordMatch);
 
         firestoreDB = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -75,6 +87,77 @@ public class RegisterActivity extends AppCompatActivity {
             startActivity(intent);
             finish(); // finish the current activity to remove it from the stack
         });
+
+        edtPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                updatePasswordIndicators(charSequence.toString());
+
+                String password = edtPassword.getText().toString();
+                String confirmPassword = edtConfirmPassword.getText().toString();
+                if (!password.equals(confirmPassword)) {
+                    tvPasswordMatch.setTextColor(getResources().getColor(R.color.red_500));
+                } else {
+                    tvPasswordMatch.setTextColor(getResources().getColor(R.color.green_700));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        edtConfirmPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2){
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2){
+                String password = edtPassword.getText().toString();
+                String confirmPassword = edtConfirmPassword.getText().toString();
+                if (!password.equals(confirmPassword)) {
+                    tvPasswordMatch.setTextColor(getResources().getColor(R.color.red_500));
+                } else {
+                    tvPasswordMatch.setTextColor(getResources().getColor(R.color.green_700));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable){
+
+            }
+        });
+    }
+
+    private void updatePasswordIndicators(String password) {
+        if (password.length() < 8) {
+            tvPasswordLength.setTextColor(getResources().getColor(R.color.red_500));
+        } else {
+            tvPasswordLength.setTextColor(getResources().getColor(R.color.green_700));
+        }
+        if (!password.matches(".*[!@#$%^&*()].*")) {
+            tvPasswordSpecialChar.setTextColor(getResources().getColor(R.color.red_500));
+        } else {
+            tvPasswordSpecialChar.setTextColor(getResources().getColor(R.color.green_700));
+        }
+        if (!password.matches(".*\\d.*")) {
+            tvPasswordNumber.setTextColor(getResources().getColor(R.color.red_500));
+        } else {
+            tvPasswordNumber.setTextColor(getResources().getColor(R.color.green_700));
+        }
+        if (!password.matches(".*[A-Za-z].*")) {
+            tvPasswordLetter.setTextColor(getResources().getColor(R.color.red_500));
+        } else {
+            tvPasswordLetter.setTextColor(getResources().getColor(R.color.green_700));
+        }
     }
 
     private boolean validateInput(String name, String username, String email, String password) {

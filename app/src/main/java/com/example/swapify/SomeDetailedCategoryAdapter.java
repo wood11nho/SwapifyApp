@@ -1,6 +1,7 @@
 package com.example.swapify;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ public class SomeDetailedCategoryAdapter extends RecyclerView.Adapter<SomeDetail
 
     public SomeDetailedCategoryAdapter(Context context, ArrayList<CategoryModel> categories) {
         this.context = context;
-        this.categories = categories;
+        this.categories = new ArrayList<>(categories);
     }
 
     @NonNull
@@ -52,6 +53,16 @@ public class SomeDetailedCategoryAdapter extends RecyclerView.Adapter<SomeDetail
         } else {
             holder.categoryImage.setImageResource(R.drawable.ic_question_mark);
         }
+
+        // Set an OnClickListener for going to the category's page
+        holder.itemView.setOnClickListener(
+                view -> {
+                    // Open the SeeAllItemsActivity with extra "category" set to the category name
+                    Intent intent = new Intent(view.getContext(), SeeAllItemsActivity.class);
+                    intent.putExtra("category", category.getName());
+                    view.getContext().startActivity(intent);
+                }
+        );
     }
 
     @Override
@@ -69,7 +80,6 @@ public class SomeDetailedCategoryAdapter extends RecyclerView.Adapter<SomeDetail
             categoryImage = itemView.findViewById(R.id.someDetailedCategoryImage);
         }
     }
-
     public void filterList(ArrayList<CategoryModel> filteredList) {
         categories.clear();
         categories.addAll(filteredList);

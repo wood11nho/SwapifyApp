@@ -1,5 +1,6 @@
 package com.example.swapify;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
         // Set the category name
         holder.categoryName.setText(category);
+
+        // Set an OnClickListener for going to the category's page
+        holder.itemView.setOnClickListener(
+                view -> {
+                    // Open the SeeAllItemsActivity with extra "category" set to the category name
+                    Intent intent = new Intent(view.getContext(), SeeAllItemsActivity.class);
+                    intent.putExtra("category", category);
+                    view.getContext().startActivity(intent);
+                }
+        );
     }
 
     @Override

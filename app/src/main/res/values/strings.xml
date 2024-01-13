@@ -51,4 +51,9 @@
     <string name="all_categories">All Categories</string>
     <string name="category_image">Category Image</string>
     <string name="category_name">Category Name</string>
+    <string name="password_length">\u2022 Password must be at least 8 characters long</string>
+    <string name="password_must_match">\u2022 Password must match</string>
+    <string name="password_letter">\u2022 Password must contain at least one letter</string>
+    <string name="password_number">\u2022 Password must contain at least one number</string>
+    <string name="password_special_character">\u2022 Password must contain at least one special character</string>
 </resources>

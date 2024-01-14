@@ -56,4 +56,5 @@
     <string name="password_letter">\u2022 Password must contain at least one letter</string>
     <string name="password_number">\u2022 Password must contain at least one number</string>
     <string name="password_special_character">\u2022 Password must contain at least one special character</string>
+    <string name="welcome_message">Hi, %1$s \uD83D\uDE03!</string>
 </resources>

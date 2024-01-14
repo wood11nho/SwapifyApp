@@ -97,12 +97,7 @@ public class AddItemActivity extends AppCompatActivity {
             }
         });
 
-        changePictureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
-        });
+        changePictureButton.setOnClickListener(v -> openGallery());
     }
 
     private void openGallery() {
@@ -226,6 +221,9 @@ public class AddItemActivity extends AppCompatActivity {
                 .add(new ItemModel(itemName, itemDescription, itemCategory, itemPrice, itemPictureUrl, itemForTrade, itemForSale, itemForAuction, userId))
                 .addOnSuccessListener(documentReference -> {
                     // Item added successfully
+                    SearchDataManager.getInstance().saveSearch(itemCategory);
+                    PostedItemsManager.getInstance().savePostedItem(itemName);
+                    PostedItemsManager.getInstance().savePostedItem(itemDescription);
                     Log.d("AddItemActivity", "Item added successfully");
                     Log.d("Item category", itemCategory);
                     // Get the document from CATEGORIES with the field 'name' equal to 'itemCategory' and update the field 'numberOfItems' with 1

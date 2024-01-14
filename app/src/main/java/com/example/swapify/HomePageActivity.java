@@ -8,8 +8,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class HomePageActivity extends AppCompatActivity {
 
@@ -80,6 +79,10 @@ public class HomePageActivity extends AppCompatActivity {
         items = new ArrayList<>();
         categories = new ArrayList<>();
 
+        SearchDataManager.initializeInstance(firestoreDB, currentUser.getUid());
+        ItemInteractionManager.initializeInstance(firestoreDB, currentUser.getUid());
+        PostedItemsManager.initializeInstance(firestoreDB, currentUser.getUid());
+
         reloadButton.setOnClickListener(v -> {
 //            // Change background tint of menu button to purple
 //            reloadButton.setBackgroundTintList(ContextCompat.getColorStateList(HomePageActivity.this, R.color.purple));
@@ -131,6 +134,9 @@ public class HomePageActivity extends AppCompatActivity {
                         Toast.makeText(HomePageActivity.this, "Please enter a search query", Toast.LENGTH_SHORT).show();
                     }
                     else {
+                        // Save the search query for user preferences
+                        SearchDataManager.getInstance().saveSearch(query);
+
                         Intent intent = new Intent(HomePageActivity.this, SeeAllItemsActivity.class);
                         intent.putExtra("query", query);
                         startActivity(intent);
@@ -163,7 +169,9 @@ public class HomePageActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         String name = documentSnapshot.getString("name");
-                        tvWelcomeMessage.setText("Hi, " + name + " \uD83D\uDE03!");
+                        String welcomeMessage = getResources().getString(R.string.welcome_message, name);
+                        tvWelcomeMessage.setText(welcomeMessage);
+
                     }
                 })
                 .addOnFailureListener(e -> {
@@ -180,7 +188,7 @@ public class HomePageActivity extends AppCompatActivity {
                         ItemModel item = documentSnapshot.toObject(ItemModel.class);
                         // I should get only the items that are not mine
                         assert item != null;
-                        if (item.getItemUserId().equals(firebaseAuth.getCurrentUser().getUid())) {
+                        if (item.getItemUserId().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid())) {
                             continue;
                         }
                         items.add(item);

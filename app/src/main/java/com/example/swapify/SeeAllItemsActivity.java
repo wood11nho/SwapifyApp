@@ -3,13 +3,11 @@ package com.example.swapify;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Objects;
 
 // This activity is used to display all the items in the database
 // If the user comes here from the home page by pressing the See All Items button, all the items are displayed
@@ -104,6 +103,8 @@ public class SeeAllItemsActivity extends AppCompatActivity{
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                SearchDataManager.getInstance().saveSearch(query);
+
                 return false;
             }
 
@@ -146,7 +147,7 @@ public class SeeAllItemsActivity extends AppCompatActivity{
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         ItemModel item = documentSnapshot.toObject(ItemModel.class);
                         assert item != null;
-                        if (item.getItemUserId().equals(firebaseAuth.getCurrentUser().getUid())) {
+                        if (item.getItemUserId().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid())) {
                             continue;
                         }
                         items.add(item);
@@ -171,7 +172,7 @@ public class SeeAllItemsActivity extends AppCompatActivity{
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         ItemModel item = documentSnapshot.toObject(ItemModel.class);
                         assert item != null;
-                        if (item.getItemUserId().equals(firebaseAuth.getCurrentUser().getUid())) {
+                        if (item.getItemUserId().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid())) {
                             continue;
                         }
                         items.add(item);
@@ -198,7 +199,7 @@ public class SeeAllItemsActivity extends AppCompatActivity{
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         ItemModel item = documentSnapshot.toObject(ItemModel.class);
                         assert item != null;
-                        if (item.getItemUserId().equals(firebaseAuth.getCurrentUser().getUid())) {
+                        if (item.getItemUserId().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid())) {
                             continue;
                         }
                         if (item.getItemCategory().equals(category)) {
@@ -228,5 +229,4 @@ public class SeeAllItemsActivity extends AppCompatActivity{
             itemAdapter.filterList(filteredItems);
         }
     }
-
 }

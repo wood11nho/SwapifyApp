@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -50,6 +49,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         // Set an OnClickListener for going to the item's full details page
         holder.itemView.setOnClickListener(view -> {
             // Open the item's details page
+            SearchDataManager.getInstance().saveSearch(item.getItemCategory());
+            ItemInteractionManager.getInstance().saveItemInteraction(item.getItemName());
+            ItemInteractionManager.getInstance().saveItemInteraction(item.getItemDescription());
+
             Intent intent = new Intent(view.getContext(), FullDetailItemActivity.class);
             intent.putExtra("itemCategory", item.getItemCategory());
             intent.putExtra("itemName", item.getItemName());

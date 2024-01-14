@@ -57,6 +57,7 @@ public class SeeAllCategoriesActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                SearchDataManager.getInstance().saveSearch(query);
                 return false;
             }
 

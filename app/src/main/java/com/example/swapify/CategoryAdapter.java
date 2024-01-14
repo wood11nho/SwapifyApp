@@ -37,6 +37,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         holder.itemView.setOnClickListener(
                 view -> {
                     // Open the SeeAllItemsActivity with extra "category" set to the category name
+                    SearchDataManager.getInstance().saveSearch(category);
+
                     Intent intent = new Intent(view.getContext(), SeeAllItemsActivity.class);
                     intent.putExtra("category", category);
                     view.getContext().startActivity(intent);

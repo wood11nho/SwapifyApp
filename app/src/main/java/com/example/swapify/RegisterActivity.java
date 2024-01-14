@@ -6,12 +6,10 @@ import android.os.Bundle;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ExecutorService executorService;
     private static final Pattern NAME_PATTERN = Pattern.compile("^[A-Za-z]+(?:\\s+[A-Za-z]+)*$");
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()])[A-Za-z\\d!@#$%^&*()]{8,}$");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -255,10 +254,18 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Add the customer to the "USERS" collection in Firestore
         CollectionReference usersCollection = firestoreDB.collection("USERS");
+        CollectionReference customerPreferencesCollection = firestoreDB.collection("USER_PREFERENCES");
         usersCollection.document(userId)
                 .set(customer)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(RegisterActivity.this, "User registration successful", Toast.LENGTH_LONG).show();
+
+                    CustomerPreferencesModel customerPreferences = new CustomerPreferencesModel();
+                    customerPreferencesCollection.document(userId)
+                            .set(customerPreferences)
+                            .addOnSuccessListener(documentReference1 -> Log.d("RegisterActivity", "User preferences added to Firestore"))
+                            .addOnFailureListener(e -> Log.d("RegisterActivity", "Error adding user preferences to Firestore"));
+
                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                     startActivity(intent);
                     finish();

@@ -55,8 +55,7 @@ public class SomeDetailedItemAdapter extends RecyclerView.Adapter<SomeDetailedIt
         holder.itemView.setOnClickListener(view -> {
             // Open the item's details page
             SearchDataManager.getInstance().saveSearch(item.getItemCategory());
-            ItemInteractionManager.getInstance().saveItemInteraction(item.getItemName());
-            ItemInteractionManager.getInstance().saveItemInteraction(item.getItemDescription());
+            ItemInteractionManager.getInstance().saveItemInteraction(item);
 
             Intent intent = new Intent(context, FullDetailItemActivity.class);
             intent.putExtra("itemCategory", item.getItemCategory());

@@ -32,7 +32,7 @@ public class ItemInteractionManager {
         }
     }
 
-    public void saveItemInteraction(String detail){
+    public void saveItemInteraction(ItemModel item){
         DocumentReference documentReference = firestoreDB.collection("USER_PREFERENCES").document(userId);
 
         documentReference.get().addOnCompleteListener(task -> {
@@ -45,7 +45,8 @@ public class ItemInteractionManager {
                         itemInteractions = new ArrayList<>();
                     }
 
-                    itemInteractions.add(detail);
+                    itemInteractions.add(item.getItemName());
+                    itemInteractions.add(item.getItemDescription());
 
                     documentReference.update("itemInteractions", itemInteractions);
                 }

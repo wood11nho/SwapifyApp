@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -95,12 +96,15 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Authentication successful, update UI with the signed-in user's information
                             FirebaseUser user = firebaseAuth.getCurrentUser();
-                            if (user != null) {
+                            assert user != null;
+                            Log.d("LoginActivity", String.valueOf(user.isEmailVerified()));
+                            if (user.isEmailVerified()) {
                                 saveUserDetailsToSharedPreferences(user.getUid(), email);
                                 updateUI(true);
-                            } else {
-                                // Unexpected error: User is null
-                                updateUI(false);
+                            }
+                            else {
+                                Toast.makeText(LoginActivity.this, "Please verify your email", Toast.LENGTH_LONG).show();
+                                updateUIforUnverifiedEmail();
                             }
                         } else {
                             // Authentication failed
@@ -140,6 +144,13 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(homePageIntent);
             finish(); // finish the current activity to remove it from the stack
         }  // Stay on the login page
+    }
+
+    private void updateUIforUnverifiedEmail() {
+        // Navigate to the verify email page
+        Intent verifyEmailIntent = new Intent(LoginActivity.this, VerifyEmailActivity.class);
+        startActivity(verifyEmailIntent);
+        finish(); // finish the current activity to remove it from the stack
     }
 
     @Override

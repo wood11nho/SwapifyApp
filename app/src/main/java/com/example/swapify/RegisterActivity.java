@@ -266,7 +266,19 @@ public class RegisterActivity extends AppCompatActivity {
                             .addOnSuccessListener(documentReference1 -> Log.d("RegisterActivity", "User preferences added to Firestore"))
                             .addOnFailureListener(e -> Log.d("RegisterActivity", "Error adding user preferences to Firestore"));
 
-                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    assert user != null;
+                    user.sendEmailVerification().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(RegisterActivity.this, "Verification email sent", Toast.LENGTH_SHORT).show();
+                            Log.d("RegisterActivity", "Verification email sent");
+                            Log.d("Is user verified", String.valueOf(user.isEmailVerified()));
+                        } else {
+                            Toast.makeText(RegisterActivity.this, "Failed to send verification email", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    Intent intent = new Intent(RegisterActivity.this, VerifyEmailActivity.class);
                     startActivity(intent);
                     finish();
                 })

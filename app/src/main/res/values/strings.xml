@@ -57,4 +57,8 @@
     <string name="password_number">\u2022 Password must contain at least one number</string>
     <string name="password_special_character">\u2022 Password must contain at least one special character</string>
     <string name="welcome_message">Hi, %1$s \uD83D\uDE03!</string>
+    <string name="verify_email_message">Please enable your account by verifying your e-mail address.</string>
+    <string name="placeholder_email">Registered email will appear here.</string>
+    <string name="resend_verification_email">Resend Verification Email</string>
+    <string name="continue_to_login">Continue to Login</string>
 </resources>

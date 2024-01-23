@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:theme="@style/Theme.Swapify"
     android:background="?android:attr/windowBackground"
     tools:context=".FullDetailItemActivity">
 
@@ -32,7 +31,7 @@
                 android:id="@+id/btnBack_full_detail_item"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="?attr/selectableItemBackground"
                 android:contentDescription="@string/back_button"
                 android:src="@drawable/ic_back_button"
                 tools:ignore="TouchTargetSizeCheck"
@@ -62,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="32sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorPrimary"
             android:textStyle="bold"
             android:layout_marginTop="16dp"
             android:padding="16dp"
@@ -71,7 +70,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/grey"
+            android:background="?attr/colorOnSecondary"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp" />
 
@@ -80,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorPrimary"
             android:textStyle="bold"
             android:layout_marginStart="16dp"
             android:text="Category" />
@@ -88,7 +87,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/grey"
+            android:background="?attr/colorOnSecondary"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp" />
 
@@ -106,7 +105,7 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:text="Want to:"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorPrimary"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="16dp" />
 
@@ -115,14 +114,15 @@
                 android:id="@+id/tradeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
                 android:text="TRADE"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:background="@color/grey"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:textColor="?attr/colorOnSecondary"
                 android:layout_marginEnd="16dp"
                 android:layout_gravity="center_vertical" />
 
@@ -131,14 +131,15 @@
                 android:id="@+id/sellTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
                 android:text="SELL"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:background="@color/grey"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:textColor="?attr/colorOnSecondary"
                 android:layout_marginEnd="16dp"
                 android:layout_gravity="center_vertical" />
 
@@ -147,21 +148,22 @@
                 android:id="@+id/auctionTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
                 android:text="AUCTION"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:background="@color/grey"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:textColor="?attr/colorOnSecondary"
                 android:layout_gravity="center_vertical" />
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/grey"
+            android:background="?attr/colorOnSecondary"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp" />
 
@@ -172,7 +174,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:text="Description"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorPrimary"
             android:padding="16dp" />
 
         <TextView
@@ -182,12 +184,12 @@
             android:textSize="16sp"
             android:layout_marginStart="16dp"
             android:text="Item Description"
-            android:textColor="@color/black" />
+            android:textColor="?attr/colorOnSecondary"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/grey"
+            android:background="?attr/colorOnSecondary"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp" />
 
@@ -199,12 +201,12 @@
             android:textStyle="bold"
             android:padding="16dp"
             android:text="Price: $0.00"
-            android:textColor="@color/black" />
+            android:textColor="?attr/colorPrimary" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/grey"
+            android:background="?attr/colorOnSecondary"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp" />
 
@@ -238,7 +240,7 @@
                     android:text="User's Name"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@color/black" />
+                    android:textColor="?attr/colorSecondary" />
 
                 <!-- User's County -->
                 <TextView
@@ -247,7 +249,7 @@
                     android:layout_height="wrap_content"
                     android:text="County"
                     android:textSize="16sp"
-                    android:textColor="@color/black" />
+                    android:textColor="?attr/colorSecondary" />
 
             </LinearLayout>
 

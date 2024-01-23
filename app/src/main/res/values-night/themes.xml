@@ -1,32 +1,54 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Dark application theme. -->
     <style name="Theme.Swapify.Dark" parent="Theme.Material3.Dark">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_700</item>
-        <item name="colorPrimaryVariant">@color/purple_900</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimary">@color/purple_500_dark</item>
+        <item name="colorPrimaryVariant">@color/purple_700_dark</item>
+        <item name="colorOnPrimary">@color/black</item>
 
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/grey_500</item>
-        <item name="colorSecondaryVariant">@color/grey_700</item>
+        <item name="colorSecondary">@color/teal_200_dark</item>
+        <item name="colorSecondaryVariant">@color/teal_700_dark</item>
         <item name="colorOnSecondary">@color/white</item>
 
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/purple_700_dark</item>
 
         <!-- Background color -->
-        <item name="android:windowBackground">@color/dark_background</item>
+        <item name="android:windowBackground">@color/black</item>
 
         <!-- Text color -->
-        <item name="android:textColorPrimary">@color/light_text</item>
-        <item name="android:textColorSecondary">@color/dark_text</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/gray_light</item>
 
         <!-- Action Bar -->
-        <item name="android:actionBarStyle">@style/Widget.AppCompat.ActionBar</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
+        <item name="android:actionBarStyle">@style/MyActionBar.Dark</item>
 
         <!-- Hints and light texts, like a grey color -->
-        <item name="android:textColorHint">@color/grey</item>
+        <item name="android:textColorHint">@color/grey_light</item>
 
+        <!-- Navigation Bar Color -->
+        <item name="android:navigationBarColor">@color/purple_500_dark</item>
+
+        <!-- Red Color for verification purposes -->
+        <item name="colorError">@color/red_500_dark</item>
+
+        <item name="selectableItemBackgroundBorderless">@color/gray_light</item>
+
+        <!-- Font Family -->
+        <item name="android:fontFamily">@font/font_family</item>
         <!-- Other items can be added based on your needs -->
+    </style>
+
+    <!-- Custom Action Bar Style for Dark Theme -->
+    <style name="MyActionBar.Dark" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="background">@color/purple_500_dark</item>
+        <item name="titleTextStyle">@style/MyActionBarTitleText.Dark</item>
+    </style>
+
+    <!-- Custom Title Text Style for Action Bar in Dark Theme -->
+    <style name="MyActionBarTitleText.Dark" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/black</item>
     </style>
 </resources>

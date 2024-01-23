@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:theme="@style/Theme.Swapify"
     android:background="?android:attr/windowBackground">
 
     <androidx.appcompat.widget.Toolbar
@@ -13,15 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        android:elevation="4dp">
 
         <ImageButton
             android:id="@+id/btnBack_add_item"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/back_button"
             android:src="@drawable/ic_back_button"
             tools:ignore="TouchTargetSizeCheck"
@@ -29,12 +26,9 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
+    <ScrollView android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/back_toolbar_add_item"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:background="?attr/colorOnPrimary"
         android:id="@+id/scrollView">
     
@@ -50,10 +44,11 @@
                 android:layout_height="150dp"
                 android:layout_gravity="center_horizontal"
                 android:src="@mipmap/default_profile_picture"
-                android:background="@drawable/rectangle_background"
+                android:background="?attr/colorSecondary"
                 android:padding="10dp"
                 android:cropToPadding="true"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/item_picture" />
     
             <Button
                 android:id="@+id/change_picture_button"
@@ -76,7 +71,7 @@
                 android:maxLines="1"
                 android:padding="8dp"
                 android:textSize="16sp"
-                android:textColorHint="@color/dark_grey"
+                android:textColorHint="?android:textColorHint"
                 android:textColor="?attr/colorOnSecondary"
                 />
     
@@ -89,7 +84,7 @@
                 android:maxLines="1"
                 android:padding="8dp"
                 android:textSize="16sp"
-                android:textColorHint="@color/dark_grey"
+                android:textColorHint="?android:textColorHint"
                 android:textColor="?attr/colorOnSecondary"
                 />
     
@@ -109,7 +104,7 @@
                 android:padding="8dp"
                 android:textSize="16sp"
                 android:background="?attr/colorPrimary"
-                android:textColorHint="@color/dark_grey"
+                android:textColorHint="?android:textColorHint"
                 />
     
             <EditText
@@ -122,7 +117,7 @@
                 android:padding="8dp"
                 android:textSize="16sp"
 
-                android:textColorHint="@color/dark_grey"
+                android:textColorHint="?android:textColorHint"
                 android:textColor="?attr/colorOnSecondary"
                 />
     

@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.Swapify"
     android:background="?android:attr/windowBackground"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -23,7 +22,7 @@
             android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/back_button"
             android:src="@drawable/ic_back_button"
             tools:ignore="TouchTargetSizeCheck"
@@ -36,7 +35,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="E-mail"
-        android:textColorHint="@color/dark_grey"
+        android:textColorHint="?android:textColorHint"
         android:inputType="text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,7 +43,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnSecondary"
         android:layout_marginTop="32dp"/>
 
     <EditText
@@ -52,7 +51,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Password"
-        android:textColorHint="@color/dark_grey"
+        android:textColorHint="?android:textColorHint"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +59,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnSecondary"
         android:layout_marginTop="16dp"/>
 
     <com.google.android.material.button.MaterialButton

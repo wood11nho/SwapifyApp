@@ -5,13 +5,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:theme="@style/Theme.Swapify"
-        android:background="?android:attr/windowBackground"
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="?android:attr/windowBackground"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/divider"
         android:fillViewport="true"
@@ -19,8 +17,21 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground">
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/toggleNightModeButton"
+                android:src="@drawable/ic_night"
+                android:contentDescription="@string/toggle_night_mode"
+                android:background="@drawable/rounded_corners"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
             <TextView
                 android:id="@+id/tvWelcomeMessage"
                 android:layout_width="wrap_content"
@@ -28,8 +39,7 @@
                 android:text="@string/hi_user"
                 android:textSize="30sp"
                 android:textStyle="bold"
-                android:layout_marginTop="32dp"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toggleNightModeButton"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="32dp"
                 android:textColor="?attr/colorPrimaryVariant"
@@ -40,9 +50,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/welcome_to_swapify"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
                 android:textColor="?attr/colorPrimaryVariant"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvWelcomeMessage"
@@ -66,6 +77,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/search_view_border"
+                    android:textColorHint="?android:textColorHint"
                     android:textColor="?attr/colorOnSecondary"
                     android:hint="Search"/>
 
@@ -76,7 +88,6 @@
                     android:src="@drawable/ic_search"
                     android:background="?attr/selectableItemBackground"
                     android:layout_gravity="center_vertical"
-
                     />
 
             </LinearLayout>
@@ -113,7 +124,6 @@
                 android:text="@string/see_all_items"
                 android:textColor="?attr/colorOnPrimary"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 android:layout_marginTop="16dp"
                 app:layout_constraintTop_toBottomOf="@id/recyclerViewItems"
                 app:layout_constraintStart_toStartOf="parent"
@@ -152,7 +162,6 @@
                 android:text="@string/see_all_categories"
                 android:textColor="?attr/colorOnPrimary"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 android:layout_marginTop="16dp"
                 app:layout_constraintTop_toBottomOf="@id/recyclerViewCategories"
                 app:layout_constraintStart_toStartOf="parent"
@@ -170,7 +179,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:text="@string/add_item"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 android:textColor="?attr/colorOnPrimary"
                 android:backgroundTint="?attr/colorPrimaryVariant"
                 android:paddingStart="24dp"
@@ -188,7 +196,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
+        android:background="?android:attr/colorPrimary"
         app:layout_constraintBottom_toTopOf="@id/toolbar" />
 
     <androidx.appcompat.widget.Toolbar

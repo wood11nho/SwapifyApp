@@ -6,7 +6,6 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.Swapify"
     android:background="@mipmap/library">
 
     <com.google.android.material.card.MaterialCardView
@@ -19,7 +18,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:theme="@style/Theme.Swapify.Dark"
         app:cardBackgroundColor="?attr/colorOnPrimary"
         >
 

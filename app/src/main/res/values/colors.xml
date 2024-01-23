@@ -4,13 +4,18 @@
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="purple_900">#FF3700B3</color>
+    <color name="purple_500_dark">#FF3700B3</color>
+    <color name="purple_700_dark">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="teal_900">#FF018786</color>
+    <color name="teal_200_dark">#FF018786</color>
+    <color name="teal_700_dark">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="orange">#FFFFA500</color>
-    <color name="grey">#D1CBD8</color>
+    <color name="grey">#CCCCCC</color>
+    <color name="gray">#808080</color>
     <color name="purple">#2D0C57</color>
     <color name="dark_grey">#757575</color>
     <color name="light_white">#F6F5F5</color>
@@ -31,4 +36,8 @@
     <color name="yellow_200">#FFFF94</color>
     <color name="yellow_500">#FFFF00</color>
     <color name="yellow_700">#B3B300</color>
+    <color name="gray_light">#D3D3D3</color>
+    <color name="grey_light">#D3D3D3</color>
+    <color name="red_500_dark">#FF0000</color>
+    <color name="red_700_dark">#B30000</color>
 </resources>

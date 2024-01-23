@@ -2,6 +2,8 @@
     android:layout_width="150dp"
     android:layout_height="wrap_content"
     android:layout_marginEnd="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
     android:background="@drawable/category_box"
     android:orientation="horizontal"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -13,16 +15,19 @@
         android:layout_gravity="center_vertical"
         android:src="@drawable/ic_category"
         android:layout_marginStart="8dp"
-        app:tint="@color/purple" />
+        app:tint="?attr/colorPrimary" />
 
     <TextView
         android:id="@+id/categoryName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Category Name"
-        android:textColor="@color/purple"
+        android:textColor="?attr/colorPrimary"
         android:textSize="16sp"
         android:layout_gravity="center_vertical"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:layout_marginStart="8dp"
+
         android:textStyle="bold" />
 </LinearLayout>

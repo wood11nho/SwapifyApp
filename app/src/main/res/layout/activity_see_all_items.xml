@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.Swapify"
     android:background="?android:attr/windowBackground"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -23,7 +22,7 @@
             android:id="@+id/btnBack_all_items"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/back_button"
             android:src="@drawable/ic_back_button"
             tools:ignore="TouchTargetSizeCheck"
@@ -34,7 +33,6 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#F6F5F5"
         app:layout_constraintTop_toBottomOf="@id/back_toolbar_all_items"
         app:layout_constraintBottom_toTopOf="@id/dividerAllItems"
         android:fillViewport="true"
@@ -52,7 +50,7 @@
                 android:textSize="26sp"
                 android:textStyle="bold"
                 android:layout_marginStart="32dp"
-                android:textColor="@color/purple"
+                android:textColor="?attr/colorPrimary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="16dp"
@@ -92,7 +90,7 @@
         android:id="@+id/dividerAllItems"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
+        android:background="?attr/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/toolbarAllItems"/>
 
     <androidx.appcompat.widget.Toolbar
@@ -108,7 +106,7 @@
             android:layout_height="48dp"
             android:id="@+id/reload_button_all_items"
             android:layout_gravity="start"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?attr/selectableItemBackground"
             android:padding="12dp"
             android:src="@drawable/ic_menu"
             tools:ignore="TouchTargetSizeCheck"
@@ -121,7 +119,7 @@
             android:layout_height="48dp"
             android:id="@+id/profile_button_all_items"
             android:layout_gravity="end"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?attr/selectableItemBackground"
             android:padding="12dp"
             android:src="@drawable/ic_profile"
             tools:ignore="TouchTargetSizeCheck"

@@ -4,7 +4,6 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.Swapify"
     android:background="@mipmap/library">
 
     <com.google.android.material.card.MaterialCardView
@@ -52,6 +51,7 @@
                 android:enabled="false"
                 android:gravity="center_horizontal"
                 android:text="@string/placeholder_email"
+                android:textColorHint="?android:textColorHint"
                 android:textSize="16sp"
                 android:labelFor="@id/email_field"
                 />
@@ -81,7 +81,7 @@
         android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#80000000"
+        android:background="?attr/colorOnSecondary"
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true">

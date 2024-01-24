@@ -15,7 +15,10 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_question_mark"
         android:contentDescription="@string/item_image"
-        />
+        android:background="@drawable/shadow_effect"
+        android:padding="8dp"
+    />
+
 
     <!-- Item Name -->
     <TextView

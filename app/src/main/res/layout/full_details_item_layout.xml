@@ -6,26 +6,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="?android:attr/windowBackground"
+    android:background="@mipmap/background"
     tools:context=".FullDetailItemActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@android:color/background_light">
+        android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/back_toolbar_full_detail_item"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
             android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
                 android:id="@+id/btnBack_full_detail_item"
@@ -240,7 +236,7 @@
                     android:text="User's Name"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="?attr/colorSecondary" />
+                    android:textColor="?attr/colorOnSecondary" />
 
                 <!-- User's County -->
                 <TextView
@@ -249,7 +245,7 @@
                     android:layout_height="wrap_content"
                     android:text="County"
                     android:textSize="16sp"
-                    android:textColor="?attr/colorSecondary" />
+                    android:textColor="?attr/colorOnSecondary" />
 
             </LinearLayout>
 

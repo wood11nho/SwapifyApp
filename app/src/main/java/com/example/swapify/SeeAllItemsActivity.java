@@ -1,13 +1,16 @@
 package com.example.swapify;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,7 +26,7 @@ import java.util.Objects;
 // This activity is used to display all the items in the database
 // If the user comes here from the home page by pressing the See All Items button, all the items are displayed
 // If the user comes here from the search bar, only the items that match the search query are displayed
-public class SeeAllItemsActivity extends AppCompatActivity{
+public class SeeAllItemsActivity extends AppCompatActivity {
     private ImageButton btnBack;
     private SearchView searchView;
     private RecyclerView recyclerViewItems;
@@ -46,6 +49,8 @@ public class SeeAllItemsActivity extends AppCompatActivity{
 
         btnBack = findViewById(R.id.btnBack_all_items);
         searchView = findViewById(R.id.searchViewAllItems);
+        ImageView searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
+        searchIcon.setImageDrawable(ContextCompat.getDrawable(SeeAllItemsActivity.this, R.drawable.ic_clear_no_background));
         recyclerViewItems = findViewById(R.id.allItemsRecyclerView);
         reloadButton = findViewById(R.id.reload_button_all_items);
         profileButton = findViewById(R.id.profile_button_all_items);

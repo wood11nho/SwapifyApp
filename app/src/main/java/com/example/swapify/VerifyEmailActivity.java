@@ -1,5 +1,6 @@
 package com.example.swapify;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,7 +22,7 @@ import com.google.firebase.firestore.model.mutation.Overlay;
 
 import java.util.Objects;
 
-public class VerifyEmailActivity extends AppCompatActivity{
+public class VerifyEmailActivity extends AppCompatActivity {
     EditText emailEditText;
     Button reverifyEmailButton;
     Button continueButton;

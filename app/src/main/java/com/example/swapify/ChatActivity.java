@@ -1,5 +1,6 @@
 package com.example.swapify;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -55,6 +56,8 @@ public class ChatActivity extends AppCompatActivity {
         messages = new ArrayList<>();
         messageAdapter = new MessageAdapter(this, R.layout.message_layout_left, messages);
         listViewChatMessages.setAdapter(messageAdapter);
+        // Move the list view to the bottom
+        listViewChatMessages.setSelection(messageAdapter.getCount() - 1);
 
         buttonSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +96,8 @@ public class ChatActivity extends AppCompatActivity {
                         // Try to add the chat between the two users to the 'CHATS' collection
                         // This will fail if the chat already exists
                         addChatToChatsCollection();
+                        // Move the list view to the bottom
+                        listViewChatMessages.setSelection(messageAdapter.getCount() - 1);
                     } else {
                         Toast.makeText(ChatActivity.this, "Error sending message!", Toast.LENGTH_SHORT).show();
                     }

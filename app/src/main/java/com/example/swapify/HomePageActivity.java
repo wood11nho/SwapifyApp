@@ -1,5 +1,6 @@
 package com.example.swapify;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -43,7 +44,6 @@ public class HomePageActivity extends AppCompatActivity {
     private CategoryAdapter categoryAdapter;
     private EditText editTextSearch;
     private ImageButton imageButtonSearch;
-    private ImageButton toggleNightModeButton;
     private boolean isNightModeOn;
     private SharedPreferences appSettingsPref;
 
@@ -93,14 +93,13 @@ public class HomePageActivity extends AppCompatActivity {
         seeAllCategoriesButton = findViewById(R.id.seeAllCategoriesButton);
         editTextSearch = findViewById(R.id.editTextSearch);
         imageButtonSearch = findViewById(R.id.imageButtonSearch);
-        toggleNightModeButton = findViewById(R.id.toggleNightModeButton);
 
-        if (isNightModeOn) {
-            toggleNightModeButton.setImageResource(R.drawable.ic_day);
-        }
-        else {
-            toggleNightModeButton.setImageResource(R.drawable.ic_night);
-        }
+//        if (isNightModeOn) {
+//            toggleNightModeButton.setImageResource(R.drawable.ic_day);
+//        }
+//        else {
+//            toggleNightModeButton.setImageResource(R.drawable.ic_night);
+//        }
 
         items = new ArrayList<>();
         categories = new ArrayList<>();
@@ -171,13 +170,13 @@ public class HomePageActivity extends AppCompatActivity {
                 }
         );
 
-        toggleNightModeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isNightModeOn = !isNightModeOn;
-                toggleAppThemeChange();
-            }
-        });
+//        toggleNightModeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                isNightModeOn = !isNightModeOn;
+//                toggleAppThemeChange();
+//            }
+//        });
 
         // Initialize the RecyclerView for items and its adapter with horizontal layout
         recyclerViewItems = findViewById(R.id.recyclerViewItems);
@@ -198,26 +197,26 @@ public class HomePageActivity extends AppCompatActivity {
         fetchCategoriesFromFirestore();
     }
 
-    private void toggleAppThemeChange() {
-        SharedPreferences.Editor editor = appSettingsPref.edit();
-        editor.putBoolean("NightMode", isNightModeOn);
-        editor.apply();
-
-        if (isNightModeOn) {
-            toggleNightModeButton.setImageResource(R.drawable.ic_day);
-        } else {
-            toggleNightModeButton.setImageResource(R.drawable.ic_night);
-        }
-
-        recreate();
-    }
+//    private void toggleAppThemeChange() {
+//        SharedPreferences.Editor editor = appSettingsPref.edit();
+//        editor.putBoolean("NightMode", isNightModeOn);
+//        editor.apply();
+//
+//        if (isNightModeOn) {
+//            toggleNightModeButton.setImageResource(R.drawable.ic_day);
+//        } else {
+//            toggleNightModeButton.setImageResource(R.drawable.ic_night);
+//        }
+//
+//        recreate();
+//    }
 
     private void fetchUserData(String userId) {
         firestoreDB.collection("USERS").document(userId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        String name = documentSnapshot.getString("name");
-                        String welcomeMessage = getResources().getString(R.string.welcome_message, name);
+                        String username = documentSnapshot.getString("username");
+                        String welcomeMessage = getResources().getString(R.string.welcome_message, username);
                         tvWelcomeMessage.setText(welcomeMessage);
 
                     }

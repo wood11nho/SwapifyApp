@@ -1,5 +1,6 @@
 package com.example.swapify;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -20,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +43,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -55,6 +59,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestoreDB;
+    private FirebaseStorage firebaseStorage;
 
     private List<Pair<String, String>> countiesGlobal = new ArrayList<>();
     private List<String> citiesGlobal = new ArrayList<>();
@@ -75,8 +80,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestoreDB = FirebaseFirestore.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
 
-        String userId = firebaseAuth.getCurrentUser().getUid();
+        String userId = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid();
         fetchUserData(userId);
 
         new Thread(new Runnable() {
@@ -213,7 +219,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
             // Check if the new phone number is already taken
             isPhoneNumberTaken(newPhoneNumber, username);
-
         });
 
     }
@@ -297,34 +302,36 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     public void openAvatarSelectionDialog(View view) {
-        // In this method, you can show a dialog or start an activity to display a list of classic avatars.
-        // When the user selects an avatar, call the updateUserFirestoreData method with the selected avatar's URL.
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference().child("avatars/");
 
-        // For simplicity, let's assume we have a list of avatar URLs
-        List<String> classicAvatars = Arrays.asList(
-                "https://robohash.org/8ad07233fd5e288ed6ed2c997e4590b1?set=set4&bgset=bg1&size=200x200",
-                "https://robohash.org/92ddbe68f1eb993d27733087b3c0feea?set=set4&bgset=bg1&size=200x200",
-                "https://robohash.org/5adb1181664f6be7034e845fc7cba87b?set=set4&bgset=bg1&size=200x200",
-                "https://robohash.org/3047b2f6f2c4207d360c858cd8fd0559?set=set4&bgset=bg1&size=200x200",
-                "https://robohash.org/3047b2f6f2c4207d360c858cd8fd0559?set=set2&bgset=bg1&size=200x200",
-                "https://robohash.org/0f8fcb99ac925f90a401bd6e3456478e?set=set2&bgset=bg1&size=200x200",
-                "https://robohash.org/1d8e186be25a806084c1bc385218f57b?set=set2&bgset=bg1&size=200x200",
-                "https://robohash.org/2e4612a69e112dcab64026c9ca85f049?set=set3&bgset=bg1&size=200x200",
-                "https://robohash.org/98ce7bb20baca8864ead1313b700b3d4?set=set3&bgset=bg1&size=200x200",
-                "https://robohash.org/9c5615494d9d9cfa79dfa45cb6a4cad1?set=set1&bgset=bg1&size=200x200",
-                "https://robohash.org/654d51bf7f78228b268bd9e8e2f2d063?set=set1&bgset=bg1&size=200x200",
-                "https://robohash.org/110befb4bd5e353c2ba86dd195ddc91d?set=set1&bgset=bg1&size=200x200"
-        );
+        List<String> avatarUrls = new ArrayList<>();
 
-        // Show a dialog with classic avatars to choose from
+        storageRef.listAll().addOnSuccessListener(listResult -> {
+            for (StorageReference item : listResult.getItems()) {
+                item.getDownloadUrl().addOnSuccessListener(uri -> {
+                    avatarUrls.add(uri.toString());
+                    if (avatarUrls.size() == listResult.getItems().size()) {
+                        showAvatarSelectionDialog(avatarUrls);
+                    }
+                }).addOnFailureListener(e -> {
+                    // Handle any errors in getting the download URL
+                    Log.e("FirebaseStorageError", "Failed to get avatar download URL. Error: " + e.getMessage());
+                });
+            }
+        }).addOnFailureListener(e -> {
+            // Handle any errors in getting the download URL
+            Log.e("FirebaseStorageError", "Failed to get avatar download URL. Error: " + e.getMessage());
+        });
+    }
+
+    private void showAvatarSelectionDialog(List<String> avatarUrls) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select Avatar");
 
-        // Use the custom adapter to display the avatars
-        AvatarAdapter avatarAdapter = new AvatarAdapter(this, classicAvatars);
+        AvatarAdapter avatarAdapter = new AvatarAdapter(this, avatarUrls);
         builder.setAdapter(avatarAdapter, (dialog, which) -> {
-            // The 'which' argument contains the index position of the selected item
-            profilePictureUrl = classicAvatars.get(which);
+            profilePictureUrl = avatarUrls.get(which);
             Glide.with(this)
                     .load(profilePictureUrl)
                     .placeholder(R.mipmap.default_profile_picture)
@@ -363,6 +370,8 @@ public class EditProfileActivity extends AppCompatActivity {
                                     .placeholder(R.mipmap.default_profile_picture)
                                     .error(R.mipmap.default_profile_picture)
                                     .into(imgProfilePic);
+
+                            profilePictureUrl = profilePicture;
                         }
                     }
                 })
@@ -384,8 +393,10 @@ public class EditProfileActivity extends AppCompatActivity {
         }
         countySpinner.setSelection(countyIndex);
 
-        // Set the selected city in the spinner
-        // First, fetch the cities for the selected county
+        loadCitiesForSelectedCounty(countyIndex, city);
+    }
+
+    private void loadCitiesForSelectedCounty(int countyIndex, String selectedCity) {
         Pair<String, String> selectedCounty = countiesGlobal.get(countyIndex);
         if (selectedCounty == null) {
             return;
@@ -393,7 +404,7 @@ public class EditProfileActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try{
+                try {
                     AssetManager assetManager = getAssets();
                     String filePath = "counties_and_cities/cities" + selectedCounty.second + ".json";
                     InputStream is = assetManager.open(filePath);
@@ -417,23 +428,25 @@ public class EditProfileActivity extends AppCompatActivity {
                         JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                         String cityName = jsonObject1.getString("nume");
                         citiesGlobal.add(cityName);
-                        Log.d("City", cityName);
                     }
 
                     // Update the UI with the fetched cities
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            final List<String> cityNames = new ArrayList<>(citiesGlobal);
-
-                            ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(EditProfileActivity.this, android.R.layout.simple_spinner_item, cityNames);
+                            ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(EditProfileActivity.this, android.R.layout.simple_spinner_item, citiesGlobal);
                             cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             citySpinner.setAdapter(cityAdapter);
                             cityAdapter.notifyDataSetChanged();
 
                             // Set the selected city
-                            int cityIndex = cityNames.indexOf(city);
-                            citySpinner.setSelection(cityIndex);
+                            for (int i = 0; i < citiesGlobal.size(); i++) {
+                                String city = citiesGlobal.get(i);
+                                if (city.equals(selectedCity)) {
+                                    citySpinner.setSelection(i);
+                                    break;
+                                }
+                            }
                         }
                     });
 

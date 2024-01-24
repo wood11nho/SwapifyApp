@@ -1,5 +1,6 @@
 package com.example.swapify;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllChatsActivity extends AppCompatActivity{
+public class AllChatsActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestoreDB;
     private FirebaseUser currentUser;

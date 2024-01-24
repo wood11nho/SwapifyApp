@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="?android:attr/windowBackground"
+    android:background="@mipmap/background"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -105,7 +103,7 @@
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:text="@string/choose_your_county"
-            android:textColor="?attr/colorPrimary"
+            android:textColor="?attr/colorOnSecondary"
             android:textSize="16sp" />
 
         <Spinner
@@ -115,7 +113,7 @@
             android:entries="@array/counties_array"
             android:prompt="@string/select_county_prompt"
             android:padding="8dp"
-            android:background="?attr/colorPrimary"
+            android:background="?attr/colorSecondary"
             android:textSize="16sp" />
 
         <TextView
@@ -124,7 +122,7 @@
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:text="@string/choose_your_city"
-            android:textColor="?attr/colorPrimary"
+            android:textColor="?attr/colorOnSecondary"
             android:textSize="16sp" />
 
 
@@ -135,7 +133,7 @@
             android:entries="@array/cities_array"
             android:prompt="@string/select_city_prompt"
             android:padding="8dp"
-            android:background="?attr/colorPrimary"
+            android:background="?attr/colorSecondary"
             android:textSize="16sp"
             />
 

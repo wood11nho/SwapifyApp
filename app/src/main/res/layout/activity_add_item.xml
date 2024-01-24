@@ -3,16 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="?android:attr/windowBackground">
+    android:background="@mipmap/background"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/back_toolbar_add_item"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp">
+        android:theme="@style/MyActionBar"
+        android:elevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/btnBack_add_item"
@@ -29,15 +32,14 @@
     <ScrollView android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/back_toolbar_add_item"
-        android:background="?attr/colorOnPrimary"
         android:id="@+id/scrollView">
-    
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp">
-    
+
             <ImageView
                 android:id="@+id/item_picture"
                 android:layout_width="150dp"
@@ -49,7 +51,7 @@
                 android:cropToPadding="true"
                 android:scaleType="centerCrop"
                 android:contentDescription="@string/item_picture" />
-    
+
             <Button
                 android:id="@+id/change_picture_button"
                 android:layout_width="wrap_content"
@@ -61,7 +63,7 @@
                 android:background="@drawable/circle_background"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp" />
-    
+
             <EditText
                 android:id="@+id/editText_itemName"
                 android:layout_width="match_parent"
@@ -74,7 +76,7 @@
                 android:textColorHint="?android:textColorHint"
                 android:textColor="?attr/colorOnSecondary"
                 />
-    
+
             <EditText
                 android:id="@+id/editText_itemDescription"
                 android:layout_width="match_parent"
@@ -87,7 +89,7 @@
                 android:textColorHint="?android:textColorHint"
                 android:textColor="?attr/colorOnSecondary"
                 />
-    
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -95,7 +97,7 @@
                 android:padding="8dp"
                 android:textSize="16sp"
                 android:textColor="?attr/colorOnSecondary"/>
-    
+
             <Spinner
                 android:id="@+id/spinner_itemCategory"
                 android:layout_width="match_parent"
@@ -103,10 +105,10 @@
                 android:hint="Item Category"
                 android:padding="8dp"
                 android:textSize="16sp"
-                android:background="?attr/colorPrimary"
+                android:background="?attr/colorSecondary"
                 android:textColorHint="?android:textColorHint"
                 />
-    
+
             <EditText
                 android:id="@+id/editText_itemPrice"
                 android:layout_width="match_parent"
@@ -120,14 +122,14 @@
                 android:textColorHint="?android:textColorHint"
                 android:textColor="?attr/colorOnSecondary"
                 />
-    
+
             <RadioGroup
                 android:id="@+id/radioGroup_itemType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="16dp">
-    
+
                 <RadioButton
                     android:id="@+id/radioButton_trade"
                     android:layout_width="wrap_content"
@@ -136,7 +138,7 @@
                     android:textSize="16sp"
                     android:textColor="?attr/colorOnSecondary"
                     android:checked="true" />
-    
+
                 <RadioButton
                     android:id="@+id/radioButton_sale"
                     android:layout_width="wrap_content"
@@ -144,7 +146,7 @@
                     android:text="Sale"
                     android:textSize="16sp"
                     android:textColor="?attr/colorOnSecondary" />
-    
+
                 <RadioButton
                     android:id="@+id/radioButton_auction"
                     android:layout_width="wrap_content"
@@ -152,9 +154,9 @@
                     android:text="Auction"
                     android:textSize="16sp"
                     android:textColor="?attr/colorOnSecondary" />
-    
+
             </RadioGroup>
-    
+
             <Button
                 android:id="@+id/save_button"
                 android:layout_width="wrap_content"
@@ -166,7 +168,7 @@
                 android:background="@drawable/rectangle_background"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp" />
-    
+
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

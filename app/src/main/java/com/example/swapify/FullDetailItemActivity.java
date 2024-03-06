@@ -70,7 +70,8 @@ public class FullDetailItemActivity extends AppCompatActivity {
         // Set the data to the views
         itemName.setText(itemNameString);
         itemCategory.setText(itemCateogryString);
-        itemPrice.setText(String.valueOf(itemPriceInt));
+        String itemPriceAux = itemPriceInt + " RON";
+        itemPrice.setText(itemPriceAux);
         itemDescription.setText(itemDescriptionString);
 
         // If the item doesn't have an image the String will look like "" or maybe null

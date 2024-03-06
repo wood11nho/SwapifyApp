@@ -1,6 +1,5 @@
 package com.example.swapify;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -25,25 +24,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -59,8 +48,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestoreDB;
-    private FirebaseStorage firebaseStorage;
-
+    private String userCounty;
+    private String userCity;
     private List<Pair<String, String>> countiesGlobal = new ArrayList<>();
     private List<String> citiesGlobal = new ArrayList<>();
 
@@ -77,10 +66,14 @@ public class EditProfileActivity extends AppCompatActivity {
         bioEdtText = findViewById(R.id.bio_edit_text);
         countySpinner = findViewById(R.id.county_spinner);
         citySpinner = findViewById(R.id.city_spinner);
+        userCounty = getIntent().getStringExtra("userCounty");
+        userCity = getIntent().getStringExtra("userCity");
+
+        Log.d("UserCounty", userCounty);
+        Log.d("UserCity", userCity);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestoreDB = FirebaseFirestore.getInstance();
-        firebaseStorage = FirebaseStorage.getInstance();
 
         String userId = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid();
         fetchUserData(userId);
@@ -128,9 +121,8 @@ public class EditProfileActivity extends AppCompatActivity {
                             countyAdapter.notifyDataSetChanged();
 
                             // Set the selected county
-                            String county = countySpinner.getSelectedItem().toString();
-                            if (!county.isEmpty()) {
-                                int countyIndex = countyNames.indexOf(county);
+                            if (userCounty != null && !userCounty.isEmpty()) {
+                                int countyIndex = countyNames.indexOf(userCounty);
                                 countySpinner.setSelection(countyIndex);
                             }
                         }
@@ -191,9 +183,8 @@ public class EditProfileActivity extends AppCompatActivity {
                                     cityAdapter.notifyDataSetChanged();
 
                                     // Set the selected city
-                                    String city = citySpinner.getSelectedItem().toString();
-                                    if (!city.isEmpty()) {
-                                        int cityIndex = cityNames.indexOf(city);
+                                    if (userCity != null && !userCity.isEmpty()) {
+                                        int cityIndex = cityNames.indexOf(userCity);
                                         citySpinner.setSelection(cityIndex);
                                     }
                                 }
@@ -350,8 +341,6 @@ public class EditProfileActivity extends AppCompatActivity {
                         String email = documentSnapshot.getString("email");
                         String phone_number = documentSnapshot.getString("phonenumber");
                         String bio = documentSnapshot.getString("bio");
-                        String county = documentSnapshot.getString("county");
-                        String city = documentSnapshot.getString("city");
                         String profilePicture = documentSnapshot.getString("profilepicture");
 
                         // Update the UI with fetched user data
@@ -360,9 +349,6 @@ public class EditProfileActivity extends AppCompatActivity {
                         emailEdtText.setText(email);
                         phone_numberEdtText.setText(phone_number);
                         bioEdtText.setText(bio);
-
-                        // Set the selected county and city in the spinners
-                        setCountyAndCitySelection(county, city);
 
                         if(profilePicture != null && !profilePicture.isEmpty()) {
                             Glide.with(this)
@@ -379,81 +365,5 @@ public class EditProfileActivity extends AppCompatActivity {
                     // Handle any errors that occur during the Firestore query
                     // For simplicity, we won't handle the error here. You can add appropriate error handling.
                 });
-    }
-
-    private void setCountyAndCitySelection(String county, String city) {
-        // Set the selected county in the spinner
-        int countyIndex = 0;
-        for (int i = 0; i < countiesGlobal.size(); i++) {
-            Pair<String, String> countyPair = countiesGlobal.get(i);
-            if (countyPair.first.equals(county)) {
-                countyIndex = i;
-                break;
-            }
-        }
-        countySpinner.setSelection(countyIndex);
-
-        loadCitiesForSelectedCounty(countyIndex, city);
-    }
-
-    private void loadCitiesForSelectedCounty(int countyIndex, String selectedCity) {
-        Pair<String, String> selectedCounty = countiesGlobal.get(countyIndex);
-        if (selectedCounty == null) {
-            return;
-        }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    AssetManager assetManager = getAssets();
-                    String filePath = "counties_and_cities/cities" + selectedCounty.second + ".json";
-                    InputStream is = assetManager.open(filePath);
-                    StringBuilder stringBuilder = new StringBuilder();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
-
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        stringBuilder.append(line);
-                    }
-                    bufferedReader.close();
-                    is.close();
-
-                    String jsonContent = stringBuilder.toString();
-
-                    JSONObject jsonObject = new JSONObject(jsonContent);
-                    JSONArray jsonArray = jsonObject.getJSONArray("cities");
-                    citiesGlobal.clear();
-
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                        String cityName = jsonObject1.getString("nume");
-                        citiesGlobal.add(cityName);
-                    }
-
-                    // Update the UI with the fetched cities
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(EditProfileActivity.this, android.R.layout.simple_spinner_item, citiesGlobal);
-                            cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            citySpinner.setAdapter(cityAdapter);
-                            cityAdapter.notifyDataSetChanged();
-
-                            // Set the selected city
-                            for (int i = 0; i < citiesGlobal.size(); i++) {
-                                String city = citiesGlobal.get(i);
-                                if (city.equals(selectedCity)) {
-                                    citySpinner.setSelection(i);
-                                    break;
-                                }
-                            }
-                        }
-                    });
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
     }
 }

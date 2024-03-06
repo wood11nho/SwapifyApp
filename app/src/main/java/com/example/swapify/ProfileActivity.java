@@ -24,9 +24,10 @@ public class ProfileActivity extends AppCompatActivity {
     private Button editProfileButton;
     private MaterialButton logoutButton;
     private ImageButton btnBack;
-
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestoreDB;
+    private String userCounty;
+    private String userCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +66,9 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
+                intent.putExtra("userCounty", userCounty);
+                intent.putExtra("userCity", userCity);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
             }
@@ -111,6 +115,8 @@ public class ProfileActivity extends AppCompatActivity {
                         txtBio.setText("Bio: " + bio);
                         txtCounty.setText("County: " + county);
                         txtCity.setText("City: " + city);
+                        userCounty = county;
+                        userCity = city;
 
                         if (profile_picture != null && !profile_picture.isEmpty()) {
                             Glide.with(this)

@@ -87,7 +87,6 @@
         android:id="@+id/dividerAllCategories"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/toolbarAllCategories"/>
 
     <androidx.appcompat.widget.Toolbar

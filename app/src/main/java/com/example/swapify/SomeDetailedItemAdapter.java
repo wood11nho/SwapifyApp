@@ -48,7 +48,8 @@ public class SomeDetailedItemAdapter extends RecyclerView.Adapter<SomeDetailedIt
         }
 
         holder.itemName.setText(item.getItemName());
-        holder.itemPrice.setText(String.valueOf(item.getItemPrice()));
+        String itemPrice = item.getItemPrice() + " RON";
+        holder.itemPrice.setText(itemPrice);
         holder.itemDescription.setText(item.getItemDescription());
 
         // Set an OnClickListener for going to the item's details page

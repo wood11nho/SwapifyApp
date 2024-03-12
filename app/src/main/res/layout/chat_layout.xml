@@ -20,7 +20,6 @@
             android:id="@+id/otherPersonNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chat with John Doe"
             android:textColor="?attr/colorPrimary"
             android:textSize="18sp"
             android:textStyle="bold"

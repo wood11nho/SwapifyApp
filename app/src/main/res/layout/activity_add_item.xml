@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@mipmap/background"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@mipmap/background">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/back_toolbar_add_item"
@@ -74,7 +74,7 @@
                 android:padding="8dp"
                 android:textSize="16sp"
                 android:textColorHint="?android:textColorHint"
-                android:textColor="?attr/colorOnSecondary"
+                android:textColor="?attr/colorOnPrimary"
                 />
 
             <EditText
@@ -87,7 +87,7 @@
                 android:padding="8dp"
                 android:textSize="16sp"
                 android:textColorHint="?android:textColorHint"
-                android:textColor="?attr/colorOnSecondary"
+                android:textColor="?attr/colorOnPrimary"
                 />
 
             <TextView
@@ -96,7 +96,8 @@
                 android:text="Choose the category:"
                 android:padding="8dp"
                 android:textSize="16sp"
-                android:textColor="?attr/colorOnSecondary"/>
+                android:textColor="?attr/colorOnPrimary"
+                />
 
             <Spinner
                 android:id="@+id/spinner_itemCategory"
@@ -120,7 +121,7 @@
                 android:textSize="16sp"
 
                 android:textColorHint="?android:textColorHint"
-                android:textColor="?attr/colorOnSecondary"
+                android:textColor="?attr/colorOnPrimary"
                 />
 
             <RadioGroup
@@ -164,10 +165,7 @@
                 android:text="Save"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
-                android:textColor="?attr/colorOnPrimary"
-                android:background="@drawable/rectangle_background"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp" />
+                android:textColor="?attr/colorOnPrimary" />
 
         </LinearLayout>
     </ScrollView>

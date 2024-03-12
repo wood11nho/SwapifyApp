@@ -30,7 +30,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="16dp"
-                android:textColor="?attr/colorPrimaryVariant"
+                android:textColor="?attr/colorSecondaryVariant"
                 />
 
             <TextView
@@ -42,7 +42,7 @@
                 android:textStyle="bold"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
-                android:textColor="?attr/colorPrimaryVariant"
+                android:textColor="?attr/colorSecondary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvWelcomeMessage"
                 />
@@ -66,7 +66,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/search_view_border"
                     android:textColorHint="?android:textColorHint"
-                    android:textColor="?attr/colorOnSecondary"
+                    android:textColor="?attr/colorOnPrimary"
                     android:hint="Search"/>
 
                 <ImageButton
@@ -89,7 +89,7 @@
                 android:textSize="26sp"
                 android:textStyle="bold"
                 android:layout_marginStart="32dp"
-                android:textColor="?attr/colorPrimaryVariant"
+                android:textColor="?attr/colorSecondary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/linearLayoutSearch"
                 android:layout_marginTop="16dp"
@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:clipToPadding="false"
-                android:textColor="?attr/colorOnSecondary"
+                android:textColor="?attr/colorOnPrimary"
                 android:layout_marginStart="32dp"
                 app:layout_constraintTop_toBottomOf="@id/recommandationText" />
 
@@ -126,7 +126,7 @@
                 android:textSize="26sp"
                 android:textStyle="bold"
                 android:layout_marginStart="32dp"
-                android:textColor="?attr/colorPrimaryVariant"
+                android:textColor="?attr/colorSecondary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/seeAllItemsButton"
                 android:layout_marginTop="16dp"
@@ -138,7 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:clipToPadding="false"
-                android:textColor="?attr/colorOnSecondary"
+                android:textColor="?attr/colorOnPrimary"
                 android:layout_marginStart="32dp"
                 app:layout_constraintTop_toBottomOf="@id/popularCategoriesText"
                 />
@@ -168,7 +168,7 @@
                 android:text="@string/add_item"
                 android:textSize="16sp"
                 android:textColor="?attr/colorOnPrimary"
-                android:backgroundTint="?attr/colorPrimaryVariant"
+                android:backgroundTint="?attr/colorSecondaryVariant"
                 android:paddingStart="24dp"
                 android:paddingEnd="24dp"
                 android:paddingTop="12dp"
@@ -184,7 +184,10 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        app:layout_constraintBottom_toTopOf="@id/toolbar" />
+        app:layout_constraintBottom_toTopOf="@id/toolbar"
+        android:background="?android:attr/dividerHorizontal"
+
+        />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

@@ -30,19 +30,42 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <!-- Display other person's name -->
+    <TextView
+        android:id="@+id/otherPersonNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorSecondary"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:text="Other Person's Name"
+        android:layout_marginBottom="8dp"
+        android:layout_below="@+id/back_toolbar_chat"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        />
+
     <!-- Display chat messages -->
     <ListView
         android:id="@+id/listViewChatMessages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/layoutMessageInput"
-        android:layout_below="@+id/back_toolbar_chat"/>
+        android:layout_below="@+id/otherPersonNameTextView"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="8dp"
+        />
 
     <!-- Message input field and send button -->
     <RelativeLayout
         android:id="@+id/layoutMessageInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_alignParentBottom="true">
 
         <EditText
@@ -51,18 +74,24 @@
             android:layout_height="wrap_content"
             android:hint="Type a message"
             android:textColorHint="?android:textColorHint"
-            android:textColor="?attr/colorOnSecondary"
+            android:textColor="?attr/colorOnPrimary"
             android:inputType="text"
             android:imeOptions="actionSend"
             android:layout_toStartOf="@+id/buttonSendMessage"
             android:layout_marginEnd="8dp"
             />
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonSendMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Send"
-            android:layout_alignParentEnd="true" />
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_send"
+            android:contentDescription="@string/send_message"
+            android:background="?attr/selectableItemBackground"
+            android:layout_marginEnd="8dp"
+            android:layout_alignParentEnd="true"
+            />
+
     </RelativeLayout>
 </RelativeLayout>

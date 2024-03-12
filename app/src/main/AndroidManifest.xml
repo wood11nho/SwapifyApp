@@ -17,77 +17,89 @@
         tools:targetApi="34">
 
         <activity
-            android:name=".LoadingScreenActivity"
+            android:name=".principalactivities.LoadingScreenActivity"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".AddItemActivity"
+            android:name=".items.AddItemActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".RegisterActivity"
+            android:name=".users.RegisterActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".users.LoginActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".HomePageActivity"
+            android:name=".principalactivities.HomePageActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".ProfileActivity"
+            android:name=".users.ProfileActivity"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".EditProfileActivity"
+            android:name=".users.EditProfileActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".ForgotPasswordActivity"
+            android:name=".users.ForgotPasswordActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".SeeAllItemsActivity"
+            android:name=".items.SeeAllItemsActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".SeeAllCategoriesActivity"
+            android:name=".categories.SeeAllCategoriesActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".ChatActivity"
+            android:name=".chats.ChatActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".AllChatsActivity"
+            android:name=".chats.AllChatsActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".FullDetailItemActivity"
+            android:name=".items.FullDetailItemActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".VerifyEmailActivity"
+            android:name=".users.VerifyEmailActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
         </activity>
 
         <activity
-            android:name=".EntryActivity"
+            android:name=".principalactivities.EntryActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

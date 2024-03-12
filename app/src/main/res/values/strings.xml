@@ -8,12 +8,8 @@
     <string name="CustomerRegister">Register</string>
     <string name="a_short_description_of_4_rows">Introducing our new item sharing and swapping app - the ultimate tool for decluttering your home, discovering new items, and connecting with your community! With our app, you can easily upload items you no longer need or want, and browse listings from other users to find items that interest you.</string>
     <string name="back_button">Back Button</string>
-
-    <string-array name="counties_array">
-    </string-array>
-    <string-array name="cities_array">
-    </string-array>
-
+    <string-array name="counties_array"></string-array>
+    <string-array name="cities_array"></string-array>
     <string name="select_city_prompt">Select a city</string>
     <string name="select_county_prompt">Select a county</string>
     <string name="item_image">Item Image</string>
@@ -63,4 +59,9 @@
     <string name="continue_to_login">Continue to Login</string>
     <string name="item_picture">Item Picture</string>
     <string name="toggle_night_mode">Toggle Night Mode</string>
+    <string name="all_chats">All Chats</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_chats">Search chats...</string>
+    <string name="wishlist_button">Wishlist Button</string>
 </resources>

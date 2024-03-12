@@ -47,7 +47,7 @@
                 android:textSize="26sp"
                 android:textStyle="bold"
                 android:layout_marginStart="32dp"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="?attr/colorSecondary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="16dp"
@@ -87,7 +87,9 @@
         android:id="@+id/dividerAllCategories"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        app:layout_constraintBottom_toTopOf="@+id/toolbarAllCategories"/>
+        app:layout_constraintBottom_toTopOf="@+id/toolbarAllCategories"
+        android:background="?android:attr/dividerHorizontal"
+        />
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
@@ -105,7 +107,6 @@
             android:padding="12dp"
             android:src="@drawable/ic_menu"
             tools:ignore="TouchTargetSizeCheck"
-            android:layout_marginBottom="18dp"
             android:contentDescription="@string/reload_page"
             />
 
@@ -118,7 +119,6 @@
             android:padding="12dp"
             android:src="@drawable/ic_profile"
             tools:ignore="TouchTargetSizeCheck"
-            android:layout_marginBottom="18dp"
             android:contentDescription="@string/profile"
             />
 

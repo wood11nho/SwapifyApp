@@ -7,6 +7,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:959727065677:android:7edd38a2ee3418cede9a04",
+        "android_client_info": {
+          "package_name": "com.elias.swapify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "959727065677-gkd0e4flkqi5svn6kuse8td1ius609o6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDojGaGP8UvWF_tX7KAZ1TCfufvUv2YStg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "959727065677-gkd0e4flkqi5svn6kuse8td1ius609o6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:959727065677:android:ee4df66aa1c57394de9a04",
         "android_client_info": {
           "package_name": "com.example.swapify"

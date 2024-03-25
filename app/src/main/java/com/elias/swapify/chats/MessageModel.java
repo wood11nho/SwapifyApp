@@ -3,8 +3,8 @@ package com.elias.swapify.chats;
 import java.util.Date;
 
 public class MessageModel {
-    private String currentUserId;
-    private String userId;
+    private String senderId;
+    private String receiverId;
     private String content;
     private Date datetime;
 
@@ -12,39 +12,39 @@ public class MessageModel {
         // Default constructor required for Firestore deserialization
     }
 
-    public MessageModel(String currentUserId, String userId, String content, Date datetime) {
-        this.currentUserId = currentUserId;
-        this.userId = userId;
+    public MessageModel(String senderId, String receiverId, String content, Date datetime) {
+        this.senderId = senderId;
+        this.receiverId = receiverId;
         this.content = content;
         this.datetime = datetime;
     }
 
-    public String getCurrentUserId() {
-        return currentUserId;
+    public String getSenderId() {
+        return senderId;
     }
 
-    public String getUserId() {
-        return userId;
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
+
+    public String getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(String receiverId) {
+        this.receiverId = receiverId;
     }
 
     public String getContent() {
         return content;
     }
 
-    public Date getDatetime() {
-        return datetime;
-    }
-
-    public void setCurrentUserId(String currentUserId) {
-        this.currentUserId = currentUserId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Date getDatetime() {
+        return datetime;
     }
 
     public void setDatetime(Date datetime) {
@@ -54,8 +54,8 @@ public class MessageModel {
     @Override
     public String toString() {
         return "MessageModel{" +
-                "currentUserId='" + currentUserId + '\'' +
-                ", userId='" + userId + '\'' +
+                "senderId='" + senderId + '\'' +
+                ", receiverId='" + receiverId + '\'' +
                 ", content='" + content + '\'' +
                 ", datetime=" + datetime +
                 '}';

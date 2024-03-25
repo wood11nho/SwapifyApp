@@ -1,9 +1,10 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.Swapify" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.Swapify.Dark" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/deep_blue</item>
         <item name="colorPrimaryVariant">@color/mid_tone_blue</item>
+        <item name="colorPrimaryDark">@color/dark_blue</item>
         <item name="colorOnPrimary">@color/off_white</item>
 
         <!-- Secondary brand color. -->
@@ -17,13 +18,16 @@
         <!-- Background color -->
         <item name="android:windowBackground">@color/light_gray</item>
 
+        <!-- Surface color -->
+        <item name="colorSurface">@color/light_gray</item>
+        <item name="colorOnSurface">@color/near_black</item>
+
         <!-- Text color -->
         <item name="android:textColorPrimary">@color/near_black</item>
         <item name="android:textColorSecondary">@color/medium_gray</item>
 
         <!-- Action Bar -->
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
 
         <!-- Hints and light texts -->
         <item name="android:textColorHint">@color/light_blue</item>
@@ -40,14 +44,61 @@
         <item name="android:fontFamily">@font/font_family</item>
     </style>
 
-    <!-- Custom Action Bar Style -->
-    <style name="MyActionBar" parent="@style/Widget.AppCompat.ActionBar">
-        <item name="background">@color/deep_blue</item>
-        <item name="titleTextStyle">@style/MyActionBarTitleText</item>
+    <style name="Theme.Swapify" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/deep_blue</item>
+        <item name="colorSecondaryVariant">@color/mid_tone_blue</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/warm_amber</item>
+        <item name="colorPrimaryVariant">@color/burnt_sienna</item>
+        <item name="colorPrimaryDark">@color/dark_orange</item>
+        <item name="colorOnPrimary">@color/off_white</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/warm_amber</item>
+
+        <!-- Background color -->
+        <item name="android:windowBackground">@color/light_gray</item>
+
+        <!-- Surface color -->
+        <item name="colorSurface">@color/light_gray</item>
+        <item name="colorOnSurface">@color/near_black</item>
+
+        <!-- Text color -->
+        <item name="android:textColorPrimary">@color/near_black</item>
+        <item name="android:textColorSecondary">@color/medium_gray</item>
+
+        <!-- Action Bar -->
+        <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>
+
+        <!-- Hints and light texts -->
+        <item name="android:textColorHint">@color/light_blue</item>
+
+        <!-- Navigation Bar Color -->
+        <item name="android:navigationBarColor">@color/warm_amber</item>
+
+        <!-- Red Color for verification purposes -->
+        <item name="colorError">@color/red_700_dark</item>
+
+        <item name="selectableItemBackgroundBorderless">@color/light_blue</item>
+
+        <!-- Font Family -->
+        <item name="android:fontFamily">@font/font_family</item>
     </style>
 
-    <!-- Custom Title Text Style for Action Bar -->
-    <style name="MyActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/off_white</item>
+    <style name="Theme.Swapify.SplashScreen" parent = "Theme.Swapify">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
+
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <!-- Specify the text color -->
+        <item name="android:textColor">@color/dark_blue</item>
+        <!-- Specify the hint text color -->
+        <item name="android:textColorHint">@color/light_blue</item>
+    </style>
+
+
 </resources>

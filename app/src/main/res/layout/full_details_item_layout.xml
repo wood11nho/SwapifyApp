@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@mipmap/background"
+    android:background="@drawable/background"
     tools:context=".items.FullDetailItemActivity">
 
     <LinearLayout
@@ -47,7 +47,7 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
-                android:src="@mipmap/default_profile_picture" />
+                android:src="@mipmap/defaultpicture" />
 
         </androidx.cardview.widget.CardView>
 
@@ -222,7 +222,7 @@
                 android:id="@+id/userProfileImage"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:src="@mipmap/default_profile_picture"/>
+                android:src="@mipmap/defaultpicture"/>
 
             <!-- User's Details (Right) -->
             <LinearLayout
@@ -264,6 +264,18 @@
                 android:scaleType="centerInside"
                 android:padding="16dp"
                 android:contentDescription="@string/send_message"
+                />
+
+            <ImageButton
+                android:id="@+id/addToWishlistButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_add_to_wishlist"
+                android:background="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:padding="16dp"
+                android:contentDescription="@string/add_to_wishlist"
                 />
 
         </LinearLayout>

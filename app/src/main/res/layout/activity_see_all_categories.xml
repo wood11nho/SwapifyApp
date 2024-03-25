@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/background"
+    android:background="@drawable/background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -46,7 +46,7 @@
                 android:text="@string/all_categories"
                 android:textSize="26sp"
                 android:textStyle="bold"
-                android:layout_marginStart="32dp"
+                android:layout_marginStart="16dp"
                 android:textColor="?attr/colorSecondary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -66,6 +66,7 @@
                 app:iconifiedByDefault="false"
                 android:background="@drawable/search_view_border"
                 android:padding="8dp"
+                style="@style/SearchViewStyle"
                 />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -96,7 +97,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/toolbarAllCategories"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:contentInsetStart="0dp"
+        app:contentInsetLeft="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="4dp"
+        >
 
         <ImageButton
             android:layout_width="48dp"
@@ -104,7 +110,8 @@
             android:id="@+id/reload_button_all_categories"
             android:layout_gravity="start"
             android:background="?attr/selectableItemBackground"
-            android:padding="12dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="0dp"
             android:src="@drawable/ic_menu"
             tools:ignore="TouchTargetSizeCheck"
             android:contentDescription="@string/reload_page"
@@ -116,7 +123,8 @@
             android:id="@+id/profile_button_all_categories"
             android:layout_gravity="end"
             android:background="?attr/selectableItemBackground"
-            android:padding="12dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="16dp"
             android:src="@drawable/ic_profile"
             tools:ignore="TouchTargetSizeCheck"
             android:contentDescription="@string/profile"

@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     app:cardCornerRadius="16dp"
     app:cardElevation="8dp"
-    android:background="?android:attr/windowBackground"
     android:layout_margin="8dp">
 
     <LinearLayout
@@ -23,6 +22,7 @@
             android:textColor="?attr/colorPrimary"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:text="Name"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"

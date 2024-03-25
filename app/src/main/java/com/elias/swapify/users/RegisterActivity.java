@@ -259,7 +259,7 @@ public class RegisterActivity extends AppCompatActivity {
                             .addOnSuccessListener(documentReference1 -> Log.d("RegisterActivity", "User preferences added to Firestore"))
                             .addOnFailureListener(e -> Log.d("RegisterActivity", "Error adding user preferences to Firestore"));
 
-                    WishlistsModel wishlist = new WishlistsModel();
+                    WishlistModel wishlist = new WishlistModel(userId);
                     // Create a document for the user in WISHLISTS collection, but the document ID should be auto generated
                     wishlistsCollection.add(wishlist)
                             .addOnSuccessListener(documentReference2 -> Log.d("RegisterActivity", "Wishlist added to Firestore"))

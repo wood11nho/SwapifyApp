@@ -1,7 +1,6 @@
 package com.elias.swapify.chats;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -128,7 +127,6 @@ public class AllChatsActivity extends AppCompatActivity implements SearchFragmen
                             chat.setUser1UsernameFromFirestore();
                             chat.setUser2UsernameFromFirestore();
                             chats.add(chat);
-                            Log.d("Chat", chat.getUser1() + " " + chat.getUser2());
                         }
                         chatAdapter.notifyDataSetChanged();
                     }
@@ -143,7 +141,6 @@ public class AllChatsActivity extends AppCompatActivity implements SearchFragmen
                         for (DocumentSnapshot document : documents) {
                             ChatModel chat = document.toObject(ChatModel.class);
                             chats.add(chat);
-                            Log.d("Chat", chat.getUser1() + " " + chat.getUser2());
                         }
                         chatAdapter.notifyDataSetChanged();
                     }

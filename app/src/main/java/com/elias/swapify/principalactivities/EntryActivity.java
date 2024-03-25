@@ -8,9 +8,9 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.elias.swapify.R;
+import com.elias.swapify.firebase.FirebaseUtil;
 import com.elias.swapify.users.LoginActivity;
 import com.elias.swapify.users.RegisterActivity;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class EntryActivity extends AppCompatActivity {
     Button registerButton;
@@ -23,36 +23,38 @@ public class EntryActivity extends AppCompatActivity {
         registerButton = findViewById(R.id.sign_up_button);
         loginButton = findViewById(R.id.log_in_button);
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            // User is logged in, redirect to HomePageActivity
-            if (!FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()) {
-                // just log out but remain on the entry page
-                FirebaseAuth.getInstance().signOut();
-            }
-            else {
+        if (FirebaseUtil.isUserLoggedIn()) {
+            if (!FirebaseUtil.isEmailVerified()) {
+                FirebaseUtil.signOut(); // Remain on the entry page
+            } else {
                 Intent intent = new Intent(EntryActivity.this, HomePageActivity.class);
                 startActivity(intent);
                 finish();
             }
         } else {
-            // User is not logged in, show the entry UI and set the button listeners
-            registerButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(EntryActivity.this, RegisterActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            });
-
-            loginButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(EntryActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            });
+            setUpButtonListeners();
         }
+    }
+
+    private void setUpButtonListeners() {
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateTo(RegisterActivity.class);
+            }
+        });
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateTo(LoginActivity.class);
+            }
+        });
+    }
+
+    private void navigateTo(Class<?> cls) {
+        Intent intent = new Intent(EntryActivity.this, cls);
+        startActivity(intent);
+        finish();
     }
 }

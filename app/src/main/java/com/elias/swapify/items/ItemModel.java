@@ -3,6 +3,7 @@ package com.elias.swapify.items;
 import androidx.annotation.NonNull;
 
 public class ItemModel {
+    private String itemId;
     private String itemName;
     private String itemDescription;
     private String itemCategory;
@@ -22,6 +23,7 @@ public class ItemModel {
         this.itemName = name;
         this.itemPrice = price;
         this.itemImage = image;
+        this.itemId = "";
     }
 
     public ItemModel(String itemName, String itemDescription, String itemCategory, int itemPrice, String itemImage, boolean itemIsForTrade, boolean itemIsForSale, boolean itemIsForAuction, String itemUserId) {
@@ -34,6 +36,7 @@ public class ItemModel {
         this.itemIsForSale = itemIsForSale;
         this.itemIsForAuction = itemIsForAuction;
         this.itemUserId = itemUserId;
+        this.itemId = "";
     }
 
     public String getItemName() {
@@ -106,6 +109,14 @@ public class ItemModel {
 
     public void setItemUserId(String itemUserId) {
         this.itemUserId = itemUserId;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
     @NonNull

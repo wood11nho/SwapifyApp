@@ -15,15 +15,14 @@
         android:layout_marginBottom="-40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:cardBackgroundColor="?android:attr/windowBackground">
+        android:backgroundTint="?attr/colorOnPrimary"
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:id="@+id/linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:background="?android:attr/windowBackground"
             android:paddingBottom="40dp"
             android:orientation="vertical">
 
@@ -61,8 +60,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:text="@string/resend_verification_email"
-                android:textColor="?attr/colorPrimaryVariant"
-                android:backgroundTint="?attr/colorSecondary" />
+                android:textColor="?attr/colorPrimary"
+                android:backgroundTint="?attr/colorSecondary"
+                android:textStyle="bold"/>
 
             <Button
                 android:id="@+id/continue_button"
@@ -70,8 +70,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:text="@string/continue_to_login"
-                android:textColor="?attr/colorPrimaryVariant"
-                android:backgroundTint="?attr/colorSecondary" />
+                android:textColor="?attr/colorSecondary"
+                android:backgroundTint="?attr/colorPrimary"
+                android:textStyle="bold"/>
 
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

@@ -2,23 +2,29 @@ package com.elias.swapify.items;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.elias.swapify.chats.ChatActivity;
 import com.elias.swapify.R;
+import com.elias.swapify.firebase.FirebaseUtil;
+import com.elias.swapify.firebase.FirestoreUtil;
 import com.elias.swapify.userpreferences.SearchDataManager;
 import com.elias.swapify.userpreferences.ItemInteractionManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class SomeDetailedItemAdapter extends RecyclerView.Adapter<SomeDetailedItemAdapter.SomeDetailedItemViewHolder> {
     private final ArrayList<ItemModel> items;
@@ -55,6 +61,22 @@ public class SomeDetailedItemAdapter extends RecyclerView.Adapter<SomeDetailedIt
         String itemPrice = item.getItemPrice() + " RON";
         holder.itemPrice.setText(itemPrice);
 
+        // If the item is already in wishlist, change the icon to @drawable/ic_remove_from_wishlist
+        FirestoreUtil.isItemInWishlist(
+                FirebaseUtil.getCurrentUserId(),
+                item.getItemId(),
+                new FirestoreUtil.WishlistCheckCallback() {
+                    @Override
+                    public void onItemInWishlist(boolean isInWishlist) {
+                        if (isInWishlist) {
+                            holder.btnAddToWishlist.setImageResource(R.drawable.ic_remove_from_wishlist);
+                        } else {
+                            holder.btnAddToWishlist.setImageResource(R.drawable.ic_add_to_wishlist);
+                        }
+                    }
+                }
+        );
+
         // Set an OnClickListener for going to the item's details page
         holder.itemView.setOnClickListener(view -> {
             // Open the item's details page
@@ -71,6 +93,7 @@ public class SomeDetailedItemAdapter extends RecyclerView.Adapter<SomeDetailedIt
             intent.putExtra("itemIsForSale", item.getItemIsForSale());
             intent.putExtra("itemIsForAuction", item.getItemIsForAuction());
             intent.putExtra("itemUserId", item.getItemUserId());
+            intent.putExtra("itemId", item.getItemId());
             context.startActivity(intent);
         });
 
@@ -81,8 +104,42 @@ public class SomeDetailedItemAdapter extends RecyclerView.Adapter<SomeDetailedIt
         });
 
         holder.btnAddToWishlist.setOnClickListener(view -> {
-            // Add the item to the user's wishlist
+            // Add the item to the user's wishlist or remove it if it's already there
+            FirestoreUtil.isItemInWishlist(
+                    FirebaseUtil.getCurrentUserId(),
+                    item.getItemId(),
+                    new FirestoreUtil.WishlistCheckCallback() {
+                        @Override
+                        public void onItemInWishlist(boolean isInWishlist) {
+                            if (isInWishlist) {
+                                removeFromWishlist(item.getItemId());
+                                holder.btnAddToWishlist.setImageResource(R.drawable.ic_add_to_wishlist);
+                            } else {
+                                addToWishlist(item.getItemId());
+                                holder.btnAddToWishlist.setImageResource(R.drawable.ic_remove_from_wishlist);
+                            }
+                        }
+                    }
+            );
         });
+    }
+
+    public ItemModel getItemAtPosition(int position) {
+        return items.get(position);
+    }
+
+    // Method to remove an item at a certain position
+    public void removeItemAt(int position) {
+        if (position >= 0 && position < items.size()) {
+            items.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    // Method to add an item to the adapter (for updating UI after adding to wishlist)
+    public void addItem(ItemModel item) {
+        items.add(item);
+        notifyItemInserted(items.size() - 1);
     }
 
     @Override
@@ -120,12 +177,61 @@ public class SomeDetailedItemAdapter extends RecyclerView.Adapter<SomeDetailedIt
 
     private void addToWishlist(String itemId) {
         // Add the item to the user's wishlist
-        // TODO: Implement this
+        FirestoreUtil.addItemToWishlist(
+                FirebaseUtil.getCurrentUserId(),
+                itemId,
+                new Date(), // Current date as the addedOn date
+                new FirestoreUtil.WishlistUpdateCallback() {
+                    @Override
+                    public void onWishlistUpdated() {
+                        // Handle the successful update, maybe show a message to the user
+                        Toast.makeText(context, "Item added to wishlist!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onWishlistUpdateFailed(Exception e) {
+                        // Handle the error, maybe show an error message to the user
+                        Toast.makeText(context, "Failed to add item to wishlist.", Toast.LENGTH_SHORT).show();
+                        Log.e("Wishlist", "Error adding item to wishlist", e);
+                    }
+                }
+        );
+    }
+
+    private void removeFromWishlist(String itemId) {
+        // Remove the item from the user's wishlist
+        FirestoreUtil.removeItemFromWishlist(
+                FirebaseUtil.getCurrentUserId(),
+                itemId,
+                new FirestoreUtil.WishlistUpdateCallback() {
+                    @Override
+                    public void onWishlistUpdated() {
+                        // Handle the successful update, maybe show a message to the user
+                        Toast.makeText(context, "Item removed from wishlist!", Toast.LENGTH_SHORT).show();
+
+                        // Update the UI to reflect the change
+                        notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onWishlistUpdateFailed(Exception e) {
+                        // Handle the error, maybe show an error message to the user
+                        Toast.makeText(context, "Failed to remove item from wishlist.", Toast.LENGTH_SHORT).show();
+                        Log.e("Wishlist", "Error removing item from wishlist", e);
+                    }
+                }
+        );
     }
 
     public void filterList(ArrayList<ItemModel> filteredList) {
         items.clear();
         items.addAll(filteredList);
+        notifyDataSetChanged();
+    }
+
+    public void updateItems(List<ItemModel> newItems) {
+        items.clear();
+        items.addAll(newItems);
         notifyDataSetChanged();
     }
 

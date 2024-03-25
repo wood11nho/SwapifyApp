@@ -45,7 +45,7 @@ public class MessageAdapter extends ArrayAdapter<MessageModel> {
     public int getItemViewType(int position) {
         MessageModel message = getItem(position);
 
-        if (message.getCurrentUserId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+        if (message.getSenderId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
             // If the current user sent the message, return the sent by me layout
             return MESSAGE_SENT_BY_ME;
         } else {
@@ -59,8 +59,6 @@ public class MessageAdapter extends ArrayAdapter<MessageModel> {
         ViewHolder viewHolder;
         MessageModel message = getItem(position);
         int viewType = getItemViewType(position);
-
-        boolean isSentByMe = checkIfMessageIsSentByMe(message);
 
         if (convertView == null) {
             if (viewType == MESSAGE_SENT_BY_ME) {
@@ -79,7 +77,7 @@ public class MessageAdapter extends ArrayAdapter<MessageModel> {
         }
 
         if (message != null) {
-            fetchSenderName(message.getCurrentUserId(), viewHolder.senderNameTextView);
+            fetchSenderName(message.getSenderId(), viewHolder.senderNameTextView);
             viewHolder.messageContentTextView.setText(message.getContent());
 
             // Check if the datetime property is not null before converting and displaying it
@@ -92,10 +90,6 @@ public class MessageAdapter extends ArrayAdapter<MessageModel> {
         }
 
         return convertView;
-    }
-
-    private boolean checkIfMessageIsSentByMe(MessageModel message) {
-        return message.getCurrentUserId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid());
     }
 
     private void fetchSenderName(String userId, final TextView senderNameTextView) {

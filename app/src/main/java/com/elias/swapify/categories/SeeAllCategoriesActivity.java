@@ -3,7 +3,6 @@ package com.elias.swapify.categories;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -75,7 +74,6 @@ public class SeeAllCategoriesActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.d("SeeCategoriesActivity", "onQueryTextChange: " + newText);
                 filterCategories(newText.toLowerCase(Locale.getDefault()));
                 return false;
             }
@@ -107,7 +105,6 @@ public class SeeAllCategoriesActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         for (int i = 0; i < task.getResult().size(); i++) {
                             categories.add(task.getResult().getDocuments().get(i).toObject(CategoryModel.class));
-                            Log.d("SeeCategoriesActivity", "fetchCategories: " + categories.get(i).getName());
                         }
                         // Set the RecyclerView
                         recyclerViewCategories.setLayoutManager(new LinearLayoutManager(this));
@@ -117,14 +114,11 @@ public class SeeAllCategoriesActivity extends AppCompatActivity {
                         recyclerViewCategories.setAdapter(categoryAdapter);
                         //        Log.d("SeeCategoriesActivity", "onCreate: setAdapter");
                         categoryAdapter.notifyDataSetChanged();
-                    } else {
-                        Log.d("SeeCategoriesActivity", "Error getting documents: ", task.getException());
                     }
                 });
     }
 
     private void filterCategories(String text) {
-        Log.d("SeeCategoriesActivity", "filterCategories: " + text);
         ArrayList<CategoryModel> filteredList = new ArrayList<>();
         for (CategoryModel category : categories) {
             if (category.getName().toLowerCase(Locale.getDefault()).contains(text)) {

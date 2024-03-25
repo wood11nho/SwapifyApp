@@ -2,7 +2,6 @@ package com.elias.swapify.chats;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,9 +55,9 @@ public class ChatAdapter extends ArrayAdapter<ChatModel>{
                 ChatModel chat = getItem(position);
                 if (chat != null) {
                     // Start the ChatActivity with the selected chat user ID
-                    String otherUserId = chat.getUser1().equals(firebaseAuth.getCurrentUser().getUid()) ? chat.getUser2() : chat.getUser1();
+                    String receiverId = chat.getUser1().equals(firebaseAuth.getCurrentUser().getUid()) ? chat.getUser2() : chat.getUser1();
                     Intent intent = new Intent(context, ChatActivity.class);
-                    intent.putExtra("userId", otherUserId);
+                    intent.putExtra("receiverId", receiverId);
                     intent.putExtra("otherPersonName", viewHolder.otherUserTextView.getText().toString());
                     context.startActivity(intent);
                 }
@@ -78,35 +77,33 @@ public class ChatAdapter extends ArrayAdapter<ChatModel>{
 
 
     private void fetchOtherUser(ChatModel chat, TextView otherUserTextView) {
-        String currentUserId = firebaseAuth.getCurrentUser().getUid();
-        String otherUserId = (currentUserId.equals(chat.getUser1())) ? chat.getUser2() : chat.getUser1();
-        Log.d("Chat between", currentUserId + " and " + otherUserId);
+        String senderId = firebaseAuth.getCurrentUser().getUid();
+        String receiverId = (senderId.equals(chat.getUser1())) ? chat.getUser2() : chat.getUser1();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("USERS").document(otherUserId);
+        DocumentReference docRef = db.collection("USERS").document(receiverId);
 
         // Add a tag to the TextView to identify it later
-        otherUserTextView.setTag(otherUserId);
+        otherUserTextView.setTag(receiverId);
 
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     String retrievedUserId = otherUserTextView.getTag().toString();
-                    if (retrievedUserId.equals(otherUserId)) {
+                    if (retrievedUserId.equals(receiverId)) {
                         // Only update the UI if the tags match
                         otherUserTextView.setText("Chat with " + document.getString("username"));
-                        Log.d("Chat between", currentUserId + " and " + otherUserId + " " + document.getString("username"));
                     }
                 } else {
                     String retrievedUserId = otherUserTextView.getTag().toString();
-                    if (retrievedUserId.equals(otherUserId)) {
+                    if (retrievedUserId.equals(receiverId)) {
                         otherUserTextView.setText("No user found");
                     }
                 }
             } else {
                 String retrievedUserId = otherUserTextView.getTag().toString();
-                if (retrievedUserId.equals(otherUserId)) {
+                if (retrievedUserId.equals(receiverId)) {
                     otherUserTextView.setText("No user found");
                 }
             }

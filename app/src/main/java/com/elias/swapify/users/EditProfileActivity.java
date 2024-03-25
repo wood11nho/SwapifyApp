@@ -70,9 +70,6 @@ public class EditProfileActivity extends AppCompatActivity {
         userCounty = getIntent().getStringExtra("userCounty");
         userCity = getIntent().getStringExtra("userCity");
 
-        Log.d("UserCounty", userCounty);
-        Log.d("UserCity", userCity);
-
         firebaseAuth = FirebaseAuth.getInstance();
         firestoreDB = FirebaseFirestore.getInstance();
 
@@ -105,7 +102,6 @@ public class EditProfileActivity extends AppCompatActivity {
                         String countyName = jsonObject.getString("nume");
                         String countyCode = jsonObject.getString("auto");
                         countiesGlobal.add(new Pair<>(countyName, countyCode));
-                        Log.d("County", countyName + " " + countyCode);
                     }
 
                     runOnUiThread(new Runnable() {
@@ -169,7 +165,6 @@ public class EditProfileActivity extends AppCompatActivity {
                                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                                 String cityName = jsonObject1.getString("nume");
                                 citiesGlobal.add(cityName);
-                                Log.d("City", cityName);
                             }
 
                             // Update the UI with the fetched cities
@@ -326,8 +321,8 @@ public class EditProfileActivity extends AppCompatActivity {
             profilePictureUrl = avatarUrls.get(which);
             Glide.with(this)
                     .load(profilePictureUrl)
-                    .placeholder(R.mipmap.default_profile_picture)
-                    .error(R.mipmap.default_profile_picture)
+                    .placeholder(R.mipmap.defaultpicture)
+                    .error(R.mipmap.defaultpicture)
                     .into(imgProfilePic);
         });
         builder.show();
@@ -354,8 +349,8 @@ public class EditProfileActivity extends AppCompatActivity {
                         if(profilePicture != null && !profilePicture.isEmpty()) {
                             Glide.with(this)
                                     .load(profilePicture)
-                                    .placeholder(R.mipmap.default_profile_picture)
-                                    .error(R.mipmap.default_profile_picture)
+                                    .placeholder(R.mipmap.defaultpicture)
+                                    .error(R.mipmap.defaultpicture)
                                     .into(imgProfilePic);
 
                             profilePictureUrl = profilePicture;

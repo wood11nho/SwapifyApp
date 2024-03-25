@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" android:maxSdkVersion="34" />
 
@@ -9,99 +10,75 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/logo_swapify"
-        android:roundIcon="@mipmap/logo_swapify_round"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/logo_swapify_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Swapify"
         tools:targetApi="34">
-
+        <activity
+            android:name=".users.WishlistActivity"
+            android:exported="false" />
         <activity
             android:name=".principalactivities.LoadingScreenActivity"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"></activity>
         <activity
             android:name=".items.AddItemActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".users.RegisterActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".users.LoginActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".principalactivities.HomePageActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".users.ProfileActivity"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"></activity>
         <activity
             android:name=".users.EditProfileActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".users.ForgotPasswordActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".items.SeeAllItemsActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".categories.SeeAllCategoriesActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".chats.ChatActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
         <activity
             android:name=".chats.AllChatsActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".items.FullDetailItemActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".users.VerifyEmailActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true">
-        </activity>
-
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".principalactivities.EntryActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.Swapify.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

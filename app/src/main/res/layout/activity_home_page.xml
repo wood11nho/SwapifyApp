@@ -4,8 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@mipmap/background">
+    android:background="@drawable/background"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -33,6 +33,18 @@
                 android:textColor="?attr/colorSecondaryVariant"
                 />
 
+            <ImageButton
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:id="@+id/toggleNightModeButton"
+                android:src="@drawable/ic_day"
+                android:background="?attr/selectableItemBackground"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="32dp"
+                android:layout_marginTop="16dp"
+                />
+
             <TextView
                 android:id="@+id/tvWelcomeMessage2"
                 android:layout_width="wrap_content"
@@ -48,8 +60,6 @@
                 />
 
             <LinearLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -66,7 +76,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/search_view_border"
                     android:textColorHint="?android:textColorHint"
-                    android:textColor="?attr/colorOnPrimary"
+                    android:textColor="@color/dark_blue"
                     android:hint="Search"/>
 
                 <ImageButton
@@ -80,6 +90,28 @@
 
             </LinearLayout>
 
+            
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewVideo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                android:elevation="4dp"
+                app:layout_constraintTop_toBottomOf="@id/linearLayoutSearch"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/recommandationText">
+
+                <VideoView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/videoView"
+                    android:background="@drawable/rounded_corners_video"
+                    android:layout_gravity="center"
+                    />
+
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/recommandationText"
@@ -91,7 +123,7 @@
                 android:layout_marginStart="32dp"
                 android:textColor="?attr/colorSecondary"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/linearLayoutSearch"
+                app:layout_constraintTop_toBottomOf="@id/cardViewVideo"
                 android:layout_marginTop="16dp"
                 />
 
@@ -195,9 +227,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:contentInsetStart="0dp"
+        app:contentInsetLeft="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        android:elevation="4dp"
-        android:theme="@style/MyActionBar">
+        android:elevation="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"

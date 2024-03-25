@@ -3,7 +3,6 @@ package com.elias.swapify.items;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -121,7 +120,6 @@ public class SeeAllItemsActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.d("SeeCategoriesActivity", "onQueryTextChange: " + newText);
                 if (!isInitialQueryTextChange) {
                     filterItems(newText.toLowerCase(Locale.getDefault()));
                 } else{
@@ -158,6 +156,7 @@ public class SeeAllItemsActivity extends AppCompatActivity {
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         ItemModel item = documentSnapshot.toObject(ItemModel.class);
                         assert item != null;
+                        item.setItemId(documentSnapshot.getId());
                         if (item.getItemUserId().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid())) {
                             continue;
                         }
@@ -183,6 +182,7 @@ public class SeeAllItemsActivity extends AppCompatActivity {
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         ItemModel item = documentSnapshot.toObject(ItemModel.class);
                         assert item != null;
+                        item.setItemId(documentSnapshot.getId());
                         if (item.getItemUserId().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid())) {
                             continue;
                         }
@@ -210,6 +210,7 @@ public class SeeAllItemsActivity extends AppCompatActivity {
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         ItemModel item = documentSnapshot.toObject(ItemModel.class);
                         assert item != null;
+                        item.setItemId(documentSnapshot.getId());
                         if (item.getItemUserId().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid())) {
                             continue;
                         }

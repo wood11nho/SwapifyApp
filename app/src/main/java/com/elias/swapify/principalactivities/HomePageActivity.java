@@ -2,22 +2,24 @@ package com.elias.swapify.principalactivities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.elias.swapify.R;
 import com.elias.swapify.categories.CategoryAdapter;
 import com.elias.swapify.categories.CategoryModel;
 import com.elias.swapify.categories.SeeAllCategoriesActivity;
 import com.elias.swapify.chats.AllChatsActivity;
+import com.elias.swapify.firebase.FirebaseUtil;
+import com.elias.swapify.firebase.FirestoreUtil;
 import com.elias.swapify.users.LoginActivity;
 import com.elias.swapify.users.ProfileActivity;
 import com.elias.swapify.userpreferences.SearchDataManager;
@@ -28,12 +30,6 @@ import com.elias.swapify.items.ItemModel;
 import com.elias.swapify.userpreferences.PostedItemsManager;
 import com.elias.swapify.items.SeeAllItemsActivity;
 import com.google.android.material.button.MaterialButton;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -48,54 +44,49 @@ public class HomePageActivity extends AppCompatActivity {
     private MaterialButton seeAllCategoriesButton;
     private ArrayList<ItemModel> items;
     private ArrayList<String> categories;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore firestoreDB;
     private RecyclerView recyclerViewItems;
     private RecyclerView recyclerViewCategories;
     private ItemAdapter itemAdapter;
     private CategoryAdapter categoryAdapter;
     private EditText editTextSearch;
     private ImageButton imageButtonSearch;
-    private boolean isNightModeOn;
-    private SharedPreferences appSettingsPref;
-
+    private VideoView videoView;
+    private ImageButton toggleNightModeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        appSettingsPref = getSharedPreferences("AppSettings", MODE_PRIVATE);
-        isNightModeOn = appSettingsPref.getBoolean("NightMode", false);
 
-        if (isNightModeOn) {
-            // Change to dark theme
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        }
-        else {
-            // Change to light theme
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home_page);
+
+        toggleNightModeButton = findViewById(R.id.toggleNightModeButton);
 
         // Start quickly the LoadingScreenActivity
         Intent loadingScreenIntent = new Intent(this, LoadingScreenActivity.class);
         startActivity(loadingScreenIntent);
 
-        setContentView(R.layout.activity_home_page);
-
-        firebaseAuth = FirebaseAuth.getInstance();
-        firestoreDB = FirebaseFirestore.getInstance();
-
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if (currentUser == null) {
-            // User not authenticated, redirect to login page
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            finish(); // finish the current activity to remove it from the stack
+        if (!FirebaseUtil.isUserLoggedIn()) {
+            redirectTo(LoginActivity.class);
             return;
         }
 
         // Set the welcome message with the username
         tvWelcomeMessage = findViewById(R.id.tvWelcomeMessage);
-        fetchUserData(currentUser.getUid());
+        String currentUserId = FirebaseUtil.getCurrentUserId();
+        if (currentUserId != null) {
+            FirestoreUtil.fetchUserData(currentUserId, new FirestoreUtil.OnUserDataFetchedListener() {
+                @Override
+                public void onUserDataFetched(String username) {
+                    String welcomeMessage = getResources().getString(R.string.welcome_message, username);
+                    tvWelcomeMessage.setText(welcomeMessage);
+                }
+
+                @Override
+                public void onError(String error) {
+                    Toast.makeText(HomePageActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         reloadButton = findViewById(R.id.reloadPageButton);
         chatButton = findViewById(R.id.chat_button);
@@ -105,20 +96,10 @@ public class HomePageActivity extends AppCompatActivity {
         seeAllCategoriesButton = findViewById(R.id.seeAllCategoriesButton);
         editTextSearch = findViewById(R.id.editTextSearch);
         imageButtonSearch = findViewById(R.id.imageButtonSearch);
-
-//        if (isNightModeOn) {
-//            toggleNightModeButton.setImageResource(R.drawable.ic_day);
-//        }
-//        else {
-//            toggleNightModeButton.setImageResource(R.drawable.ic_night);
-//        }
+        videoView = findViewById(R.id.videoView);
 
         items = new ArrayList<>();
         categories = new ArrayList<>();
-
-        SearchDataManager.initializeInstance(firestoreDB, currentUser.getUid());
-        ItemInteractionManager.initializeInstance(firestoreDB, currentUser.getUid());
-        PostedItemsManager.initializeInstance(firestoreDB, currentUser.getUid());
 
         reloadButton.setOnClickListener(v -> {
 //            // Change background tint of menu button to purple
@@ -182,13 +163,7 @@ public class HomePageActivity extends AppCompatActivity {
                 }
         );
 
-//        toggleNightModeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                isNightModeOn = !isNightModeOn;
-//                toggleAppThemeChange();
-//            }
-//        });
+//        toggleNightModeButton.setOnClickListener(v -> toggleAppThemeChange());
 
         // Initialize the RecyclerView for items and its adapter with horizontal layout
         recyclerViewItems = findViewById(R.id.recyclerViewItems);
@@ -203,88 +178,66 @@ public class HomePageActivity extends AppCompatActivity {
         recyclerViewCategories.setAdapter(categoryAdapter);
 
         // Fetch items from Firestore
-        fetchItemsFromFirestore();
+        FirestoreUtil.fetchItemsFromFirestore(new FirestoreUtil.OnItemsFetchedListener() {
+            @Override
+            public void onItemsFetched(ArrayList<ItemModel> items) {
+                HomePageActivity.this.items.clear();
+                HomePageActivity.this.items.addAll(items);
+                itemAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(HomePageActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // Fetch categories from Firestore
-        fetchCategoriesFromFirestore();
+        FirestoreUtil.fetchCategoriesFromFirestore(new FirestoreUtil.OnCategoriesFetchedListener() {
+            @Override
+            public void onCategoriesFetched(ArrayList<String> categories) {
+                HomePageActivity.this.categories.clear();
+                HomePageActivity.this.categories.addAll(categories);
+                categoryAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(HomePageActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-//    private void toggleAppThemeChange() {
-//        SharedPreferences.Editor editor = appSettingsPref.edit();
-//        editor.putBoolean("NightMode", isNightModeOn);
-//        editor.apply();
-//
-//        if (isNightModeOn) {
-//            toggleNightModeButton.setImageResource(R.drawable.ic_day);
-//        } else {
-//            toggleNightModeButton.setImageResource(R.drawable.ic_night);
-//        }
-//
-//        recreate();
-//    }
-
-    private void fetchUserData(String userId) {
-        firestoreDB.collection("USERS").document(userId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String username = documentSnapshot.getString("username");
-                        String welcomeMessage = getResources().getString(R.string.welcome_message, username);
-                        tvWelcomeMessage.setText(welcomeMessage);
-
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    // Handle any errors that occur during the Firestore query
-                    // For simplicity, we won't handle the error here. You can add appropriate error handling.
-                });
+    private void redirectTo(Class<?> activityClass) {
+        Intent intent = new Intent(this, activityClass);
+        startActivity(intent);
+        finish();
     }
 
-    private void fetchItemsFromFirestore() {
-        firestoreDB.collection("ITEMS").get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    items.clear(); // Clear the items list to avoid duplicates when updating the UI
-                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        ItemModel item = documentSnapshot.toObject(ItemModel.class);
-                        // I should get only the items that are not mine
-                        assert item != null;
-                        if (item.getItemUserId().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid())) {
-                            continue;
-                        }
-                        items.add(item);
-                    }
-                    // Notify the adapter that the data has changed
-                    itemAdapter.notifyItemChanged(items.size());
-                })
-                .addOnFailureListener(e -> {
-                    // Handle any errors that occur during the Firestore query
-                    // For simplicity, we won't handle the error here. You can add appropriate error handling.
-                });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initializeVideoView();
     }
 
-    private void fetchCategoriesFromFirestore(){
-        final int[] count = {0};
-
-        firestoreDB.collection("CATEGORIES")
-                .orderBy("numberOfItems", Query.Direction.DESCENDING)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    categories.clear(); // Clear the categories list to avoid duplicates when updating the UI
-                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        CategoryModel category = documentSnapshot.toObject(CategoryModel.class);
-                        assert category != null;
-                        if (count[0] == 3) {
-                            break;
-                        }
-                        categories.add(category.getName());
-                        count[0]++;
-                    }
-                    // Notify the adapter that the data has changed
-                    categoryAdapter.notifyItemChanged(categories.size());
-                })
-                .addOnFailureListener(e -> {
-                    // Handle any errors that occur during the Firestore query
-                    // For simplicity, we won't handle the error here. You can add appropriate error handling.
-                });
+    private void initializeVideoView() {
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.video_shopping);
+        videoView.setVideoURI(uri);
+        // Check if the video is not already playing before starting
+        if (!videoView.isPlaying()) {
+            videoView.start();
+        }
+        videoView.setOnCompletionListener(mp -> videoView.start());
     }
 
+    private void toggleAppThemeChange() {
+        SharedPreferences appSettingsPref = getSharedPreferences("AppSettings", MODE_PRIVATE);
+        boolean isNightModeOn = appSettingsPref.getBoolean("NightMode", false);
+        SharedPreferences.Editor editor = appSettingsPref.edit();
+        editor.putBoolean("NightMode", !isNightModeOn);
+        editor.apply();
+
+        // Apply the updated theme preference app-wide
+        AppCompatDelegate.setDefaultNightMode(!isNightModeOn ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+    }
 }

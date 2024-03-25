@@ -70,6 +70,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             intent.putExtra("itemIsForSale", item.getItemIsForSale());
             intent.putExtra("itemIsForAuction", item.getItemIsForAuction());
             intent.putExtra("itemUserId", item.getItemUserId());
+            intent.putExtra("itemId", item.getItemId());
             view.getContext().startActivity(intent);
         });
     }

@@ -24,7 +24,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView txtName, txtUsername, txtEmail, txtPhone_number, txtBio, txtCity, txtCounty;
     private Button editProfileButton;
     private MaterialButton logoutButton;
-    private ImageButton btnBack;
+    private ImageButton btnBack, btnWishlist;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestoreDB;
     private String userCounty;
@@ -49,6 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
         editProfileButton = findViewById(R.id.edit_profile_button);
         logoutButton = findViewById(R.id.logout_button);
         btnBack = findViewById(R.id.btnBack);
+        btnWishlist = findViewById(R.id.btnWishlist);
 
         String userId = firebaseAuth.getCurrentUser().getUid();
         fetchUserData(userId);
@@ -94,6 +95,14 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        btnWishlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, WishlistActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void fetchUserData(String userId) {
@@ -125,8 +134,8 @@ public class ProfileActivity extends AppCompatActivity {
                         if (profile_picture != null && !profile_picture.isEmpty()) {
                             Glide.with(this)
                                     .load(profile_picture)
-                                    .placeholder(R.mipmap.default_profile_picture)
-                                    .error(R.mipmap.default_profile_picture)
+                                    .placeholder(R.mipmap.defaultpicture)
+                                    .error(R.mipmap.defaultpicture)
                                     .into(imgProfilePic);
                         }
                     }

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,10 +47,6 @@ public class VerifyEmailActivity extends AppCompatActivity {
                 // Send the user a verification email
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 user.reload();
-                Log.d("VerifyEmailActivity", "onClick: " + user);
-                Log.d("VerifyEmailActivity", "onClick: " + user.getEmail());
-                Log.d("VerifyEmailActivity", "onClick: " + user.isEmailVerified());
-                Log.d("VerifyEmailActivity", "onClick: " + user.getUid());
                 if (!user.isEmailVerified()){
                     user.sendEmailVerification().addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {

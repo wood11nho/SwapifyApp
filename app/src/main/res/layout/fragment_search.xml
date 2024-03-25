@@ -14,6 +14,6 @@
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:padding="16dp"
-        android:textColor="?attr/colorOnSurface"
+        android:textColor="@color/dark_blue"
         android:textColorHint="?android:textColorHint" />
 </RelativeLayout>

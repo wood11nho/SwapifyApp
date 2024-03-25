@@ -18,7 +18,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -38,7 +37,6 @@ public class ChatActivity extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     private List<MessageModel> messages;
     private TextView otherPersonNameTextView;
-    private String otherPersonName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,16 +76,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        // Set the other person's name
-        FirebaseFirestore.getInstance().collection("USERS").document(getIntent().getStringExtra("userId")).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    otherPersonName = task.getResult().getString("username");
-                    otherPersonNameTextView.setText("Chat with " + otherPersonName);
-                }
-            }
-        });
+        otherPersonNameTextView.setText(getIntent().getStringExtra("otherPersonName"));
 
         loadMessages();
     }
@@ -96,7 +85,7 @@ public class ChatActivity extends AppCompatActivity {
         String messageContent = editTextMessageInput.getText().toString().trim();
         if (!messageContent.isEmpty()) {
             // Create a new message
-            MessageModel message = new MessageModel(currentUser.getUid(), getIntent().getStringExtra("userId"), messageContent, new Timestamp(new Date()).toDate());
+            MessageModel message = new MessageModel(currentUser.getUid(), getIntent().getStringExtra("receiverId"), messageContent, new Timestamp(new Date()).toDate());
 
             // Add the message to Firestore
             chatMessagesCollection.add(message).addOnCompleteListener(new OnCompleteListener() {
@@ -123,7 +112,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void addChatToChatsCollection() {
         String user1 = currentUser.getUid();
-        String user2 = getIntent().getStringExtra("userId");
+        String user2 = getIntent().getStringExtra("receiverId");
 
         // Create a new chat
         ChatModel chat = new ChatModel(user1, user2);
@@ -157,18 +146,17 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void loadMessages() {
-        String currentUserId = currentUser.getUid();
-        String chatUserId = getIntent().getStringExtra("userId");
-
+        String senderId = currentUser.getUid();
+        String receiverId = getIntent().getStringExtra("receiverId");
         // Create an array of user IDs for the two directions of the chat
         List<String> chatUserIds = new ArrayList<>();
-        chatUserIds.add(currentUserId);
-        chatUserIds.add(chatUserId);
+        chatUserIds.add(senderId);
+        chatUserIds.add(receiverId);
 
         // Build a query to get messages sent between the two users in both directions
         chatMessagesCollection
-                .whereIn("currentUserId", chatUserIds)
-                .whereIn("userId", chatUserIds)
+                .whereIn("senderId", chatUserIds)
+                .whereIn("receiverId", chatUserIds)
                 .orderBy("datetime")  // You can adjust the ordering as needed
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

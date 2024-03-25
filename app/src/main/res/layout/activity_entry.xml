@@ -16,6 +16,7 @@
         android:layout_marginBottom="-40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="?attr/colorOnPrimary"
         app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
@@ -23,7 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-
             android:paddingBottom="40dp"
             android:orientation="vertical">
 
@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:src="@mipmap/logo_swapify"
+                android:src="@mipmap/logo_swapify_foreground"
                 android:layout_marginTop="16dp"
                 android:contentDescription="@string/app_logo"/>
 
@@ -51,7 +51,7 @@
                 android:shadowDy="2"
                 android:shadowRadius="4"
                 android:text="SWAPIFY"
-                android:textColor="?attr/colorPrimaryVariant"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
@@ -64,7 +64,7 @@
                 android:padding="16dp"
                 android:text="@string/a_short_description_of_4_rows"
                 android:textSize="16sp"
-                android:textColor="?attr/colorSecondaryVariant"
+                android:textColor="?attr/colorPrimaryVariant"
                 android:textStyle="bold"
                 />
 
@@ -78,7 +78,7 @@
                 android:text="CREATE NEW ACCOUNT"
                 android:textStyle="bold"
                 android:textColor="?attr/colorSecondary"
-                android:backgroundTint="?attr/colorPrimaryVariant"
+                android:backgroundTint="?attr/colorPrimary"
                 />
 
             <Button
@@ -88,8 +88,8 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:textColor="?attr/colorPrimaryVariant"
-                android:backgroundTint="?attr/colorSecondary"
+                android:textColor="?attr/colorSecondary"
+                android:backgroundTint="?attr/colorPrimary"
                 android:text="LOG INTO EXISTING ACCOUNT"
                 android:textStyle="bold"
                 />

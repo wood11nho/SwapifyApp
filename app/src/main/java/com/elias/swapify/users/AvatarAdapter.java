@@ -33,8 +33,8 @@ public class AvatarAdapter extends ArrayAdapter<String> {
 
         Glide.with(context)
                 .load(avatarUrl)
-                .placeholder(R.mipmap.default_profile_picture)
-                .error(R.mipmap.default_profile_picture)
+                .placeholder(R.mipmap.defaultpicture)
+                .error(R.mipmap.defaultpicture)
                 .into(imageView);
 
         return convertView;

@@ -1,5 +1,7 @@
 package com.elias.swapify.chats;
 
+import static com.elias.swapify.firebase.FirebaseUtil.getCurrentUserId;
+
 import android.content.Intent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -36,9 +38,14 @@ public class AllChatsActivity extends AppCompatActivity implements SearchFragmen
     }
 
     private void filterChats(String searchText) {
+        String currentUserId = getCurrentUserId(); // You need to implement this method
         List<ChatModel> filteredChats = new ArrayList<>();
         for (ChatModel chat : chats) {
-            if (chat.getUser1Username().toLowerCase().contains(searchText.toLowerCase()) || chat.getUser2Username().toLowerCase().contains(searchText.toLowerCase())) {
+            // Check if current user is user1 or user2 and get the other user's username
+            String otherUsername = chat.getUser1().equals(currentUserId) ? chat.getUser2Username() : chat.getUser1Username();
+
+            // Now filter using otherUsername
+            if (otherUsername.toLowerCase().contains(searchText.toLowerCase())) {
                 filteredChats.add(chat);
             }
         }
@@ -76,29 +83,21 @@ public class AllChatsActivity extends AppCompatActivity implements SearchFragmen
             public void onClick(View v) {
                 FrameLayout searchFrameLayout = findViewById(R.id.searchFrameLayout);
                 SearchFragment searchFragment = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.searchFrameLayout);
-                if (searchFragment != null && searchFragment.isVisible()){
+
+                if (searchFragment != null && searchFragment.isVisible()) {
+                    // Hide the search fragment with animation
                     getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(
-                                    R.anim.fade_in,
-                                    R.anim.fade_out
-                            )
+                            .setCustomAnimations(R.anim.fade_in, R.anim.slide_out)
                             .remove(searchFragment)
                             .commit();
                     searchFrameLayout.setVisibility(View.GONE);
-                }
-                else
-                {
+                } else {
+                    // Show the search fragment with animation
                     searchFragment = new SearchFragment();
                     getSupportFragmentManager().beginTransaction()
-                            .setCustomAnimations(
-                                    R.anim.slide_in,
-                                    R.anim.fade_out,
-                                    R.anim.fade_in,
-                                    R.anim.slide_out
-                            )
+                            .setCustomAnimations(R.anim.slide_in, R.anim.fade_out)
                             .replace(R.id.searchFrameLayout, searchFragment)
                             .commit();
-                    // Change layout_constraintTop_toBottomOf from @id/relativeLayoutAllChats to @+id/searchFrameLayout
                     ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) listViewChatMessages.getLayoutParams();
                     params.topToBottom = R.id.searchFrameLayout;
                     listViewChatMessages.setLayoutParams(params);

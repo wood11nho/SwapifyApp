@@ -165,14 +165,24 @@ public class SomeDetailedItemAdapter extends RecyclerView.Adapter<SomeDetailedIt
     }
 
     private void openChatWithUser(String userId) {
-        // Create an Intent to open the chat activity
-        Intent chatIntent = new Intent(context, ChatActivity.class);
+        // Fetch the user's name based on userId
+        FirestoreUtil.fetchUsersName(userId, new FirestoreUtil.OnUserDataFetchedListener() {
+            @Override
+            public void onUserDataFetched(String name) {
+                // If the user's name is successfully fetched, proceed to start ChatActivity with the extra information
+                Intent chatIntent = new Intent(context, ChatActivity.class);
+                chatIntent.putExtra("receiverId", userId);
+                chatIntent.putExtra("otherPersonName", name); // Use the fetched name here
+                context.startActivity(chatIntent);
+            }
 
-        // Pass the user's unique identifier to the chat activity
-        chatIntent.putExtra("userId", userId);
-
-        // Start the chat activity
-        context.startActivity(chatIntent);
+            @Override
+            public void onError(String error) {
+                // Handle error (e.g., could not fetch user's name)
+                Log.e("ChatActivity", "Error fetching user name: " + error);
+                Toast.makeText(context, "Failed to fetch user details.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void addToWishlist(String itemId) {

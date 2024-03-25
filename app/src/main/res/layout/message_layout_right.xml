@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp"
+    android:padding="16dp"
     android:background="@drawable/message_box_right"
     android:layout_gravity="end"
     android:elevation="16dp">

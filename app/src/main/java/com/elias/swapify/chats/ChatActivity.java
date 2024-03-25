@@ -1,9 +1,11 @@
 package com.elias.swapify.chats;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -11,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.elias.swapify.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,6 +40,7 @@ public class ChatActivity extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     private List<MessageModel> messages;
     private TextView otherPersonNameTextView;
+    private ImageView otherPersonAvatarImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,7 @@ public class ChatActivity extends AppCompatActivity {
         buttonSendMessage = findViewById(R.id.buttonSendMessage);
         backButton = findViewById(R.id.btnBack_chat);
         otherPersonNameTextView = findViewById(R.id.otherPersonNameTextView);
+        otherPersonAvatarImageView = findViewById(R.id.otherPersonAvatarImageView);
 
         messages = new ArrayList<>();
         messageAdapter = new MessageAdapter(this, R.layout.message_layout_left, messages);
@@ -76,8 +81,10 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        Log.d("ChatActivity", "Receiver name: " + getIntent().getStringExtra("otherPersonName"));
         otherPersonNameTextView.setText(getIntent().getStringExtra("otherPersonName"));
 
+        loadAvatar();
         loadMessages();
     }
 
@@ -170,6 +177,35 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private void loadAvatar() {
+        // Load the avatar of the other person
+        String receiverId = getIntent().getStringExtra("receiverId");
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("USERS")
+                .document(receiverId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        String avatarUrl = task.getResult().getString("profilepicture");
+                        // Check if the avatarUrl is not null and not empty
+                        if (avatarUrl != null && !avatarUrl.isEmpty()) {
+                            Glide.with(ChatActivity.this)
+                                    .load(avatarUrl)
+                                    .placeholder(R.drawable.ic_profile_fulfill) // shown during load
+                                    .error(R.drawable.ic_profile_fulfill) // shown on error
+                                    .into(otherPersonAvatarImageView);
+                        } else {
+                            // Directly load the default avatar if avatarUrl is null or empty
+                            otherPersonAvatarImageView.setImageResource(R.drawable.ic_profile_fulfill);
+                        }
+                    } else {
+                        // In case the task fails or the result is null, directly load the default avatar
+                        otherPersonAvatarImageView.setImageResource(R.drawable.ic_profile_fulfill);
+                    }
+                });
+    }
+
 
 
 }

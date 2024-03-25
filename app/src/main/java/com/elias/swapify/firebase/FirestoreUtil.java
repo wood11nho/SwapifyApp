@@ -4,8 +4,8 @@ import android.util.Log;
 
 import com.elias.swapify.categories.CategoryModel;
 import com.elias.swapify.items.ItemModel;
-import com.elias.swapify.users.WishlistItem;
-import com.elias.swapify.users.WishlistModel;
+import com.elias.swapify.wishlists.WishlistItem;
+import com.elias.swapify.wishlists.WishlistModel;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -32,6 +32,18 @@ public class FirestoreUtil {
                 })
                 .addOnFailureListener(e -> listener.onError(e.toString()));
     }
+
+    public static void fetchUsersName(String userId, OnUserDataFetchedListener listener) {
+        firestore.collection("USERS").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String name = documentSnapshot.getString("name"); // Assuming the field for the user's name is "name"
+                        listener.onUserDataFetched(name);
+                    }
+                })
+                .addOnFailureListener(e -> listener.onError(e.toString()));
+    }
+
 
     public static void fetchItemsFromFirestore(OnItemsFetchedListener listener) {
         firestore.collection("ITEMS").get()

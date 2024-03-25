@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.elias.swapify.principalactivities.EntryActivity;
 import com.elias.swapify.R;
 import com.elias.swapify.userpreferences.CustomerPreferencesModel;
+import com.elias.swapify.wishlists.WishlistModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

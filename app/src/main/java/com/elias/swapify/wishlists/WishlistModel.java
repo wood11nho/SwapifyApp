@@ -1,4 +1,4 @@
-package com.elias.swapify.users;
+package com.elias.swapify.wishlists;
 
 import java.util.ArrayList;
 import java.util.List;

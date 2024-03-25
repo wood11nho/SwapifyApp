@@ -16,7 +16,11 @@
     <!-- Background Layer with Gradient -->
     <item android:top="2dp" android:right="2dp" android:left="2dp">
         <shape android:shape="rectangle">
-            <corners android:radius="8dp" />
+            <corners
+                android:topLeftRadius="30dp"
+                android:topRightRadius="0dp"
+                android:bottomLeftRadius="30dp"
+                android:bottomRightRadius="30dp"/>
             <gradient
                 android:startColor="#A7FFEB"
                 android:endColor="#64FFDA"

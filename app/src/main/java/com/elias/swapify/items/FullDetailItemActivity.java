@@ -137,7 +137,8 @@ public class FullDetailItemActivity extends AppCompatActivity {
 
         chatButton.setOnClickListener(v -> {
             Intent intent = new Intent(FullDetailItemActivity.this, ChatActivity.class);
-            intent.putExtra("userId", getIntent().getStringExtra("itemUserId"));
+            intent.putExtra("receiverId", getIntent().getStringExtra("itemUserId"));
+            intent.putExtra("otherPersonName", itemOwnerName.getText().toString());
             startActivity(intent);
         });
 

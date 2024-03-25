@@ -1,4 +1,4 @@
-package com.elias.swapify.users;
+package com.elias.swapify.wishlists;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -78,31 +78,42 @@ public class WishlistActivity extends AppCompatActivity {
             View itemView = viewHolder.itemView;
             int backgroundCornerOffset = 20; // Adjust this to your liking
 
+            // Determine the direction of the swipe.
+            boolean isCancelled = dX == 0 && !isCurrentlyActive;
+            boolean isRightSwipe = dX > 0;
+
+            // Calculate the position of the icon and background.
             int iconMargin = (itemView.getHeight() - icon.getIntrinsicHeight()) / 2;
             int iconTop = itemView.getTop() + (itemView.getHeight() - icon.getIntrinsicHeight()) / 2;
             int iconBottom = iconTop + icon.getIntrinsicHeight();
+            int iconLeft;
+            int iconRight;
 
-            if (dX > 0) { // Swiping to the right
-                int iconLeft = itemView.getLeft() + iconMargin;
-                int iconRight = iconLeft + icon.getIntrinsicWidth();
-                icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
-
+            if (isRightSwipe) {
+                iconLeft = itemView.getLeft() + iconMargin;
+                iconRight = iconLeft + icon.getIntrinsicWidth();
                 background.setBounds(itemView.getLeft(), itemView.getTop(),
                         itemView.getLeft() + ((int) dX) + backgroundCornerOffset, itemView.getBottom());
-            } else if (dX < 0) { // Swiping to the left
-                int iconLeft = itemView.getRight() - iconMargin - icon.getIntrinsicWidth();
-                int iconRight = itemView.getRight() - iconMargin;
-                icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
-
+            } else {
+                iconLeft = itemView.getRight() - iconMargin - icon.getIntrinsicWidth();
+                iconRight = itemView.getRight() - iconMargin;
                 background.setBounds(itemView.getRight() + ((int) dX) - backgroundCornerOffset,
                         itemView.getTop(), itemView.getRight(), itemView.getBottom());
-            } else { // view is unSwiped
+            }
+
+            // Set bounds for the icon and draw.
+            icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+
+            if (isCancelled) {
+                // Clear the background and the icon when swipe is canceled.
                 background.setBounds(0, 0, 0, 0);
+                icon.setBounds(0, 0, 0, 0);
             }
 
             background.draw(c);
             icon.draw(c);
         }
+
 
     }
 

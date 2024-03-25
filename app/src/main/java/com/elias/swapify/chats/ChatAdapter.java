@@ -2,14 +2,17 @@ package com.elias.swapify.chats;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.elias.swapify.R;
+import com.elias.swapify.firebase.FirestoreUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -54,15 +57,29 @@ public class ChatAdapter extends ArrayAdapter<ChatModel>{
             public void onClick(View view) {
                 ChatModel chat = getItem(position);
                 if (chat != null) {
-                    // Start the ChatActivity with the selected chat user ID
                     String receiverId = chat.getUser1().equals(firebaseAuth.getCurrentUser().getUid()) ? chat.getUser2() : chat.getUser1();
-                    Intent intent = new Intent(context, ChatActivity.class);
-                    intent.putExtra("receiverId", receiverId);
-                    intent.putExtra("otherPersonName", viewHolder.otherUserTextView.getText().toString());
-                    context.startActivity(intent);
+                    // Fetch the user's name before starting the activity
+                    FirestoreUtil.fetchUsersName(receiverId, new FirestoreUtil.OnUserDataFetchedListener() {
+                        @Override
+                        public void onUserDataFetched(String name) {
+                            // Name fetched successfully, now start ChatActivity with the name and receiverId
+                            Intent intent = new Intent(context, ChatActivity.class);
+                            intent.putExtra("receiverId", receiverId);
+                            intent.putExtra("otherPersonName", name);
+                            context.startActivity(intent);
+                        }
+
+                        @Override
+                        public void onError(String error) {
+                            // Handle error - maybe log this or show user feedback
+                            Log.e("ChatInitiationError", "Could not fetch user name: " + error);
+                            Toast.makeText(context, "Failed to fetch user details.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         });
+
 
         // Get the current item
         ChatModel chat = getItem(position);

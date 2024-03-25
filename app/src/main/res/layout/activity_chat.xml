@@ -37,23 +37,40 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-        <!-- Display other person's name -->
-        <TextView
-            android:id="@+id/otherPersonNameTextView"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorSecondary"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:text="Other Person's Name"
-            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
             android:layout_below="@+id/back_toolbar_chat"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            />
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:id="@+id/otherPersonInfoLayout">
+
+            <!-- Other Person's Avatar ImageView -->
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/otherPersonAvatarImageView"
+                android:src="@drawable/ic_profile_fulfill"
+                android:contentDescription="Other Person's Avatar"
+                android:scaleType="centerCrop"/>
+
+            <!-- Display other person's name -->
+            <TextView
+                android:id="@+id/otherPersonNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginStart="16dp"
+                android:text="Other Person's Name"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"/>
+
+        </LinearLayout>
 
         <!-- Display chat messages -->
         <ListView
@@ -61,7 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/layoutMessageInput"
-            android:layout_below="@+id/otherPersonNameTextView"
+            android:layout_below="@+id/otherPersonInfoLayout"
             android:divider="@android:color/transparent"
             android:dividerHeight="8dp"
             />

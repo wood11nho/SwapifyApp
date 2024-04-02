@@ -24,10 +24,12 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.elias.swapify.firebase.FirebaseMLModel;
 import com.elias.swapify.principalactivities.HomePageActivity;
 import com.elias.swapify.R;
 import com.elias.swapify.userpreferences.SearchDataManager;
 import com.elias.swapify.userpreferences.PostedItemsManager;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -50,6 +52,7 @@ public class AddItemActivity extends AppCompatActivity {
     private EditText itemPriceEditText;
     private RadioGroup itemTypeRadioGroup;
     private Button saveButton;
+    private FirebaseMLModel firebaseMLModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,10 @@ public class AddItemActivity extends AppCompatActivity {
         itemPriceEditText = findViewById(R.id.editText_itemPrice);
         itemTypeRadioGroup = findViewById(R.id.radioGroup_itemType);
         saveButton = findViewById(R.id.save_button);
+
+        // Initialize the FirebaseMLModel object
+        firebaseMLModel = new FirebaseMLModel();
+        firebaseMLModel.downloadAndInitializeModel(this, "Detect-Category-Model");
 
         fetchCategoriesFromFirestore();
 
@@ -160,6 +167,9 @@ public class AddItemActivity extends AppCompatActivity {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
                 itemPictureImageView.setImageBitmap(bitmap);
 
+                // Classify the selected image using the Firebase ML model
+                classifyImage(bitmap);
+
                 // Call uploadImageToFirebaseStorage to upload the selected image
                 uploadImageToFirebaseStorage(selectedImageUri);
 
@@ -170,6 +180,48 @@ public class AddItemActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void classifyImage(Bitmap image) {
+        // Ensure the model is ready for prediction
+        if (firebaseMLModel.getInterpreter() != null) {
+            String predictedCategory = firebaseMLModel.predictImageCategory(image);
+            Log.d("AddItemActivity", "Predicted Category: " + predictedCategory);
+            // Create a modern and attractive screen notification or popup which tells you the predicted category
+            showSnackbar(predictedCategory);
+        } else {
+            Log.d("AddItemActivity", "Interpreter is not initialized");
+        }
+    }
+
+    private void showSnackbar(String predictedCategory) {
+        // Find the root view of the activity to anchor the Snackbar
+        View rootView = findViewById(android.R.id.content);
+
+        // Create the Snackbar
+        Snackbar snackbar = Snackbar.make(rootView, "It looks like you want to add a " + predictedCategory + " item. Is that correct?", Snackbar.LENGTH_LONG);
+
+        // Add "YES" action to the Snackbar
+        snackbar.setAction("YES", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Find the spinner item that matches the predicted category and set the spinner's selection
+                for (int i = 0; i < itemCategorySpinner.getAdapter().getCount(); i++) {
+                    if (itemCategorySpinner.getAdapter().getItem(i).toString().equalsIgnoreCase(predictedCategory)) {
+                        itemCategorySpinner.setSelection(i);
+                        break; // Exit the loop once the matching category is found and set
+                    }
+                }
+                snackbar.dismiss(); // Dismiss the Snackbar once the action is performed
+            }
+        }).setActionTextColor(getResources().getColor(android.R.color.holo_blue_light)); // Set the action text color
+
+        // Optionally, change the background or text color of the Snackbar
+        snackbar.setBackgroundTint(getResources().getColor(R.color.white)); // Example background color
+        snackbar.setTextColor(getResources().getColor(R.color.black)); // Example text color
+
+        // Show the Snackbar
+        snackbar.show();
     }
 
     private boolean validateInput() {

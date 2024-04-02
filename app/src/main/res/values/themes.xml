@@ -89,7 +89,7 @@
     </style>
 
     <style name="Theme.Swapify.SplashScreen" parent = "Theme.Swapify">
-        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowFullscreen">false</item>
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 

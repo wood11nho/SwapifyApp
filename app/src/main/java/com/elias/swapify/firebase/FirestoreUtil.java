@@ -37,7 +37,7 @@ public class FirestoreUtil {
         firestore.collection("USERS").document(userId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        String name = documentSnapshot.getString("name"); // Assuming the field for the user's name is "name"
+                        String name = documentSnapshot.getString("name");
                         listener.onUserDataFetched(name);
                     }
                 })
@@ -301,7 +301,7 @@ public class FirestoreUtil {
 
     // Define interfaces for callbacks
     public interface OnUserDataFetchedListener {
-        void onUserDataFetched(String username);
+        void onUserDataFetched(String field);
         void onError(String error);
     }
 

@@ -51,7 +51,7 @@ public class HomePageActivity extends AppCompatActivity {
     private EditText editTextSearch;
     private ImageButton imageButtonSearch;
     private VideoView videoView;
-    private ImageButton toggleNightModeButton;
+    private ImageButton signOutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,7 @@ public class HomePageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-        toggleNightModeButton = findViewById(R.id.toggleNightModeButton);
+        signOutButton = findViewById(R.id.signOutButton);
 
         // Start quickly the LoadingScreenActivity
         Intent loadingScreenIntent = new Intent(this, LoadingScreenActivity.class);
@@ -162,6 +162,11 @@ public class HomePageActivity extends AppCompatActivity {
                     }
                 }
         );
+
+        signOutButton.setOnClickListener(v -> {
+            FirebaseUtil.signOut();
+            redirectTo(LoginActivity.class);
+        });
 
 //        toggleNightModeButton.setOnClickListener(v -> toggleAppThemeChange());
 

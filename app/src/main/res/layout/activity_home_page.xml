@@ -36,12 +36,12 @@
             <ImageButton
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:id="@+id/toggleNightModeButton"
-                android:src="@drawable/ic_day"
+                android:id="@+id/signOutButton"
+                android:src="@drawable/ic_signout"
                 android:background="?attr/selectableItemBackground"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="32dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
                 />
 
@@ -86,6 +86,8 @@
                     android:src="@drawable/ic_search"
                     android:background="?attr/selectableItemBackground"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginStart="8dp"
+
                     />
 
             </LinearLayout>

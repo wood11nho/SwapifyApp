@@ -325,6 +325,8 @@ public class AddItemActivity extends AppCompatActivity {
                             .whereEqualTo("name", itemCategory)
                             .get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
+                                // Set the itemId field of the item to the document ID
+                                firestoreDB.collection("ITEMS").document(documentReference.getId()).update("itemId", documentReference.getId());
                                 if (queryDocumentSnapshots.size() == 1) {
                                     DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                                     String documentId = documentSnapshot.getId();

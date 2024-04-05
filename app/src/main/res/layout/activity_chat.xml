@@ -72,6 +72,16 @@
 
         </LinearLayout>
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/dividerHorizontal"
+            android:layout_below="@+id/otherPersonInfoLayout"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            />
+
         <!-- Display chat messages -->
         <ListView
             android:id="@+id/listViewChatMessages"

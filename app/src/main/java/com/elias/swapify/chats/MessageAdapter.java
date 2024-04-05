@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
 import com.elias.swapify.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -71,13 +73,15 @@ public class MessageAdapter extends ArrayAdapter<MessageModel> {
             viewHolder.senderNameTextView = convertView.findViewById(R.id.senderNameTextView);
             viewHolder.messageContentTextView = convertView.findViewById(R.id.messageContentTextView);
             viewHolder.messageTimestampTextView = convertView.findViewById(R.id.messageTimestampTextView);
+            viewHolder.senderAvatarImageView = convertView.findViewById(R.id.smallProfileImage);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
         if (message != null) {
-            fetchSenderName(message.getSenderId(), viewHolder.senderNameTextView);
+            // Fetch the sender's name and avatar
+            fetchSenderAndAvatar(message.getSenderId(), viewHolder.senderNameTextView, viewHolder.senderAvatarImageView);
             viewHolder.messageContentTextView.setText(message.getContent());
 
             // Check if the datetime property is not null before converting and displaying it
@@ -92,28 +96,34 @@ public class MessageAdapter extends ArrayAdapter<MessageModel> {
         return convertView;
     }
 
-    private void fetchSenderName(String userId, final TextView senderNameTextView) {
-        // Assuming you have a 'USERS' collection in Firestore
+    private void fetchSenderAndAvatar(String userId, final TextView senderNameTextView, final ImageView senderAvatarImageView) {
         DocumentReference userRef = FirebaseFirestore.getInstance().collection("USERS").document(userId);
-
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful() && task.getResult() != null) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        // Get the user's name from the document
                         String userName = document.getString("name");
+                        String userAvatarUrl = document.getString("profilepicture");
                         senderNameTextView.setText(userName);
+                        // Now load the avatar using Glide or Picasso
+                        Glide.with(context)
+                                .load(userAvatarUrl)
+                                .placeholder(R.drawable.ic_profile) // default avatar placeholder
+                                .into(senderAvatarImageView);
                     }
                 }
             }
         });
     }
 
+
     private static class ViewHolder {
+
         TextView senderNameTextView;
         TextView messageContentTextView;
         TextView messageTimestampTextView;
+        ImageView senderAvatarImageView;
     }
 }

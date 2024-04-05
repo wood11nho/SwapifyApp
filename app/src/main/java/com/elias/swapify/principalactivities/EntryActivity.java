@@ -11,6 +11,9 @@ import com.elias.swapify.R;
 import com.elias.swapify.firebase.FirebaseUtil;
 import com.elias.swapify.users.LoginActivity;
 import com.elias.swapify.users.RegisterActivity;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory;
 
 public class EntryActivity extends AppCompatActivity {
     Button registerButton;
@@ -20,6 +23,12 @@ public class EntryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry);
+
+        FirebaseApp.initializeApp(this);
+        FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+        firebaseAppCheck.installAppCheckProviderFactory(
+                PlayIntegrityAppCheckProviderFactory.getInstance());
+
         registerButton = findViewById(R.id.sign_up_button);
         loginButton = findViewById(R.id.log_in_button);
 

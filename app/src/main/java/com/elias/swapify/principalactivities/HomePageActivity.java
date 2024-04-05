@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.elias.swapify.R;
 import com.elias.swapify.categories.CategoryAdapter;
 import com.elias.swapify.categories.CategoryModel;
@@ -30,6 +32,8 @@ import com.elias.swapify.items.ItemModel;
 import com.elias.swapify.userpreferences.PostedItemsManager;
 import com.elias.swapify.items.SeeAllItemsActivity;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -52,6 +56,8 @@ public class HomePageActivity extends AppCompatActivity {
     private ImageButton imageButtonSearch;
     private VideoView videoView;
     private ImageButton signOutButton;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private FloatingActionButton fabMaps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +103,18 @@ public class HomePageActivity extends AppCompatActivity {
         editTextSearch = findViewById(R.id.editTextSearch);
         imageButtonSearch = findViewById(R.id.imageButtonSearch);
         videoView = findViewById(R.id.videoView);
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        fabMaps = findViewById(R.id.fabMaps);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Intent intent = new Intent(HomePageActivity.this, HomePageActivity.class);
+                startActivity(intent);
+                finish(); // finish the current activity to remove it from the stack
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         items = new ArrayList<>();
         categories = new ArrayList<>();
@@ -166,6 +184,12 @@ public class HomePageActivity extends AppCompatActivity {
         signOutButton.setOnClickListener(v -> {
             FirebaseUtil.signOut();
             redirectTo(LoginActivity.class);
+        });
+
+        fabMaps.setOnClickListener(v -> {
+            Intent intent = new Intent(HomePageActivity.this, MapsActivity.class);
+            startActivity(intent);
+            finish(); // finish the current activity to remove it from the stack
         });
 
 //        toggleNightModeButton.setOnClickListener(v -> toggleAppThemeChange());

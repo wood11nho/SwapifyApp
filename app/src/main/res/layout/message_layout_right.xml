@@ -1,46 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@drawable/message_box_right"
-    android:layout_gravity="end"
-    android:elevation="16dp">
+    android:layout_marginTop="10dp">
 
-    <TextView
-        android:id="@+id/senderNameTextView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="?attr/colorPrimary"
-        android:textStyle="bold"
-        android:paddingBottom="4dp"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:text="Sender Name"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@drawable/message_box_right"
         android:layout_gravity="end"
-        />
+        android:elevation="16dp"
+        android:maxWidth="300dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/messageContentTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="?attr/colorOnSecondary"
-        android:paddingBottom="4dp"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        android:text="Message content goes here"
-        android:layout_gravity="end"
-        android:textAlignment="textEnd"
-        />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="end">
 
-    <TextView
-        android:id="@+id/messageTimestampTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="?attr/colorOnSecondary"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-        android:text="Message time goes here"
-        android:layout_gravity="end"
-        />
+            <!-- Sender Name TextView -->
+            <TextView
+                android:id="@+id/senderNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorPrimary"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:text="Sender Name"
+                android:layout_gravity="end"
+                android:layout_marginEnd="10dp"
+                />
 
-</LinearLayout>
+            <!-- Profile Picture CardView -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/smallProfileImageCard"
+                app:cardCornerRadius="90dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/smallProfileImage"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_profile"/>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/messageContentTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSecondary"
+            android:paddingBottom="4dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:text="Message content goes here"
+            android:layout_gravity="end"
+            android:textAlignment="textEnd"
+            />
+
+        <TextView
+            android:id="@+id/messageTimestampTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSecondary"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            android:text="Message time goes here"
+            android:layout_gravity="end"
+            />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

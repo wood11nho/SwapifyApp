@@ -53,6 +53,7 @@ public class SeeAllItemsActivity extends AppCompatActivity {
 
         btnBack = findViewById(R.id.btnBack_all_items);
         searchView = findViewById(R.id.searchViewAllItems);
+        searchView.setQueryHint("Search items or locations");
         ImageView searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
         searchIcon.setImageDrawable(ContextCompat.getDrawable(SeeAllItemsActivity.this, R.drawable.ic_clear_no_background));
         searchIcon.setBackgroundColor(Color.TRANSPARENT);

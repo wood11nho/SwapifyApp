@@ -43,6 +43,7 @@ public class SeeAllCategoriesActivity extends AppCompatActivity {
 
         btnBack = findViewById(R.id.btnBack_all_categories);
         searchView = findViewById(R.id.searchViewAllCategories);
+        searchView.setQueryHint("Search categories");
         ImageView closeButton = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
         closeButton.setImageDrawable(ContextCompat.getDrawable(SeeAllCategoriesActivity.this, R.drawable.ic_clear_no_background));
         closeButton.setBackgroundColor(Color.TRANSPARENT);

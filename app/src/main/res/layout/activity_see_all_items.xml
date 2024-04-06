@@ -63,12 +63,12 @@
                 app:layout_constraintTop_toBottomOf="@id/allItemsTitle"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                android:queryHint="Search"
                 app:iconifiedByDefault="false"
                 android:background="@drawable/search_view_border"
                 android:padding="8dp"
-                style="@style/SearchViewStyle"
-                />
+                android:queryHint="Search for item, category, location..."
+                style="@style/SearchViewStyle" />
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/allItemsRecyclerView"

@@ -97,7 +97,7 @@
         <!-- Specify the text color -->
         <item name="android:textColor">@color/dark_blue</item>
         <!-- Specify the hint text color -->
-        <item name="android:textColorHint">@color/light_blue</item>
+        <item name="android:textColorHint">@color/dark_blue</item>
     </style>
 
 

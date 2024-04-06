@@ -2,6 +2,7 @@ package com.elias.swapify.principalactivities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -13,6 +14,7 @@ import com.elias.swapify.users.LoginActivity;
 import com.elias.swapify.users.RegisterActivity;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory;
 
 public class EntryActivity extends AppCompatActivity {
@@ -27,21 +29,26 @@ public class EntryActivity extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
         firebaseAppCheck.installAppCheckProviderFactory(
-                PlayIntegrityAppCheckProviderFactory.getInstance());
+                DebugAppCheckProviderFactory.getInstance());
 
         registerButton = findViewById(R.id.sign_up_button);
         loginButton = findViewById(R.id.log_in_button);
 
+        checkUserStatus();
+
+        setUpButtonListeners();
+    }
+
+    private void checkUserStatus() {
         if (FirebaseUtil.isUserLoggedIn()) {
             if (!FirebaseUtil.isEmailVerified()) {
                 FirebaseUtil.signOut(); // Remain on the entry page
             } else {
+                Log.d("EntryActivity", "User is logged in");
                 Intent intent = new Intent(EntryActivity.this, HomePageActivity.class);
                 startActivity(intent);
                 finish();
             }
-        } else {
-            setUpButtonListeners();
         }
     }
 

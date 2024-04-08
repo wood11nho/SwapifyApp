@@ -65,7 +65,7 @@
         <activity
             android:name=".chats.ChatActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".chats.AllChatsActivity"
             android:exported="true"

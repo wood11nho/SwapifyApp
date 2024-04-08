@@ -63,6 +63,15 @@
             android:padding="16dp"
             android:text="Item Name" />
 
+        <TextView
+            android:id="@+id/fullDetailItemLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="?attr/colorSecondaryVariant"
+            android:layout_marginStart="16dp"
+            android:text="Location" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"

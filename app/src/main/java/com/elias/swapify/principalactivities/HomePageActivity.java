@@ -154,7 +154,6 @@ public class HomePageActivity extends AppCompatActivity {
         seeAllItemsButton.setOnClickListener(v -> {
             Intent intent = new Intent(HomePageActivity.this, SeeAllItemsActivity.class);
             startActivity(intent);
-            finish(); // finish the current activity to remove it from the stack
         });
 
         seeAllCategoriesButton.setOnClickListener(v -> {
@@ -189,7 +188,6 @@ public class HomePageActivity extends AppCompatActivity {
         fabMaps.setOnClickListener(v -> {
             Intent intent = new Intent(HomePageActivity.this, MapsActivity.class);
             startActivity(intent);
-            finish(); // finish the current activity to remove it from the stack
         });
 
 //        toggleNightModeButton.setOnClickListener(v -> toggleAppThemeChange());

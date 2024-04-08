@@ -37,6 +37,7 @@ public class FullDetailItemActivity extends AppCompatActivity {
     private ImageView itemOwnerImage;
     private TextView itemOwnerName;
     private TextView itemOwnerCounty;
+    private TextView itemLocation;
     private ImageButton backButton;
     private ImageButton chatButton;
     private ImageButton wishlistButton;
@@ -63,6 +64,7 @@ public class FullDetailItemActivity extends AppCompatActivity {
         backButton = findViewById(R.id.btnBack_full_detail_item);
         chatButton = findViewById(R.id.messageUserButton);
         wishlistButton = findViewById(R.id.addToWishlistButton);
+        itemLocation = findViewById(R.id.fullDetailItemLocation);
 
         Intent currentIntent = getIntent();
         String itemNameString = currentIntent.getStringExtra("itemName");
@@ -75,6 +77,7 @@ public class FullDetailItemActivity extends AppCompatActivity {
         boolean isForAuctionBoolean = currentIntent.getBooleanExtra("itemIsForAuction", false);
         String itemOwnerId = currentIntent.getStringExtra("itemUserId");
         String itemId = currentIntent.getStringExtra("itemId");
+        String itemLocationString = currentIntent.getStringExtra("itemLocation");
 
         // Set the data to the views
         itemName.setText(itemNameString);
@@ -82,6 +85,7 @@ public class FullDetailItemActivity extends AppCompatActivity {
         String itemPriceAux = itemPriceInt + " RON";
         itemPrice.setText(itemPriceAux);
         itemDescription.setText(itemDescriptionString);
+        itemLocation.setText(itemLocationString);
 
         // If the item doesn't have an image the String will look like "" or maybe null
         if (itemImageUrl != null && !itemImageUrl.equals("")) {

@@ -3,20 +3,21 @@ package com.elias.swapify.principalactivities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
-import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.elias.swapify.R;
+import com.elias.swapify.firebase.FirebaseUtil;
 import com.elias.swapify.items.SeeAllItemsActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -24,90 +25,115 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
-
     private GoogleMap myMap;
-    private final int FINE_PERMISSION_CODE = 1;
-    Location currentLocation;
-    FusedLocationProviderClient fusedLocationProviderClient;
-    List<LocationItem> locationItems = Arrays.asList(
-            new LocationItem("Bucharest", new LatLng(44.4268, 26.1025), 2), // Bucharest is listed twice with a total count of 2
-            new LocationItem("Galati", new LatLng(45.4354, 28.0073), 1),
-            new LocationItem("Craiova", new LatLng(44.3302, 23.7949), 1),
-            new LocationItem("Iasi", new LatLng(47.1585, 27.6014), 1),
-            new LocationItem("Cluj-Napoca", new LatLng(46.7712, 23.6236), 1)
-    );
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private HashMap<String, LatLng> locationCoordinates = new HashMap<>();
+    FloatingActionButton fab;
+
+    // Permission request with the new Activity Result API
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    initMap();
+                } else {
+                    showDefaultLocation();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_maps);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted, so request it
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_PERMISSION_CODE);
-        } else {
-            // Permission has already been granted, continue as usual
+        fab = findViewById(R.id.back_button);
+        fab.setOnClickListener(v -> finish());
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
+
+        loadGeolocationData();
+        requestLocationPermission();
+    }
+
+    private void requestLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             initMap();
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+    }
+
+    private void showDefaultLocation() {
+        LatLng defaultLocation = new LatLng(44.4268, 26.1025); // Bucharest, for example
+        if (myMap != null) {
+            myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
+        }
+    }
+
+    private void loadGeolocationData() {
+        String json = null;
+        try {
+            InputStream is = getAssets().open("counties_and_cities/geolocation.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        Type listType = new TypeToken<List<GeolocationItem>>(){}.getType();
+        List<GeolocationItem> geolocationItems = new Gson().fromJson(json, listType);
+
+        for (GeolocationItem item : geolocationItems) {
+            locationCoordinates.put(item.nume, new LatLng(item.latitudine, item.longitudine));
         }
     }
 
     private void initMap() {
-        // Initialize your map here
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        getLastLocation();
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-    }
-
-    private void getLastLocation() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    currentLocation = task.getResult();
-                    if (myMap != null) {
-                        LatLng currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                        myMap.addMarker(new MarkerOptions().position(currentLatLng).title("Current Location"));
-                        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14)); // Changed to zoom in a bit on the current location
-                    }
-                } else {
-                    // Handle the case where the location is null (e.g. could not be determined)
-                }
-            });
-        } else {
-            // Permission not granted, handle accordingly
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == FINE_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission was granted
-                initMap();
-            } else {
-                // Permission was denied or request was cancelled
-                // You can disable certain features or inform the user as needed
-                // For now, let's just use a default location
-                LatLng defaultLocation = new LatLng(44.4268, 26.1025); // Bucharest, for example
-                myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
+    private void applyMapStyle(GoogleMap googleMap) {
+        try {
+            // Customize the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.style_json)); // Create a raw resource folder and add your json file
+
+            if (!success) {
+                Log.e("MapsActivity", "Style parsing failed.");
             }
+        } catch (Resources.NotFoundException e) {
+            Log.e("MapsActivity", "Can't find style. Error: ", e);
         }
     }
 
@@ -115,58 +141,68 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(@NonNull GoogleMap googleMap) {
         myMap = googleMap;
         myMap.setOnMarkerClickListener(this);
+        applyMapStyle(myMap); // Apply custom style to the map
+        fetchAndDisplayItems();
+    }
 
-        // Zoom into Romania
-        LatLng romaniaCenter = new LatLng(45.9432, 24.9668); // Approximate center of Romania
-        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(romaniaCenter, 6));
+    private void fetchAndDisplayItems() {
+        FirebaseFirestore.getInstance().collection("ITEMS")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Temporary map to store item counts per location
+                        HashMap<String, Integer> itemCountsPerLocation = new HashMap<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            if (!Objects.equals(document.getString("itemUserId"), FirebaseUtil.getCurrentUserId())) {
+                                String locationName = document.getString("itemLocation");
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    itemCountsPerLocation.put(locationName, itemCountsPerLocation.getOrDefault(locationName, 0) + 1);
+                                }
+                            }
+                        }
 
-        // Add circles and markers for each location item
-        for (LocationItem item : locationItems) {
-            // Add a marker with the item count
-            myMap.addMarker(new MarkerOptions()
-                    .position(item.coordinates)
-                    .title(item.cityName)
-                    .snippet("Items: " + item.itemCount));
-
-            // Add a circle to represent the area of each city
-            myMap.addCircle(new CircleOptions()
-                    .center(item.coordinates)
-                    .radius(10000) // Radius in meters
-                    .strokeWidth(0f) // We don't need a border
-                    .fillColor(0x5500ff00)); // A semi-transparent green
-        }
+                        // Now, create markers with item counts stored in their tags
+                        for (Map.Entry<String, Integer> entry : itemCountsPerLocation.entrySet()) {
+                            LatLng coordinates = locationCoordinates.get(entry.getKey());
+                            if (coordinates != null) {
+                                Marker marker = myMap.addMarker(new MarkerOptions()
+                                        .position(coordinates)
+                                        .title(entry.getKey()));
+                                if (marker != null) {
+                                    marker.setTag(entry.getValue());  // Store the item count in the marker's tag
+                                }
+                            }
+                        }
+                        LatLng romaniaCenter = new LatLng(45.9432, 24.9668);
+                        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(romaniaCenter, 6));
+                    } else {
+                        Log.d("MapsActivity", "Error getting documents: ", task.getException());
+                    }
+                });
     }
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        // Create an AlertDialog Builder
+        // Retrieve the item count from the marker's tag
+        Integer itemCount = (Integer) marker.getTag();
+        String title = itemCount + " items found at " + marker.getTitle();
+
         new AlertDialog.Builder(this)
-                .setTitle("View Items")
+                .setTitle(title)
                 .setMessage("Do you want to see all items from " + marker.getTitle() + "?")
                 .setPositiveButton("Yes", (dialog, which) -> {
-                    // User clicked yes, so let's start SeeAllItemsActivity
                     Intent intent = new Intent(MapsActivity.this, SeeAllItemsActivity.class);
-                    intent.putExtra("query", marker.getTitle());
+                    intent.putExtra("location", marker.getTitle());
                     startActivity(intent);
                 })
-                .setNegativeButton("No", (dialog, which) -> {
-                    // User clicked no, dismiss the dialog
-                    dialog.dismiss();
-                })
+                .setNegativeButton("No", null)
                 .show();
-        return true; // We handle the click event so return true
+        return true;
     }
-}
 
-// A simple class to hold your locations and item counts
-class LocationItem {
-    String cityName;
-    LatLng coordinates;
-    int itemCount;
-
-    LocationItem(String cityName, LatLng coordinates, int itemCount) {
-        this.cityName = cityName;
-        this.coordinates = coordinates;
-        this.itemCount = itemCount;
+    static class GeolocationItem {
+        String nume;
+        double latitudine;
+        double longitudine;
     }
 }

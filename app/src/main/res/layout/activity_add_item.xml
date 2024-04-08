@@ -90,6 +90,25 @@
                 />
 
             <TextView
+                android:id="@+id/location_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="Choose the location: "
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/location_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/counties_array"
+                android:prompt="@string/select_county_prompt"
+                android:padding="8dp"
+                android:background="?attr/colorOnPrimary"
+                android:textSize="16sp" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Choose the category:"

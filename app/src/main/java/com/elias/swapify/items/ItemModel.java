@@ -13,6 +13,7 @@ public class ItemModel {
     private boolean itemIsForSale;
     private boolean itemIsForAuction;
     private String itemUserId;
+    private String itemLocation;
 
     public ItemModel() {
         // Default constructor required for Firestore deserialization
@@ -26,7 +27,7 @@ public class ItemModel {
         this.itemId = "";
     }
 
-    public ItemModel(String itemName, String itemDescription, String itemCategory, int itemPrice, String itemImage, boolean itemIsForTrade, boolean itemIsForSale, boolean itemIsForAuction, String itemUserId) {
+    public ItemModel(String itemName, String itemDescription, String itemCategory, int itemPrice, String itemImage, boolean itemIsForTrade, boolean itemIsForSale, boolean itemIsForAuction, String itemUserId, String itemLocation) {
         this.itemName = itemName;
         this.itemDescription = itemDescription;
         this.itemCategory = itemCategory;
@@ -37,6 +38,7 @@ public class ItemModel {
         this.itemIsForAuction = itemIsForAuction;
         this.itemUserId = itemUserId;
         this.itemId = "";
+        this.itemLocation = itemLocation;
     }
 
     public String getItemName() {
@@ -119,6 +121,14 @@ public class ItemModel {
         this.itemId = itemId;
     }
 
+    public String getItemLocation() {
+        return itemLocation;
+    }
+
+    public void setItemLocation(String itemLocation) {
+        this.itemLocation = itemLocation;
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -132,6 +142,7 @@ public class ItemModel {
                 ", itemIsForSale=" + itemIsForSale +
                 ", itemIsForAuction=" + itemIsForAuction +
                 ", itemUserId='" + itemUserId + '\'' +
+                ", itemLocation='" + itemLocation + '\'' +
                 '}';
     }
 }

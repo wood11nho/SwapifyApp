@@ -37,7 +37,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class AddItemActivity extends AppCompatActivity {
@@ -53,6 +58,7 @@ public class AddItemActivity extends AppCompatActivity {
     private RadioGroup itemTypeRadioGroup;
     private Button saveButton;
     private FirebaseMLModel firebaseMLModel;
+    private Spinner itemLocationSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +74,7 @@ public class AddItemActivity extends AppCompatActivity {
         itemCategorySpinner = findViewById(R.id.spinner_itemCategory);
         itemPriceEditText = findViewById(R.id.editText_itemPrice);
         itemTypeRadioGroup = findViewById(R.id.radioGroup_itemType);
+        itemLocationSpinner = findViewById(R.id.location_spinner);
         saveButton = findViewById(R.id.save_button);
 
         // Initialize the FirebaseMLModel object
@@ -100,6 +107,12 @@ public class AddItemActivity extends AppCompatActivity {
                 boolean itemForTrade = selectedItemTypeId == R.id.radioButton_trade;
                 boolean itemForSale = selectedItemTypeId == R.id.radioButton_sale;
                 boolean itemForAuction = selectedItemTypeId == R.id.radioButton_auction;
+                String itemLocation;
+                if (itemLocationSpinner.getSelectedItem() == null) {
+                    itemLocation = "";
+                } else {
+                    itemLocation = itemLocationSpinner.getSelectedItem().toString();
+                }
 
                 // Get the current user's ID from FirebaseAuth
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -110,7 +123,7 @@ public class AddItemActivity extends AppCompatActivity {
                 String userId = currentUser.getUid();
 
                 // Add the data to Firestore
-                uploadItemToFirestore(itemName, itemDescription, itemCategory, itemPrice, itemPictureUrl, itemForTrade, itemForSale, itemForAuction, userId);
+                uploadItemToFirestore(itemName, itemDescription, itemCategory, itemPrice, itemPictureUrl, itemForTrade, itemForSale, itemForAuction, userId, itemLocation);
             }
         });
 
@@ -125,7 +138,50 @@ public class AddItemActivity extends AppCompatActivity {
                 }
             }
         });
+
+        fetchLocationsFromJSON();
     }
+
+    private String loadJSONFromAsset() {
+        String json = null;
+        try {
+            InputStream is = getAssets().open("counties_and_cities/counties.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+
+    private void fetchLocationsFromJSON() {
+        ArrayList<String> countyNames = new ArrayList<>();
+        try {
+            String json = loadJSONFromAsset();
+            JSONArray jsonArray = new JSONArray(json);
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject countyObject = jsonArray.getJSONObject(i);
+                countyNames.add(countyObject.getString("nume")); // "nume" is the key for county names in your JSON
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        populateSpinner(countyNames);
+    }
+
+    private void populateSpinner(ArrayList<String> countyNames) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, countyNames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        itemLocationSpinner.setAdapter(adapter);
+    }
+
+
 
     private void openGalleryWithPermissionCheck() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -259,6 +315,13 @@ public class AddItemActivity extends AppCompatActivity {
             return false;
         }
 
+        // Validate the item location
+        String itemLocation = itemLocationSpinner.getSelectedItem().toString();
+        if (itemLocation.isEmpty()) {
+            itemLocationSpinner.requestFocus();
+            return false;
+        }
+
         return true;
     }
 
@@ -311,10 +374,10 @@ public class AddItemActivity extends AppCompatActivity {
                 });
     }
 
-    private void uploadItemToFirestore(String itemName, String itemDescription, String itemCategory, int itemPrice, String itemPictureUrl, boolean itemForTrade, boolean itemForSale, boolean itemForAuction, String userId) {
+    private void uploadItemToFirestore(String itemName, String itemDescription, String itemCategory, int itemPrice, String itemPictureUrl, boolean itemForTrade, boolean itemForSale, boolean itemForAuction, String userId, String itemLocation) {
         FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
         firestoreDB.collection("ITEMS")
-                .add(new ItemModel(itemName, itemDescription, itemCategory, itemPrice, itemPictureUrl, itemForTrade, itemForSale, itemForAuction, userId))
+                .add(new ItemModel(itemName, itemDescription, itemCategory, itemPrice, itemPictureUrl, itemForTrade, itemForSale, itemForAuction, userId, itemLocation))
                 .addOnSuccessListener(documentReference -> {
                     // Item added successfully
                     SearchDataManager.getInstance().saveSearch(itemCategory);

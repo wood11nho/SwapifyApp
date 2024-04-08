@@ -26,10 +26,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
-
-// This activity is used to display all the items in the database
-// If the user comes here from the home page by pressing the See All Items button, all the items are displayed
-// If the user comes here from the search bar, only the items that match the search query are displayed
 public class SeeAllItemsActivity extends AppCompatActivity {
     private ImageButton btnBack;
     private SearchView searchView;
@@ -53,7 +49,7 @@ public class SeeAllItemsActivity extends AppCompatActivity {
 
         btnBack = findViewById(R.id.btnBack_all_items);
         searchView = findViewById(R.id.searchViewAllItems);
-        searchView.setQueryHint("Search items or locations");
+        searchView.setQueryHint("Search items, categories, locations");
         ImageView searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
         searchIcon.setImageDrawable(ContextCompat.getDrawable(SeeAllItemsActivity.this, R.drawable.ic_clear_no_background));
         searchIcon.setBackgroundColor(Color.TRANSPARENT);
@@ -78,9 +74,6 @@ public class SeeAllItemsActivity extends AppCompatActivity {
         auxItems = new ArrayList<>();
 
         btnBack.setOnClickListener(v -> {
-            Intent intent = new Intent(SeeAllItemsActivity.this, HomePageActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
             finish();
         });
 
@@ -95,6 +88,9 @@ public class SeeAllItemsActivity extends AppCompatActivity {
             }
             else if (getIntent().hasExtra("category")) {
                 intent.putExtra("category", getIntent().getStringExtra("category"));
+            }
+            else if (getIntent().hasExtra("location")) {
+                intent.putExtra("location", getIntent().getStringExtra("location"));
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); // clear the activity stack
             startActivity(intent);
@@ -130,7 +126,7 @@ public class SeeAllItemsActivity extends AppCompatActivity {
             }
         });
 
-        if(getIntent().hasExtra("query") || getIntent().hasExtra("category")) {
+        if(getIntent().hasExtra("query") || getIntent().hasExtra("category") || getIntent().hasExtra("location")) {
             if (getIntent().hasExtra("query")) {
                 String query = getIntent().getStringExtra("query");
                 searchView.setQuery(query, true);
@@ -138,10 +134,16 @@ public class SeeAllItemsActivity extends AppCompatActivity {
                 fetchFilteredItems(query);
                 isInitialQueryTextChange = false;
             }
-            else {
+            else if (getIntent().hasExtra("category")) {
                 String category = getIntent().getStringExtra("category");
-                tvAllItems.setText(category);
+                tvAllItems.setText("Items in " + category + " category");
                 fetchCategoryItems(category);
+                isInitialQueryTextChange = false;
+            }
+            else if (getIntent().hasExtra("location")) {
+                String location = getIntent().getStringExtra("location");
+                tvAllItems.setText("Items found in " + location);
+                fetchLocationItems(location);
                 isInitialQueryTextChange = false;
             }
         }
@@ -231,11 +233,40 @@ public class SeeAllItemsActivity extends AppCompatActivity {
                 });
     }
 
+    private void fetchLocationItems(String location) {
+        firestoreDB.collection("ITEMS").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    items.clear();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        ItemModel item = documentSnapshot.toObject(ItemModel.class);
+                        assert item != null;
+                        item.setItemId(documentSnapshot.getId());
+                        if (item.getItemUserId().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid())) {
+                            continue;
+                        }
+                        if (item.getItemLocation().equals(location)) {
+                            items.add(item);
+                        }
+                    }
+
+                    recyclerViewItems.setLayoutManager(new LinearLayoutManager(this));
+                    itemAdapter = new SomeDetailedItemAdapter(this, items);
+                    recyclerViewItems.setAdapter(itemAdapter);
+
+                    itemAdapter.notifyItemChanged(items.size());
+                })
+                .addOnFailureListener(e -> {
+                    // Show a toast message of failure
+                });
+    }
+
     private void filterItems(String text) {
         if (itemAdapter != null) {
             ArrayList<ItemModel> filteredItems = new ArrayList<>();
             for (ItemModel item : items) {
-                if (item.getItemName().toLowerCase().contains(text.toLowerCase())) {
+                if (item.getItemName().toLowerCase().contains(text.toLowerCase()) ||
+                        item.getItemCategory().toLowerCase().contains(text.toLowerCase()) ||
+                        item.getItemLocation().toLowerCase().contains(text.toLowerCase())) {
                     filteredItems.add(item);
                 }
             }

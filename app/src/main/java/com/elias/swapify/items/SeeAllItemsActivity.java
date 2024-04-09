@@ -3,12 +3,17 @@ package com.elias.swapify.items;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,14 +38,20 @@ public class SeeAllItemsActivity extends AppCompatActivity {
     private ImageButton reloadButton;
     private ImageButton profileButton;
     private ArrayList<ItemModel> items;
-    private ArrayList<ItemModel> auxItems; // I use this just because items should always contain all items, and auxItems should be
-    // the one that gets filtered first time, because otherwise, if you come here with a search query that doesn't return any results,
-    // and then you delete the query, you won't see any items, because items will be empty
+    private ArrayList<ItemModel> auxItems; // I use this just because items should always contain all items,
+    // and auxItems should be the one that gets filtered first time, because otherwise, if you come here
+    // with a search query that doesn't return any results, and then you delete the query,
+    // you won't see any items, because items will be empty
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestoreDB;
     private SomeDetailedItemAdapter itemAdapter;
     private boolean isInitialQueryTextChange = true;
     private TextView tvAllItems;
+    private ImageButton toggleFiltersButton;
+    private ConstraintLayout filtersLayout;
+    private Spinner categoryFilterSpinner, locationFilterSpinner;
+    private EditText edtMinPriceFilter, edtMaxPriceFilter;
+    private Button applyFiltersButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,18 +59,30 @@ public class SeeAllItemsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_see_all_items);
 
         btnBack = findViewById(R.id.btnBack_all_items);
+
         searchView = findViewById(R.id.searchViewAllItems);
         searchView.setQueryHint("Search items, categories, locations");
         ImageView searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
         searchIcon.setImageDrawable(ContextCompat.getDrawable(SeeAllItemsActivity.this, R.drawable.ic_clear_no_background));
         searchIcon.setBackgroundColor(Color.TRANSPARENT);
+
         recyclerViewItems = findViewById(R.id.allItemsRecyclerView);
         reloadButton = findViewById(R.id.reload_button_all_items);
         profileButton = findViewById(R.id.profile_button_all_items);
         tvAllItems = findViewById(R.id.allItemsTitle);
+        toggleFiltersButton = findViewById(R.id.toggle_filters_button);
+        filtersLayout = findViewById(R.id.filter_layout);
+        categoryFilterSpinner = findViewById(R.id.spinnerCategoryFilter);
+        locationFilterSpinner = findViewById(R.id.spinnerLocationFilter);
+        edtMinPriceFilter = findViewById(R.id.etMinPriceFilter);
+        edtMaxPriceFilter = findViewById(R.id.etMaxPriceFilter);
+        applyFiltersButton = findViewById(R.id.applyFilterButton);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestoreDB = FirebaseFirestore.getInstance();
+
+        fetchCategoriesForSpinner(categoryFilterSpinner);
+        fetchLocationsForSpinner(locationFilterSpinner);
 
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser == null) {
@@ -78,9 +101,6 @@ public class SeeAllItemsActivity extends AppCompatActivity {
         });
 
         reloadButton.setOnClickListener(v -> {
-//            reloadButton.setBackgroundTintList(ContextCompat.getColorStateList(SeeAllItemsActivity.this, R.color.purple));
-//            profileButton.setBackgroundTintList(ContextCompat.getColorStateList(SeeAllItemsActivity.this, R.color.grey));
-
             Intent intent = new Intent(SeeAllItemsActivity.this, SeeAllItemsActivity.class);
             // Still add the extra "query" or "category" if it exists
             if (getIntent().hasExtra("query")) {
@@ -92,15 +112,11 @@ public class SeeAllItemsActivity extends AppCompatActivity {
             else if (getIntent().hasExtra("location")) {
                 intent.putExtra("location", getIntent().getStringExtra("location"));
             }
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); // clear the activity stack
             startActivity(intent);
             finish();
         });
 
         profileButton.setOnClickListener(v -> {
-//            profileButton.setBackgroundTintList(ContextCompat.getColorStateList(SeeAllItemsActivity.this, R.color.purple));
-//            reloadButton.setBackgroundTintList(ContextCompat.getColorStateList(SeeAllItemsActivity.this, R.color.grey));
-
             Intent intent = new Intent(SeeAllItemsActivity.this, ProfileActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); // clear the activity stack
             startActivity(intent);
@@ -111,7 +127,6 @@ public class SeeAllItemsActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 SearchDataManager.getInstance().saveSearch(query);
-
                 return false;
             }
 
@@ -125,6 +140,18 @@ public class SeeAllItemsActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        toggleFiltersButton.setOnClickListener(v -> {
+            if (filtersLayout.getVisibility() == ConstraintLayout.VISIBLE) {
+                filtersLayout.setVisibility(ConstraintLayout.GONE);
+                toggleFiltersButton.setImageResource(R.drawable.ic_show_filters);
+            } else {
+                filtersLayout.setVisibility(ConstraintLayout.VISIBLE);
+                toggleFiltersButton.setImageResource(R.drawable.ic_hide_filters);
+            }
+        });
+
+        applyFiltersButton.setOnClickListener(v -> filterItemsWithFilters());
 
         if(getIntent().hasExtra("query") || getIntent().hasExtra("category") || getIntent().hasExtra("location")) {
             if (getIntent().hasExtra("query")) {
@@ -152,6 +179,51 @@ public class SeeAllItemsActivity extends AppCompatActivity {
         }
     }
 
+    private void fetchCategoriesForSpinner(Spinner spinner) {
+        firestoreDB.collection("CATEGORIES").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    ArrayList<String> categories = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        String category = documentSnapshot.getString("name");
+                        categories.add(category);
+                    }
+                    categories.add(0, "All categories");
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner.setAdapter(adapter);
+                    spinner.setSelection(0);
+                })
+                .addOnFailureListener(e -> {
+                    // Show a toast message of failure
+                });
+    }
+
+    private void fetchLocationsForSpinner(Spinner spinner){
+        firestoreDB.collection("ITEMS").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    ArrayList<String> locations = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        ItemModel item = documentSnapshot.toObject(ItemModel.class);
+                        assert item != null;
+                        item.setItemId(documentSnapshot.getId());
+                        if (item.getItemUserId().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid())) {
+                            continue;
+                        }
+                        if (!locations.contains(item.getItemLocation())) {
+                            locations.add(item.getItemLocation());
+                        }
+                    }
+                    locations.add(0, "All locations");
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, locations);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner.setAdapter(adapter);
+                    spinner.setSelection(0);
+                })
+                .addOnFailureListener(e -> {
+                    // Show a toast message of failure
+                });
+    }
+
     private void fetchItems() {
         firestoreDB.collection("ITEMS").get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -162,6 +234,47 @@ public class SeeAllItemsActivity extends AppCompatActivity {
                         item.setItemId(documentSnapshot.getId());
                         if (item.getItemUserId().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid())) {
                             continue;
+                        }
+                        items.add(item);
+                    }
+
+                    recyclerViewItems.setLayoutManager(new LinearLayoutManager(this));
+                    itemAdapter = new SomeDetailedItemAdapter(this, items);
+                    recyclerViewItems.setAdapter(itemAdapter);
+
+                    itemAdapter.notifyItemChanged(items.size());
+                })
+                .addOnFailureListener(e -> {
+                    // Show a toast message of failure
+                });
+    }
+
+    private void filterItemsWithFilters() {
+        String category = categoryFilterSpinner.getSelectedItem().toString();
+        String location = locationFilterSpinner.getSelectedItem().toString();
+        String minPrice = edtMinPriceFilter.getText().toString();
+        String maxPrice = edtMaxPriceFilter.getText().toString();
+
+        firestoreDB.collection("ITEMS").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    items.clear();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        ItemModel item = documentSnapshot.toObject(ItemModel.class);
+                        assert item != null;
+                        item.setItemId(documentSnapshot.getId());
+                        if (item.getItemUserId().equals(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid())) {
+                            continue;
+                        }
+                        if (!category.equals("All categories") && !item.getItemCategory().equals(category)) {
+                            continue;
+                        }
+                        if (!location.equals("All locations") && !item.getItemLocation().equals(location)) {
+                            continue;
+                        }
+                        if (!minPrice.isEmpty() && !maxPrice.isEmpty()) {
+                            if (item.getItemPrice() < Double.parseDouble(minPrice) || item.getItemPrice() > Double.parseDouble(maxPrice)) {
+                                continue;
+                            }
                         }
                         items.add(item);
                     }

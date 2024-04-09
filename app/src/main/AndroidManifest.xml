@@ -19,11 +19,14 @@
         android:theme="@style/Theme.Swapify"
         tools:targetApi="34">
         <activity
+            android:name=".principalactivities.TicketSupportActivity"
+            android:exported="true" />
+        <activity
             android:name=".principalactivities.MapsActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".wishlists.WishlistActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".principalactivities.LoadingScreenActivity"
             android:exported="true" />

@@ -86,6 +86,7 @@
             android:layout_toStartOf="@+id/buttonSendMessage"
             android:layout_alignParentStart="true"
             android:inputType="text"
+            android:textColor="?attr/colorOnPrimary"
             android:imeOptions="actionSend"
             android:padding="8dp" />
 

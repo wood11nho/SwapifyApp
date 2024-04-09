@@ -234,6 +234,19 @@
         app:layout_constraintBottom_toTopOf="@id/toolbar" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabSupport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="Go to Maps"
+        android:src="@drawable/ic_question_mark"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="?attr/colorPrimary"
+        android:backgroundTint="?attr/colorSecondary" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabMaps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

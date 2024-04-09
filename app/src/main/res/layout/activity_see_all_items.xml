@@ -37,8 +37,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/allItemsTitle"
@@ -69,6 +68,119 @@
                 android:queryHint="Search for item, category, location..."
                 style="@style/SearchViewStyle" />
 
+            <ImageButton
+                android:id="@+id/toggle_filters_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="Toggle filters"
+                android:src="@drawable/ic_show_filters"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.041"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/searchViewAllItems" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/filter_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/toggle_filters_button"
+                android:layout_marginTop="8dp"
+                android:padding="16dp">
+
+                <!-- Category Filter -->
+                <TextView
+                    android:id="@+id/categoryFilter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+
+                    />
+                <Spinner
+                    android:id="@+id/spinnerCategoryFilter"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/categoryFilter"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
+
+                <!-- Location Filter -->
+                <TextView
+                    android:id="@+id/locationFilter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/spinnerCategoryFilter"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="16dp"
+                    />
+                <Spinner
+                    android:id="@+id/spinnerLocationFilter"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/locationFilter"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <!-- Price Range Filter -->
+                <!-- Implement as per your design. Example: Two EditTexts for min and max price or a range slider -->
+                <!-- Placeholder for Price Range -->
+                <TextView
+                    android:id="@+id/priceRange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Price Range"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/spinnerLocationFilter"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="16dp"
+                    />
+                <EditText
+                    android:id="@+id/etMinPriceFilter"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/priceRange"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/etMaxPriceFilter"
+                    android:layout_marginTop="8dp"
+                    android:inputType="numberDecimal"
+                    android:hint="Min Price"
+                    />
+
+                <EditText
+                    android:id="@+id/etMaxPriceFilter"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/priceRange"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/etMinPriceFilter"
+                    android:layout_marginTop="8dp"
+                    android:inputType="numberDecimal"
+                    android:hint="Max Price"
+                    />
+
+                <!-- Apply Filter Button -->
+                <Button
+                    android:id="@+id/applyFilterButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Apply Filter"
+                    app:layout_constraintTop_toBottomOf="@id/etMinPriceFilter"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="16dp"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/allItemsRecyclerView"
@@ -76,7 +188,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                app:layout_constraintTop_toBottomOf="@id/searchViewAllItems"
+                app:layout_constraintTop_toBottomOf="@id/filter_layout"
                 android:clipToPadding="false"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"

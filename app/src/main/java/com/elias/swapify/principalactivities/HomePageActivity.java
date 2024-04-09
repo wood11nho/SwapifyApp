@@ -57,7 +57,7 @@ public class HomePageActivity extends AppCompatActivity {
     private VideoView videoView;
     private ImageButton signOutButton;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private FloatingActionButton fabMaps;
+    private FloatingActionButton fabMaps, fabSupport;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +105,7 @@ public class HomePageActivity extends AppCompatActivity {
         videoView = findViewById(R.id.videoView);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         fabMaps = findViewById(R.id.fabMaps);
+        fabSupport = findViewById(R.id.fabSupport);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -190,7 +191,10 @@ public class HomePageActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-//        toggleNightModeButton.setOnClickListener(v -> toggleAppThemeChange());
+        fabSupport.setOnClickListener(v -> {
+            Intent intent = new Intent(HomePageActivity.this, TicketSupportActivity.class);
+            startActivity(intent);
+        });
 
         // Initialize the RecyclerView for items and its adapter with horizontal layout
         recyclerViewItems = findViewById(R.id.recyclerViewItems);

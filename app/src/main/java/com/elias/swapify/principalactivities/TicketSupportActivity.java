@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import androidx.appcompat.app.AppCompatActivity;
 import com.elias.swapify.R;
@@ -16,6 +17,7 @@ public class TicketSupportActivity extends AppCompatActivity {
     private EditText subjectEditText, descriptionEditText, userEmailEditText, userNameEditText;
     private Spinner issueCategorySpinner, urgencySpinner;
     private Button sendButton;
+    private ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class TicketSupportActivity extends AppCompatActivity {
         issueCategorySpinner = findViewById(R.id.issueCategorySpinner);
         urgencySpinner = findViewById(R.id.urgencySpinner);
         sendButton = findViewById(R.id.sendButton);
+        backButton = findViewById(R.id.btnBack_toolbar_support);
 
         setupSpinners();
 
@@ -40,6 +43,10 @@ public class TicketSupportActivity extends AppCompatActivity {
             String urgency = urgencySpinner.getSelectedItem().toString();
             String name = userNameEditText.getText().toString();
             fetchSupportEmailAndSend(userEmail, subject, description, issueCategory, urgency, name);
+        });
+
+        backButton.setOnClickListener(view -> {
+            finish();
         });
     }
 

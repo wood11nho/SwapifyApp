@@ -1,22 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/library">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabSupport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Contact Support"
+        android:src="@drawable/ic_question_mark"
+        app:backgroundTint="?attr/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:rippleColor="?attr/colorSecondary"
+        app:tint="?attr/colorSecondary" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:contentDescription="Information"
+        android:src="@drawable/ic_info"
+        app:backgroundTint="?attr/colorPrimary"
+        app:rippleColor="?attr/colorOnSecondary"
+        app:tint="?attr/colorSecondary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        app:cardCornerRadius="40dp"
         android:layout_marginBottom="-40dp"
+        android:backgroundTint="?attr/colorOnPrimary"
+        app:cardCornerRadius="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:backgroundTint="?attr/colorOnPrimary"
         app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
@@ -24,17 +52,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:paddingBottom="40dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="40dp">
 
             <ImageView
                 android:id="@+id/icon_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:src="@mipmap/logo_swapify_foreground"
                 android:layout_marginTop="16dp"
-                android:contentDescription="@string/app_logo"/>
+                android:contentDescription="@string/app_logo"
+                android:src="@mipmap/logo_swapify_foreground" />
 
             <TextView
                 android:id="@+id/title_text"
@@ -63,10 +91,9 @@
                 android:gravity="center_horizontal"
                 android:padding="16dp"
                 android:text="@string/a_short_description_of_4_rows"
-                android:textSize="16sp"
                 android:textColor="?attr/colorPrimaryVariant"
-                android:textStyle="bold"
-                />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/sign_up_button"
@@ -75,11 +102,10 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:text="CREATE NEW ACCOUNT"
-                android:textStyle="bold"
-                android:textColor="?attr/colorSecondary"
                 android:backgroundTint="?attr/colorPrimary"
-                />
+                android:text="CREATE NEW ACCOUNT"
+                android:textColor="?attr/colorSecondary"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/log_in_button"
@@ -88,11 +114,10 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:textColor="?attr/colorSecondary"
                 android:backgroundTint="?attr/colorPrimary"
                 android:text="LOG INTO EXISTING ACCOUNT"
-                android:textStyle="bold"
-                />
+                android:textColor="?attr/colorSecondary"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

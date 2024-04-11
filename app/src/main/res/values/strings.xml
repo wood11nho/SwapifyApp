@@ -63,4 +63,14 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_chats">Search chats...</string>
     <string name="wishlist_button">Wishlist Button</string>
+
+    <!--  Onboarding screens descriptions  -->
+    <string name="onboarding_screen_1_title">Welcome to Swapify!</string>
+    <string name="onboarding_screen_1_description">The ultimate tool for decluttering your home, discovering new items, and connecting with your community! Explore our wonderful app and discover all the features we have to offer.</string>
+    <string name="onboarding_screen_2_title">Discover New Items</string>
+    <string name="onboarding_screen_2_description">Easily upload items you no longer need or want, and browse listings from other users to find items that interest you. Swapify is the perfect place to find new treasures! We encourage sustainable living and fashion.</string>
+    <string name="onboarding_screen_3_title">Connect with Your Community</string>
+    <string name="onboarding_screen_3_description">Connect with other users, chat with them, and arrange swaps or purchases. The greater the community, the more items you can discover and the more people you can meet. Join us today!</string>
+    <string name="onboarding_screen_4_title">Explore around you</string>
+    <string name="onboarding_screen_4_description">Look on the map to see what items are available around you. You can also filter by category to find exactly what you are looking for. Did you find something you like? Add it to wishlist, so that you can find it later.</string>
 </resources>

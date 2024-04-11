@@ -41,6 +41,7 @@
     <color name="grey_light">#D3D3D3</color>
     <color name="red_500_dark">#FF0000</color>
     <color name="red_700_dark">#B30000</color>
+    <color name="transparent">#00000000</color>
 
     <!-- Color Palette -->
     <color name="deep_blue">#000080</color>

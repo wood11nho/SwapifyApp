@@ -81,6 +81,9 @@
             android:name=".users.VerifyEmailActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".onboarding.OnboardingScreensActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".principalactivities.EntryActivity"
             android:exported="true"

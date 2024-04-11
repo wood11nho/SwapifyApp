@@ -10,8 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.elias.swapify.R;
 import com.elias.swapify.firebase.FirebaseUtil;
+import com.elias.swapify.onboarding.OnboardingScreensActivity;
 import com.elias.swapify.users.LoginActivity;
 import com.elias.swapify.users.RegisterActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
@@ -20,6 +22,7 @@ import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderF
 public class EntryActivity extends AppCompatActivity {
     Button registerButton;
     Button loginButton;
+    FloatingActionButton fabSupport, fabInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,8 @@ public class EntryActivity extends AppCompatActivity {
 
         registerButton = findViewById(R.id.sign_up_button);
         loginButton = findViewById(R.id.log_in_button);
+        fabSupport = findViewById(R.id.fabSupport);
+        fabInfo = findViewById(R.id.fabInfo);
 
         checkUserStatus();
 
@@ -64,6 +69,21 @@ public class EntryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 navigateTo(LoginActivity.class);
+            }
+        });
+
+        fabSupport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(EntryActivity.this, TicketSupportActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        fabInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateTo(OnboardingScreensActivity.class);
             }
         });
     }

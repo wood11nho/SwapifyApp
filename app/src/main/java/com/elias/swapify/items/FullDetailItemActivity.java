@@ -31,7 +31,7 @@ public class FullDetailItemActivity extends AppCompatActivity {
     private TextView itemCategory;
     private TextView isForTrade;
     private TextView isForSale;
-    private TextView isForAuction;
+    private TextView isForCharity;
     private TextView itemPrice;
     private TextView itemDescription;
     private ImageView itemOwnerImage;
@@ -55,7 +55,7 @@ public class FullDetailItemActivity extends AppCompatActivity {
         itemName = findViewById(R.id.fullDetailItemName);
         isForTrade = findViewById(R.id.tradeTextView);
         isForSale = findViewById(R.id.sellTextView);
-        isForAuction = findViewById(R.id.auctionTextView);
+        isForCharity = findViewById(R.id.charityTextView);
         itemPrice = findViewById(R.id.fullDetailItemPrice);
         itemDescription = findViewById(R.id.fullDetailItemDescription);
         itemOwnerImage = findViewById(R.id.userProfileImage);
@@ -74,7 +74,7 @@ public class FullDetailItemActivity extends AppCompatActivity {
         String itemImageUrl = currentIntent.getStringExtra("itemImage");
         boolean isForTradeBoolean = currentIntent.getBooleanExtra("itemIsForTrade", false);
         boolean isForSaleBoolean = currentIntent.getBooleanExtra("itemIsForSale", false);
-        boolean isForAuctionBoolean = currentIntent.getBooleanExtra("itemIsForAuction", false);
+        boolean isForCharityBoolean = currentIntent.getBooleanExtra("itemIsForCharity", false);
         String itemOwnerId = currentIntent.getStringExtra("itemUserId");
         String itemId = currentIntent.getStringExtra("itemId");
         String itemLocationString = currentIntent.getStringExtra("itemLocation");
@@ -110,9 +110,9 @@ public class FullDetailItemActivity extends AppCompatActivity {
             isForSale.setTextColor(getResources().getColor(R.color.white));
         }
 
-        if (isForAuctionBoolean) {
-            isForAuction.setBackgroundColor(getResources().getColor(R.color.purple));
-            isForAuction.setTextColor(getResources().getColor(R.color.white));
+        if (isForCharityBoolean) {
+            isForCharity.setBackgroundColor(getResources().getColor(R.color.purple));
+            isForCharity.setTextColor(getResources().getColor(R.color.white));
         }
 
         // Set the item owner's profile image

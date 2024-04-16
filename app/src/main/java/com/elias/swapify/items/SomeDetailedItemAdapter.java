@@ -91,7 +91,7 @@ public class SomeDetailedItemAdapter extends RecyclerView.Adapter<SomeDetailedIt
             intent.putExtra("itemImage", item.getItemImage());
             intent.putExtra("itemIsForTrade", item.getItemIsForTrade());
             intent.putExtra("itemIsForSale", item.getItemIsForSale());
-            intent.putExtra("itemIsForAuction", item.getItemIsForAuction());
+            intent.putExtra("itemIsForCharity", item.getItemIsForCharity());
             intent.putExtra("itemUserId", item.getItemUserId());
             intent.putExtra("itemId", item.getItemId());
             intent.putExtra("itemLocation", item.getItemLocation());

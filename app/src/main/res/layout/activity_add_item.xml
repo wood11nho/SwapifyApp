@@ -43,8 +43,8 @@
 
             <ImageView
                 android:id="@+id/item_picture"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
                 android:layout_gravity="center_horizontal"
                 android:src="@mipmap/defaultpicture"
                 android:background="?attr/colorOnPrimary"
@@ -64,6 +64,16 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp" />
 
+            <TextView
+                android:id="@+id/item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Item Name"
+                android:textSize="16sp"
+                android:textColor="?attr/colorOnPrimary"
+                android:layout_marginTop="16dp"
+                android:padding="8dp" />
+
             <EditText
                 android:id="@+id/editText_itemName"
                 android:layout_width="match_parent"
@@ -75,6 +85,15 @@
                 android:textSize="16sp"
                 android:textColorHint="?android:textColorHint"
                 android:textColor="?attr/colorOnPrimary"/>
+
+            <TextView
+                android:id="@+id/item_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Item Description"
+                android:textSize="16sp"
+                android:textColor="?attr/colorOnPrimary"
+                android:padding="8dp" />
 
             <EditText
                 android:id="@+id/editText_itemDescription"
@@ -128,6 +147,15 @@
                 android:textColorHint="?android:textColorHint"
                 />
 
+            <TextView
+                android:id="@+id/item_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Item Price"
+                android:textSize="16sp"
+                android:textColor="?attr/colorOnPrimary"
+                android:padding="8dp" />
+
             <EditText
                 android:id="@+id/editText_itemPrice"
                 android:layout_width="match_parent"
@@ -137,16 +165,46 @@
                 android:maxLines="1"
                 android:padding="8dp"
                 android:textSize="16sp"
-
                 android:textColorHint="?android:textColorHint"
                 android:textColor="?attr/colorOnPrimary"
                 />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="8dp">
+
+                <ImageView
+                    android:id="@+id/imageView_infoIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_info"
+                    android:contentDescription="Info Icon"
+                    android:paddingEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/textView_priceExplanationAndItemType"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Item selected for trade, therefore the price is not mandatory and is set to 0."
+                    android:textSize="16sp"
+                    android:minLines="2"
+                    android:textColor="?attr/colorSecondary"
+                    android:background="@drawable/rounded_corners"
+                    android:padding="8dp"/>
+
+            </LinearLayout>
+
 
             <RadioGroup
                 android:id="@+id/radioGroup_itemType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp">
 
                 <RadioButton
@@ -167,14 +225,21 @@
                     android:textColor="?attr/colorOnSecondary" />
 
                 <RadioButton
-                    android:id="@+id/radioButton_auction"
+                    android:id="@+id/radioButton_charity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Auction"
+                    android:text="Charity"
                     android:textSize="16sp"
                     android:textColor="?attr/colorOnSecondary" />
 
             </RadioGroup>
+
+            <androidx.viewpager.widget.ViewPager
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:id="@+id/charities_view_pager_slider"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"/>
 
             <Button
                 android:id="@+id/save_button"

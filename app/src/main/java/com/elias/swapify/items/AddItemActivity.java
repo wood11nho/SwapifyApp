@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.elias.swapify.firebase.FirebaseMLModel;
@@ -59,6 +61,10 @@ public class AddItemActivity extends AppCompatActivity {
     private Button saveButton;
     private FirebaseMLModel firebaseMLModel;
     private Spinner itemLocationSpinner;
+    private TextView textViewPriceExplanationAndItemType;
+    private ViewPager charitiesViewPager;
+    private CharityPagerAdapter charityPagerAdapter;
+    private ArrayList<CharityModel> charities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,12 +82,15 @@ public class AddItemActivity extends AppCompatActivity {
         itemTypeRadioGroup = findViewById(R.id.radioGroup_itemType);
         itemLocationSpinner = findViewById(R.id.location_spinner);
         saveButton = findViewById(R.id.save_button);
+        textViewPriceExplanationAndItemType = findViewById(R.id.textView_priceExplanationAndItemType);
+        charitiesViewPager = findViewById(R.id.charities_view_pager_slider);
 
         // Initialize the FirebaseMLModel object
         firebaseMLModel = new FirebaseMLModel();
         firebaseMLModel.downloadAndInitializeModel(this, "Detect-Category-Model");
 
         fetchCategoriesFromFirestore();
+        fetchCharitiesFromFirestore();
 
         // Set up the back button
         backButton.setOnClickListener(v -> {
@@ -106,7 +115,7 @@ public class AddItemActivity extends AppCompatActivity {
                 int selectedItemTypeId = itemTypeRadioGroup.getCheckedRadioButtonId();
                 boolean itemForTrade = selectedItemTypeId == R.id.radioButton_trade;
                 boolean itemForSale = selectedItemTypeId == R.id.radioButton_sale;
-                boolean itemForAuction = selectedItemTypeId == R.id.radioButton_auction;
+                boolean itemForCharity = selectedItemTypeId == R.id.radioButton_charity;
                 String itemLocation;
                 if (itemLocationSpinner.getSelectedItem() == null) {
                     itemLocation = "";
@@ -123,7 +132,7 @@ public class AddItemActivity extends AppCompatActivity {
                 String userId = currentUser.getUid();
 
                 // Add the data to Firestore
-                uploadItemToFirestore(itemName, itemDescription, itemCategory, itemPrice, itemPictureUrl, itemForTrade, itemForSale, itemForAuction, userId, itemLocation);
+                uploadItemToFirestore(itemName, itemDescription, itemCategory, itemPrice, itemPictureUrl, itemForTrade, itemForSale, itemForCharity, userId, itemLocation);
             }
         });
 
@@ -136,6 +145,23 @@ public class AddItemActivity extends AppCompatActivity {
                     e.printStackTrace();
 
                 }
+            }
+        });
+
+        itemTypeRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.radioButton_trade) {
+                itemPriceEditText.setEnabled(false);
+                itemPriceEditText.setText("0");
+                textViewPriceExplanationAndItemType.setText("Item selected for trade, therefore the price is not mandatory and is set to 0.");
+            } else if (checkedId == R.id.radioButton_sale) {
+                itemPriceEditText.setEnabled(true);
+                itemPriceEditText.setText("");
+                textViewPriceExplanationAndItemType.setText("Item selected for sale, therefore the price is mandatory.");
+            } else if (checkedId == R.id.radioButton_charity) {
+                itemPriceEditText.setEnabled(true);
+                itemPriceEditText.setText("");
+                textViewPriceExplanationAndItemType.setText("Item selected for charity, therefore the price is mandatory and you must select a charity.");
+                charitiesViewPager.setVisibility(View.VISIBLE);
             }
         });
 
@@ -325,6 +351,49 @@ public class AddItemActivity extends AppCompatActivity {
         return true;
     }
 
+    private void fetchCharitiesFromFirestore(){
+        FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
+        firestoreDB.collection("CHARITIES")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    charities = new ArrayList<>();
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        String charityName = documentSnapshot.getString("charityName");
+                        String charityDescription = documentSnapshot.getString("charityDescription");
+                        String charityImage = documentSnapshot.getString("charityImage");
+                        charities.add(new CharityModel(charityName, charityDescription, charityImage));
+                    }
+                    charityPagerAdapter = new CharityPagerAdapter(this, charities);
+                    charitiesViewPager.setAdapter(charityPagerAdapter);
+                    charitiesViewPager.addOnPageChangeListener(viewListener);
+                })
+                .addOnFailureListener(e -> {
+                    // Handle any errors that occur during the Firestore query
+                    Log.e("AddItemActivity", "Error fetching charities: " + e.getMessage());
+                });
+    }
+
+    ViewPager.OnPageChangeListener viewListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            // Set the charity name and description in the text views
+            TextView charityName = findViewById(R.id.charityName);
+            TextView charityDescription = findViewById(R.id.charityDescription);
+            charityName.setText(charities.get(position).getCharityName());
+            charityDescription.setText(charities.get(position).getCharityDescription());
+            charityPagerAdapter.setSelectedPosition(position);
+            Log.d("AddItemActivity", "Selected charity: " + charities.get(position).getCharityName());
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+        }
+    };
+
     private void fetchCategoriesFromFirestore() {
         FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
         firestoreDB.collection("CATEGORIES")
@@ -374,10 +443,10 @@ public class AddItemActivity extends AppCompatActivity {
                 });
     }
 
-    private void uploadItemToFirestore(String itemName, String itemDescription, String itemCategory, int itemPrice, String itemPictureUrl, boolean itemForTrade, boolean itemForSale, boolean itemForAuction, String userId, String itemLocation) {
+    private void uploadItemToFirestore(String itemName, String itemDescription, String itemCategory, int itemPrice, String itemPictureUrl, boolean itemForTrade, boolean itemForSale, boolean itemForCharity, String userId, String itemLocation) {
         FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
         firestoreDB.collection("ITEMS")
-                .add(new ItemModel(itemName, itemDescription, itemCategory, itemPrice, itemPictureUrl, itemForTrade, itemForSale, itemForAuction, userId, itemLocation))
+                .add(new ItemModel(itemName, itemDescription, itemCategory, itemPrice, itemPictureUrl, itemForTrade, itemForSale, itemForCharity, userId, itemLocation))
                 .addOnSuccessListener(documentReference -> {
                     // Item added successfully
                     SearchDataManager.getInstance().saveSearch(itemCategory);

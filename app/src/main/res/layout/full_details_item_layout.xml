@@ -150,16 +150,16 @@
                 android:layout_marginEnd="16dp"
                 android:layout_weight="1" />
 
-            <!-- AUCTION -->
+            <!-- CHARITY -->
             <TextView
-                android:id="@+id/auctionTextView"
+                android:id="@+id/charityTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:paddingStart="4dp"
                 android:paddingEnd="4dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                android:text="AUCTION"
+                android:text="CHARITY"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:background="?attr/selectableItemBackgroundBorderless"

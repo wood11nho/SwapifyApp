@@ -11,7 +11,7 @@ public class ItemModel {
     private String itemImage;
     private boolean itemIsForTrade;
     private boolean itemIsForSale;
-    private boolean itemIsForAuction;
+    private boolean itemIsForCharity;
     private String itemUserId;
     private String itemLocation;
 
@@ -27,7 +27,7 @@ public class ItemModel {
         this.itemId = "";
     }
 
-    public ItemModel(String itemName, String itemDescription, String itemCategory, int itemPrice, String itemImage, boolean itemIsForTrade, boolean itemIsForSale, boolean itemIsForAuction, String itemUserId, String itemLocation) {
+    public ItemModel(String itemName, String itemDescription, String itemCategory, int itemPrice, String itemImage, boolean itemIsForTrade, boolean itemIsForSale, boolean itemIsForCharity, String itemUserId, String itemLocation) {
         this.itemName = itemName;
         this.itemDescription = itemDescription;
         this.itemCategory = itemCategory;
@@ -35,7 +35,7 @@ public class ItemModel {
         this.itemImage = itemImage;
         this.itemIsForTrade = itemIsForTrade;
         this.itemIsForSale = itemIsForSale;
-        this.itemIsForAuction = itemIsForAuction;
+        this.itemIsForCharity = itemIsForCharity;
         this.itemUserId = itemUserId;
         this.itemId = "";
         this.itemLocation = itemLocation;
@@ -69,8 +69,8 @@ public class ItemModel {
         return itemIsForSale;
     }
 
-    public boolean getItemIsForAuction() {
-        return itemIsForAuction;
+    public boolean getItemIsForCharity() {
+        return itemIsForCharity;
     }
 
     public String getItemUserId() {
@@ -105,8 +105,8 @@ public class ItemModel {
         this.itemIsForSale = itemIsForSale;
     }
 
-    public void setItemIsForAuction(boolean itemIsForAuction) {
-        this.itemIsForAuction = itemIsForAuction;
+    public void setItemIsForCharity(boolean itemIsForCharity) {
+        this.itemIsForCharity = itemIsForCharity;
     }
 
     public void setItemUserId(String itemUserId) {
@@ -140,7 +140,7 @@ public class ItemModel {
                 ", itemImage='" + itemImage + '\'' +
                 ", itemIsForTrade=" + itemIsForTrade +
                 ", itemIsForSale=" + itemIsForSale +
-                ", itemIsForAuction=" + itemIsForAuction +
+                ", itemIsForCharity=" + itemIsForCharity +
                 ", itemUserId='" + itemUserId + '\'' +
                 ", itemLocation='" + itemLocation + '\'' +
                 '}';

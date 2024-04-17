@@ -3,6 +3,7 @@ package com.elias.swapify.firebase;
 import android.util.Log;
 
 import com.elias.swapify.categories.CategoryModel;
+import com.elias.swapify.charity.CharityModel;
 import com.elias.swapify.items.ItemModel;
 import com.elias.swapify.wishlists.WishlistItem;
 import com.elias.swapify.wishlists.WishlistModel;
@@ -21,6 +22,19 @@ import java.util.Map;
 
 public class FirestoreUtil {
     private static final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+    public static void fetchCharityData(String charityId, OnCharityDataFetchedListener listener) {
+        firestore.collection("CHARITIES").document(charityId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        CharityModel charity = documentSnapshot.toObject(CharityModel.class);
+                        if (charity != null){
+                            listener.onCharityDataFetched(charity);
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> listener.onError(e.toString()));
+    }
 
     public static void fetchUserData(String userId, OnUserDataFetchedListener listener) {
         firestore.collection("USERS").document(userId).get()
@@ -300,6 +314,12 @@ public class FirestoreUtil {
     }
 
     // Define interfaces for callbacks
+
+    public interface OnCharityDataFetchedListener {
+        void onCharityDataFetched(CharityModel charity);
+        void onError(String error);
+    }
+
     public interface OnUserDataFetchedListener {
         void onUserDataFetched(String field);
         void onError(String error);

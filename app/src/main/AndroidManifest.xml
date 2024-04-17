@@ -19,6 +19,9 @@
         android:theme="@style/Theme.Swapify"
         tools:targetApi="34">
         <activity
+            android:name=".charity.FullDetailCharityActivity"
+            android:exported="false" />
+        <activity
             android:name=".principalactivities.TicketSupportActivity"
             android:exported="true" />
         <activity
@@ -81,7 +84,8 @@
             android:name=".users.VerifyEmailActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".onboarding.OnboardingScreensActivity"
+        <activity
+            android:name=".onboarding.OnboardingScreensActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity

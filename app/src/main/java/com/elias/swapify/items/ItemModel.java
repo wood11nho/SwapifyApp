@@ -14,6 +14,7 @@ public class ItemModel {
     private boolean itemIsForCharity;
     private String itemUserId;
     private String itemLocation;
+    private String itemCharityId;
 
     public ItemModel() {
         // Default constructor required for Firestore deserialization
@@ -27,7 +28,7 @@ public class ItemModel {
         this.itemId = "";
     }
 
-    public ItemModel(String itemName, String itemDescription, String itemCategory, int itemPrice, String itemImage, boolean itemIsForTrade, boolean itemIsForSale, boolean itemIsForCharity, String itemUserId, String itemLocation) {
+    public ItemModel(String itemName, String itemDescription, String itemCategory, int itemPrice, String itemImage, boolean itemIsForTrade, boolean itemIsForSale, boolean itemIsForCharity, String itemUserId, String itemLocation, String itemCharityId) {
         this.itemName = itemName;
         this.itemDescription = itemDescription;
         this.itemCategory = itemCategory;
@@ -39,6 +40,7 @@ public class ItemModel {
         this.itemUserId = itemUserId;
         this.itemId = "";
         this.itemLocation = itemLocation;
+        this.itemCharityId = itemCharityId;
     }
 
     public String getItemName() {
@@ -127,6 +129,14 @@ public class ItemModel {
 
     public void setItemLocation(String itemLocation) {
         this.itemLocation = itemLocation;
+    }
+
+    public String getItemCharityId() {
+        return itemCharityId;
+    }
+
+    public void setItemCharityId(String itemCharityId) {
+        this.itemCharityId = itemCharityId;
     }
 
     @NonNull

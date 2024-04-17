@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.elias.swapify.R;
 import com.elias.swapify.userpreferences.SearchDataManager;
 import com.elias.swapify.items.SeeAllItemsActivity;
@@ -44,14 +46,15 @@ public class SomeDetailedCategoryAdapter extends RecyclerView.Adapter<SomeDetail
 
         // Set the category image
         String categoryImage = category.getCategoryImage();
-        // If the category doesn't have an image the String will look like "" or maybe null
+// If the category doesn't have an image the String will look like "" or maybe null
         if (categoryImage != null && !categoryImage.equals("")) {
-            Picasso.get()
+            Glide.with(holder.itemView.getContext()) // Context can be obtained from the ViewHolder's itemView.
                     .load(categoryImage)
-                    .resize(300, 0)
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_question_mark)
-                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .override(300, 300) // Specifies the size to resize the image.
+                    .centerCrop() // This will crop the center of the resized image to match the ImageView's dimensions.
+                    .placeholder(R.drawable.ic_question_mark) // Shows a placeholder until the image loads.
+                    .diskCacheStrategy(DiskCacheStrategy.NONE) // Equivalent to Picasso's NO_CACHE, NO_STORE.
+                    .skipMemoryCache(true) // Skips memory cache, similar to Picasso's memory policy.
                     .into(holder.categoryImage);
         } else {
             holder.categoryImage.setImageResource(R.drawable.ic_question_mark);

@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.elias.swapify.chats.ChatActivity;
 import com.elias.swapify.R;
 import com.elias.swapify.firebase.FirebaseUtil;
@@ -52,7 +53,13 @@ public class SomeDetailedItemAdapter extends RecyclerView.Adapter<SomeDetailedIt
 
         // If the item doesn't have an image the String will look like "" or maybe null
         if (itemImage != null && !itemImage.equals("")) {
-            Picasso.get().load(itemImage).into(holder.itemImage);
+            Glide.with(holder.itemView.getContext()) // Context can be obtained from the ViewHolder's itemView.
+                    .load(itemImage)
+                    .fitCenter() // Scales the image to fit the ImageView while maintaining its aspect ratio.
+                    .centerCrop() // This will crop the center of the scaled image to fill the ImageView fully.
+                    .placeholder(R.drawable.ic_question_mark)
+                    .error(R.drawable.ic_question_mark)
+                    .into(holder.itemImage);
         } else {
             holder.itemImage.setImageResource(R.drawable.ic_question_mark);
         }
@@ -95,6 +102,7 @@ public class SomeDetailedItemAdapter extends RecyclerView.Adapter<SomeDetailedIt
             intent.putExtra("itemUserId", item.getItemUserId());
             intent.putExtra("itemId", item.getItemId());
             intent.putExtra("itemLocation", item.getItemLocation());
+            intent.putExtra("itemCharityId", item.getItemCharityId());
             context.startActivity(intent);
         });
 

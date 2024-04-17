@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.elias.swapify.charity.FullDetailCharityActivity;
 import com.elias.swapify.chats.ChatActivity;
 import com.elias.swapify.R;
 import com.elias.swapify.firebase.FirebaseUtil;
@@ -19,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 
@@ -41,6 +42,10 @@ public class FullDetailItemActivity extends AppCompatActivity {
     private ImageButton backButton;
     private ImageButton chatButton;
     private ImageButton wishlistButton;
+    private LinearLayout charityLayout;
+    private ImageView charityImage;
+    private TextView charityName;
+    private TextView charityDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,11 @@ public class FullDetailItemActivity extends AppCompatActivity {
         chatButton = findViewById(R.id.messageUserButton);
         wishlistButton = findViewById(R.id.addToWishlistButton);
         itemLocation = findViewById(R.id.fullDetailItemLocation);
+        charityLayout = findViewById(R.id.charityll);
+        charityImage = findViewById(R.id.charityItemImage);
+        charityName = findViewById(R.id.charityItemName);
+        charityDescription = findViewById(R.id.charityItemDescription);
+
 
         Intent currentIntent = getIntent();
         String itemNameString = currentIntent.getStringExtra("itemName");
@@ -78,6 +88,7 @@ public class FullDetailItemActivity extends AppCompatActivity {
         String itemOwnerId = currentIntent.getStringExtra("itemUserId");
         String itemId = currentIntent.getStringExtra("itemId");
         String itemLocationString = currentIntent.getStringExtra("itemLocation");
+        String itemCharityId = currentIntent.getStringExtra("itemCharityId");
 
         // Set the data to the views
         itemName.setText(itemNameString);
@@ -89,8 +100,12 @@ public class FullDetailItemActivity extends AppCompatActivity {
 
         // If the item doesn't have an image the String will look like "" or maybe null
         if (itemImageUrl != null && !itemImageUrl.equals("")) {
-            Picasso.get()
+            Glide.with(this)
                     .load(itemImageUrl)
+                    .fitCenter()
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_question_mark)
+                    .error(R.drawable.ic_question_mark)
                     .into(itemImage);
         } else {
             itemImage.setImageResource(R.drawable.ic_question_mark);
@@ -103,16 +118,20 @@ public class FullDetailItemActivity extends AppCompatActivity {
         if (isForTradeBoolean) {
             isForTrade.setBackgroundColor(getResources().getColor(R.color.purple));
             isForTrade.setTextColor(getResources().getColor(R.color.white));
+            charityLayout.setVisibility(LinearLayout.GONE);
         }
 
         if (isForSaleBoolean) {
             isForSale.setBackgroundColor(getResources().getColor(R.color.purple));
             isForSale.setTextColor(getResources().getColor(R.color.white));
+            charityLayout.setVisibility(LinearLayout.GONE);
         }
 
         if (isForCharityBoolean) {
             isForCharity.setBackgroundColor(getResources().getColor(R.color.purple));
             isForCharity.setTextColor(getResources().getColor(R.color.white));
+            fetchCharityData(itemCharityId);
+            charityLayout.setVisibility(LinearLayout.VISIBLE);
         }
 
         // Set the item owner's profile image
@@ -166,6 +185,40 @@ public class FullDetailItemActivity extends AppCompatActivity {
             );
         });
 
+        charityLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(FullDetailItemActivity.this, FullDetailCharityActivity.class);
+            intent.putExtra("charityId", itemCharityId);
+            startActivity(intent);
+        });
+
+    }
+
+    private void fetchCharityData(String charityId) {
+        DocumentReference docRef = firestoreDB.collection("CHARITIES").document(charityId);
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    String charityNameString = document.getString("charityName");
+                    String charityDescriptionString = document.getString("charityDescription");
+                    String charityImageString = document.getString("charityImage");
+
+                    charityName.setText(charityNameString);
+                    charityDescription.setText(charityDescriptionString);
+
+                    // Load it with Glide if it is an image
+                    if (charityImageString != null && !charityImageString.isEmpty()) {
+                        Glide.with(this)
+                                .load(charityImageString)
+                                .into(charityImage);
+                    }
+                } else {
+                    Toast.makeText(FullDetailItemActivity.this, "Failed to fetch charity data.", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(FullDetailItemActivity.this, "Failed to fetch charity data.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setUserFullName(String userId) {

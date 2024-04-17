@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.elias.swapify.R;
 import com.elias.swapify.userpreferences.SearchDataManager;
 import com.elias.swapify.userpreferences.ItemInteractionManager;
@@ -40,14 +41,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         String itemImage = item.getItemImage();
         // If the item doesn't have an image the String will look like "" or maybe null
         if (itemImage != null && !itemImage.equals("")) {
-            Picasso.get()
+            Glide.with(holder.itemView.getContext()) // Context can be obtained from the ViewHolder's itemView.
                     .load(itemImage)
-                    .fit() // This will cause the image to be resized to fit the ImageView.
-                    .centerCrop() // This will crop the center of the resized image to match the ImageView's dimensions.
+                    .fitCenter() // Scales the image to fit the ImageView while maintaining its aspect ratio.
+                    .centerCrop() // This will crop the center of the scaled image to fill the ImageView fully.
+                    .placeholder(R.drawable.ic_question_mark)
+                    .error(R.drawable.ic_question_mark)
                     .into(holder.itemImage);
         } else {
             holder.itemImage.setImageResource(R.drawable.ic_question_mark);
         }
+
 
         // Set the item's name and price
         holder.itemName.setText(item.getItemName());
@@ -72,6 +76,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             intent.putExtra("itemUserId", item.getItemUserId());
             intent.putExtra("itemId", item.getItemId());
             intent.putExtra("itemLocation", item.getItemLocation());
+            intent.putExtra("itemCharityId", item.getItemCharityId());
             view.getContext().startActivity(intent);
         });
     }

@@ -1,17 +1,27 @@
-package com.elias.swapify.items;
+package com.elias.swapify.charity;
 
 public class CharityModel {
+    private String charityId;
     private String charityName;
     private String charityDescription;
     private String charityImage;
 
-    public CharityModel(String charityName, String charityDescription, String charityImage) {
+    public CharityModel(String charityId, String charityName, String charityDescription, String charityImage) {
+        this.charityId = charityId;
         this.charityName = charityName;
         this.charityDescription = charityDescription;
         this.charityImage = charityImage;
     }
 
     public CharityModel() {
+    }
+
+    public String getCharityId() {
+        return charityId;
+    }
+
+    public void setCharityId(String charityId) {
+        this.charityId = charityId;
     }
 
     public String getCharityName() {

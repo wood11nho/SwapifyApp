@@ -3,7 +3,6 @@ package com.elias.swapify.items;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
@@ -26,6 +25,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.elias.swapify.charity.CharityModel;
+import com.elias.swapify.charity.CharityPagerAdapter;
 import com.elias.swapify.firebase.FirebaseMLModel;
 import com.elias.swapify.principalactivities.HomePageActivity;
 import com.elias.swapify.R;
@@ -84,6 +85,8 @@ public class AddItemActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.save_button);
         textViewPriceExplanationAndItemType = findViewById(R.id.textView_priceExplanationAndItemType);
         charitiesViewPager = findViewById(R.id.charities_view_pager_slider);
+
+        charitiesViewPager.setVisibility(View.GONE);
 
         // Initialize the FirebaseMLModel object
         firebaseMLModel = new FirebaseMLModel();
@@ -153,10 +156,12 @@ public class AddItemActivity extends AppCompatActivity {
                 itemPriceEditText.setEnabled(false);
                 itemPriceEditText.setText("0");
                 textViewPriceExplanationAndItemType.setText("Item selected for trade, therefore the price is not mandatory and is set to 0.");
+                charitiesViewPager.setVisibility(View.GONE);
             } else if (checkedId == R.id.radioButton_sale) {
                 itemPriceEditText.setEnabled(true);
                 itemPriceEditText.setText("");
                 textViewPriceExplanationAndItemType.setText("Item selected for sale, therefore the price is mandatory.");
+                charitiesViewPager.setVisibility(View.GONE);
             } else if (checkedId == R.id.radioButton_charity) {
                 itemPriceEditText.setEnabled(true);
                 itemPriceEditText.setText("");
@@ -244,24 +249,43 @@ public class AddItemActivity extends AppCompatActivity {
 
         if (requestCode == PICK_FROM_GALLERY && resultCode == RESULT_OK && data != null) {
             Uri selectedImageUri = data.getData();
-            // Display the image in itemPictureImageView
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
-                itemPictureImageView.setImageBitmap(bitmap);
+                // Resize the bitmap before setting it to ImageView
+                Bitmap resizedBitmap = getResizedBitmap(bitmap, 1200); // Resize to a max width of 1200px while maintaining aspect ratio
+                itemPictureImageView.setImageBitmap(resizedBitmap);
 
-                // Classify the selected image using the Firebase ML model
-                classifyImage(bitmap);
+                // Classify the resized image using the Firebase ML model
+                classifyImage(resizedBitmap);
 
-                // Call uploadImageToFirebaseStorage to upload the selected image
+                // Upload the resized image to Firebase Storage
                 uploadImageToFirebaseStorage(selectedImageUri);
 
                 // Save the image URL in itemPictureUrl
                 assert selectedImageUri != null;
                 itemPictureUrl = selectedImageUri.toString();
             } catch (IOException e) {
+                Toast.makeText(this, "Error loading image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
+            } catch (OutOfMemoryError e) {
+                Toast.makeText(this, "Image is too large and cannot be loaded.", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private Bitmap getResizedBitmap(Bitmap image, int maxWidth) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float)width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxWidth;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxWidth;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
     private void classifyImage(Bitmap image) {
@@ -358,10 +382,11 @@ public class AddItemActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     charities = new ArrayList<>();
                     for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        String charityId = documentSnapshot.getId();
                         String charityName = documentSnapshot.getString("charityName");
                         String charityDescription = documentSnapshot.getString("charityDescription");
                         String charityImage = documentSnapshot.getString("charityImage");
-                        charities.add(new CharityModel(charityName, charityDescription, charityImage));
+                        charities.add(new CharityModel(charityId, charityName, charityDescription, charityImage));
                     }
                     charityPagerAdapter = new CharityPagerAdapter(this, charities);
                     charitiesViewPager.setAdapter(charityPagerAdapter);
@@ -445,8 +470,14 @@ public class AddItemActivity extends AppCompatActivity {
 
     private void uploadItemToFirestore(String itemName, String itemDescription, String itemCategory, int itemPrice, String itemPictureUrl, boolean itemForTrade, boolean itemForSale, boolean itemForCharity, String userId, String itemLocation) {
         FirebaseFirestore firestoreDB = FirebaseFirestore.getInstance();
+        String itemCharityId = "";
+        if (itemForCharity) {
+            int selectedCharityIndex = charitiesViewPager.getCurrentItem();
+            CharityModel selectedCharity = charities.get(selectedCharityIndex);
+            itemCharityId = selectedCharity.getCharityId();
+        }
         firestoreDB.collection("ITEMS")
-                .add(new ItemModel(itemName, itemDescription, itemCategory, itemPrice, itemPictureUrl, itemForTrade, itemForSale, itemForCharity, userId, itemLocation))
+                .add(new ItemModel(itemName, itemDescription, itemCategory, itemPrice, itemPictureUrl, itemForTrade, itemForSale, itemForCharity, userId, itemLocation, itemCharityId))
                 .addOnSuccessListener(documentReference -> {
                     // Item added successfully
                     SearchDataManager.getInstance().saveSearch(itemCategory);

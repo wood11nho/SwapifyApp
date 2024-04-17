@@ -63,7 +63,7 @@
         android:paddingTop="16dp"
         android:paddingHorizontal="16dp"
         android:text="Charity Name"
-        app:layout_constraintTop_toBottomOf="@id/charityImage"
+        app:layout_constraintTop_toBottomOf="@id/charityImageCard"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

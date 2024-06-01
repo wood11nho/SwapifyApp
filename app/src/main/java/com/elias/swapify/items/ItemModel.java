@@ -2,7 +2,9 @@ package com.elias.swapify.items;
 
 import androidx.annotation.NonNull;
 
-public class ItemModel {
+import java.io.Serializable;
+
+public class ItemModel implements Serializable {
     private String itemId;
     private String itemName;
     private String itemDescription;

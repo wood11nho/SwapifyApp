@@ -2,6 +2,7 @@ package com.elias.swapify.firebase;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,6 +22,8 @@ import org.tensorflow.lite.support.image.ops.ResizeOp;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.HashMap;
@@ -41,24 +44,17 @@ public class FirebaseMLModel {
     private TensorOperator dequantizeOp = new DequantizeOp(PROBABILITY_MEAN, PROBABILITY_STD);
 
     public void downloadAndInitializeModel(Context context, String modelName) {
-        // Define download conditions for the model
         CustomModelDownloadConditions conditions = new CustomModelDownloadConditions.Builder()
-                .requireWifi() // This condition can be changed based on requirements
+                .requireWifi()
                 .build();
-
-        // Start model download
         FirebaseModelDownloader.getInstance()
                 .getModel(modelName, DownloadType.LOCAL_MODEL_UPDATE_IN_BACKGROUND, conditions)
                 .addOnSuccessListener(new OnSuccessListener<CustomModel>() {
                     @Override
                     public void onSuccess(CustomModel model) {
-                        // Model download complete
                         File modelFile = model.getFile();
                         if (modelFile != null) {
-                            // Initialize the TensorFlow Lite interpreter with the downloaded model
                             interpreter = new Interpreter(modelFile);
-                            // Notify the rest of your application that the model is ready for use
-                            // This could be a callback, a LiveData update, or a similar mechanism
                             onModelReady();
                         }
                     }
@@ -66,36 +62,49 @@ public class FirebaseMLModel {
     }
 
     private void onModelReady() {
-        // Implementation depends on how you want to notify the activities or fragments
-        // For example, you could use a callback interface or LiveData to notify the UI components
     }
 
     public Interpreter getInterpreter() {
         return interpreter;
     }
 
-    public String predictImageCategory(Bitmap image) {
-        // Resize the image and convert it to a ByteBuffer
+    private Bitmap tensorImageToBitmap(TensorImage tensorImage) {
+        ByteBuffer buffer = tensorImage.getBuffer();
+        buffer.rewind();
+
+        Bitmap bitmap = Bitmap.createBitmap(IMG_SIZE, IMG_SIZE, Bitmap.Config.ARGB_8888);
+        int[] pixels = new int[IMG_SIZE * IMG_SIZE];
+        for (int i = 0; i < pixels.length; i++) {
+            int r = buffer.get() & 0xFF;
+            int g = buffer.get() & 0xFF;
+            int b = buffer.get() & 0xFF;
+            pixels[i] = Color.rgb(r, g, b);
+        }
+        bitmap.setPixels(pixels, 0, IMG_SIZE, 0, 0, IMG_SIZE, IMG_SIZE);
+        return bitmap;
+    }
+
+    public String predictImageCategory(Bitmap image, Context context) {
         Bitmap resizedImage = Bitmap.createScaledBitmap(image, IMG_SIZE, IMG_SIZE, true);
 
-        // Create a TensorImage object from the resized bitmap
         TensorImage tensorImage = new TensorImage(DataType.UINT8);
         tensorImage.load(resizedImage);
         tensorImage = new ImageProcessor.Builder()
                 .add(new ResizeOp(IMG_SIZE, IMG_SIZE, ResizeOp.ResizeMethod.BILINEAR))
-                .add(quantizeOp) // Quantize the image to UINT8
+                .add(quantizeOp)
                 .build()
                 .process(tensorImage);
 
-        // Run inference using the interpreter
+        Bitmap processedBitmap = tensorImageToBitmap(tensorImage);
+        saveProcessedImage(context, processedBitmap);
+
         ByteBuffer inputBuffer = tensorImage.getBuffer();
         int[] outputShape = interpreter.getOutputTensor(0).shape();
         DataType outputDataType = interpreter.getOutputTensor(0).dataType();
         TensorBuffer outputBuffer = TensorBuffer.createFixedSize(outputShape, outputDataType);
-        // Run the model
+
         interpreter.run(inputBuffer, outputBuffer.getBuffer().rewind());
 
-        // Get the prediction and handle potential out-of-bounds error
         float[] probabilities = outputBuffer.getFloatArray();
         Log.d("FirebaseMLModel", "Length of probabilities array: " + probabilities.length);
 
@@ -105,9 +114,22 @@ public class FirebaseMLModel {
             return "Error: Predicted index out of bounds";
         }
 
-        // Assuming you have a method to map predictedIndex to category name
         String predictedCategory = indexToCategory(predictedIndex);
         return predictedCategory;
+    }
+
+    private void saveProcessedImage(Context context, Bitmap bitmap) {
+        File dir = new File(context.getExternalFilesDir(null), "processed_images");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        File file = new File(dir, "processed_image.png");
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            Log.d("FirebaseMLModel", "Processed image saved at: " + file.getAbsolutePath());
+        } catch (IOException e) {
+            Log.e("FirebaseMLModel", "Error saving processed image", e);
+        }
     }
 
     private int getMaxProbabilityIndex(float[] probabilities) {

@@ -146,6 +146,15 @@
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true" />
 
+    <Button
+        android:id="@+id/see_my_ads_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My ads"
+        android:layout_below="@id/edit_profile_button"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true" />
+
     <com.google.android.material.button.MaterialButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

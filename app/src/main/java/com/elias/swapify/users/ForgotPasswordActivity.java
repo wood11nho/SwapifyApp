@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class ForgotPasswordActivity extends AppCompatActivity {
     private EditText edtEmail;
     private Button btnResetPassword;
-
+    private ImageButton btnBack;
     private FirebaseAuth firebaseAuth;
 
     @Override
@@ -24,6 +25,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         edtEmail = findViewById(R.id.emailEditText);
         btnResetPassword = findViewById(R.id.resetButton);
+        btnBack = findViewById(R.id.btnBack_forgot_password);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -44,6 +46,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             }
         });
 
+        btnBack.setOnClickListener(v -> {
+            Intent intent = new Intent(ForgotPasswordActivity.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private boolean validateInput(String email) {

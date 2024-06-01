@@ -18,6 +18,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory;
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory;
+import com.google.firebase.perf.FirebasePerformance;
 
 public class EntryActivity extends AppCompatActivity {
     Button registerButton;
@@ -33,6 +34,7 @@ public class EntryActivity extends AppCompatActivity {
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
         firebaseAppCheck.installAppCheckProviderFactory(
                 DebugAppCheckProviderFactory.getInstance());
+        FirebasePerformance.getInstance().setPerformanceCollectionEnabled(true);
 
         registerButton = findViewById(R.id.sign_up_button);
         loginButton = findViewById(R.id.log_in_button);

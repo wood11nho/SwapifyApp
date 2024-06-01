@@ -180,6 +180,9 @@ public class FirestoreUtil {
 
                         WishlistItem newItem = new WishlistItem(addedOn, itemId);
 
+                        // Log a message
+                        Log.d("FirestoreUtil", "Adding item to wishlist: " + newItem.getItemId());
+
                         // Atomically add the new item to the "items" array field in the wishlist document
                         wishlistRef.update("items", FieldValue.arrayUnion(newItem))
                                 .addOnSuccessListener(aVoid -> callback.onWishlistUpdated())
@@ -313,7 +316,29 @@ public class FirestoreUtil {
         }
     }
 
+    public static void deleteItem(ItemModel item) {
+        firestore.collection("ITEMS").document(item.getItemId())
+                .delete()
+                .addOnSuccessListener(aVoid -> Log.d("FirestoreUtil", "Item deleted successfully"))
+                .addOnFailureListener(e -> Log.e("FirestoreUtil", "Error deleting item", e));
+    }
+
+    public static void fetchUserItems(String currentUserId, FirestoreUtil.OnUserItemsFetchedListener onUserItemsFetchedListener) {
+        firestore.collection("ITEMS")
+                .whereEqualTo("itemUserId", currentUserId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    onUserItemsFetchedListener.onUserItemsFetched(queryDocumentSnapshots.getDocuments());
+                })
+                .addOnFailureListener(e -> onUserItemsFetchedListener.onError(e.toString()));
+    }
+
     // Define interfaces for callbacks
+
+    public interface OnUserItemsFetchedListener {
+        void onUserItemsFetched(List<DocumentSnapshot> userItems);
+        void onError(String error);
+    }
 
     public interface OnCharityDataFetchedListener {
         void onCharityDataFetched(CharityModel charity);

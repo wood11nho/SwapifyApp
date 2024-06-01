@@ -34,13 +34,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
         String category = categories.get(position);
 
-        // Set the category name
         holder.categoryName.setText(category);
 
-        // Set an OnClickListener for going to the category's page
         holder.itemView.setOnClickListener(
                 view -> {
-                    // Open the SeeAllItemsActivity with extra "category" set to the category name
                     SearchDataManager.getInstance().saveSearch(category);
 
                     Intent intent = new Intent(view.getContext(), SeeAllItemsActivity.class);

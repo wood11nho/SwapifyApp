@@ -24,7 +24,6 @@ public class SearchFragment extends Fragment {
     private EditText searchEditText;
     private boolean requestFocus;
     public SearchFragment() {
-        // Required empty public constructor
         requestFocus = false;
     }
 

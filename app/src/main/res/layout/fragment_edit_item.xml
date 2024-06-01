@@ -5,10 +5,11 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_edit_item_root"
     android:background="@drawable/background">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/back_toolbar_add_item"
+        android:id="@+id/back_toolbar_edit_item"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="4dp"
@@ -19,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
-            android:id="@+id/btnBack_add_item"
+            android:id="@+id/btnBack_edit_item"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackground"
@@ -32,7 +33,7 @@
 
     <ScrollView android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/back_toolbar_add_item"
+        android:layout_below="@id/back_toolbar_edit_item"
         android:id="@+id/scrollView">
 
         <LinearLayout
@@ -54,10 +55,10 @@
                 android:contentDescription="@string/item_picture" />
 
             <Button
-                android:id="@+id/change_picture_button"
+                android:id="@+id/edit_picture_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add Picture"
+                android:text="Edit Picture"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
                 android:textColor="?attr/colorOnPrimary"
@@ -247,7 +248,7 @@
                 android:id="@+id/save_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Save"
+                android:text="Save changes"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
                 android:textColor="?attr/colorOnPrimary" />

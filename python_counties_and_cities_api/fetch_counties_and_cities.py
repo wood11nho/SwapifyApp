@@ -1,5 +1,3 @@
-# Fetch data from https://roloca.coldfuse.io/judete and create a json file with the data
-
 import requests
 import json
 

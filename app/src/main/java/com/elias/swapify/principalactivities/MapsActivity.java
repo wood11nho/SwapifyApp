@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -47,7 +48,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap myMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private HashMap<String, LatLng> locationCoordinates = new HashMap<>();
-    FloatingActionButton fab;
+    FloatingActionButton fabBack, fabToggleLocation;
+    private boolean isLocationEnabled = false;
 
     // Permission request with the new Activity Result API
     private final ActivityResultLauncher<String> requestPermissionLauncher =
@@ -64,8 +66,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        fab = findViewById(R.id.back_button);
-        fab.setOnClickListener(v -> finish());
+        fabBack = findViewById(R.id.back_button);
+        fabBack.setOnClickListener(v -> finish());
+
+        fabToggleLocation = findViewById(R.id.fab_toggle_location);
+        fabToggleLocation.setOnClickListener(v -> navigateToUserLocation());
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -81,14 +86,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             initMap();
         } else {
-            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                new AlertDialog.Builder(this)
+                        .setTitle("Location Permission Needed")
+                        .setMessage("This app needs the Location permission to show your location on the map.")
+                        .setPositiveButton("OK", (dialog, which) -> requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION))
+                        .create()
+                        .show();
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
         }
     }
 
     private void showDefaultLocation() {
-        LatLng defaultLocation = new LatLng(44.4268, 26.1025); // Bucharest, for example
+        LatLng defaultLocation = new LatLng(45.9432, 24.9668); // Romania Center
         if (myMap != null) {
-            myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
+            myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 6));
         }
     }
 
@@ -142,6 +156,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         myMap = googleMap;
         myMap.setOnMarkerClickListener(this);
         applyMapStyle(myMap); // Apply custom style to the map
+
+        // Disable the default location button
+        myMap.getUiSettings().setMyLocationButtonEnabled(false);
+
+        showDefaultLocation(); // Show Romania initially
+
+        // Delay zoom to user's location by 5 seconds
+        new Handler().postDelayed(() -> {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                myMap.setMyLocationEnabled(true);
+
+                // Get the last known location and move the camera to it
+                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, location -> {
+                    if (location != null) {
+                        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
+                        isLocationEnabled = true;
+                    }
+                });
+            }
+        }, 5000);
+
         fetchAndDisplayItems();
     }
 
@@ -173,8 +209,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 }
                             }
                         }
-                        LatLng romaniaCenter = new LatLng(45.9432, 24.9668);
-                        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(romaniaCenter, 6));
                     } else {
                         Log.d("MapsActivity", "Error getting documents: ", task.getException());
                     }
@@ -198,6 +232,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setNegativeButton("No", null)
                 .show();
         return true;
+    }
+
+    private void navigateToUserLocation() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, location -> {
+                if (location != null) {
+                    LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                    myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 15));
+                }
+            });
+        } else {
+            requestLocationPermission();
+        }
     }
 
     static class GeolocationItem {

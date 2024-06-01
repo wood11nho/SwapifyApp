@@ -141,14 +141,11 @@ public class FullDetailItemActivity extends AppCompatActivity {
         FirestoreUtil.isItemInWishlist(
                 FirebaseUtil.getCurrentUserId(),
                 itemId,
-                new FirestoreUtil.WishlistCheckCallback() {
-                    @Override
-                    public void onItemInWishlist(boolean isInWishlist) {
-                        if (isInWishlist) {
-                            wishlistButton.setImageResource(R.drawable.ic_remove_from_wishlist);
-                        } else {
-                            wishlistButton.setImageResource(R.drawable.ic_add_to_wishlist);
-                        }
+                isInWishlist -> {
+                    if (isInWishlist) {
+                        wishlistButton.setImageResource(R.drawable.ic_remove_from_wishlist);
+                    } else {
+                        wishlistButton.setImageResource(R.drawable.ic_add_to_wishlist);
                     }
                 }
         );
@@ -170,16 +167,14 @@ public class FullDetailItemActivity extends AppCompatActivity {
             FirestoreUtil.isItemInWishlist(
                     FirebaseUtil.getCurrentUserId(),
                     itemId,
-                    new FirestoreUtil.WishlistCheckCallback() {
-                        @Override
-                        public void onItemInWishlist(boolean isInWishlist) {
-                            if (isInWishlist) {
-                                removeFromWishlist(itemId);
-                                wishlistButton.setImageResource(R.drawable.ic_add_to_wishlist);
-                            } else {
-                                addToWishlist(itemId);
-                                wishlistButton.setImageResource(R.drawable.ic_remove_from_wishlist);
-                            }
+                    isInWishlist -> {
+                        if (isInWishlist) {
+                            removeFromWishlist(itemId);
+                            wishlistButton.setImageResource(R.drawable.ic_add_to_wishlist);
+                        } else {
+                            addToWishlist(itemId);
+                            Log.d("Wishlist", "Item added to wishlist");
+                            wishlistButton.setImageResource(R.drawable.ic_remove_from_wishlist);
                         }
                     }
             );

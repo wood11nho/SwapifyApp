@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.elias.swapify.items.MyAdsActivity;
 import com.elias.swapify.principalactivities.HomePageActivity;
 import com.elias.swapify.R;
 import com.elias.swapify.wishlists.WishlistActivity;
@@ -23,7 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class ProfileActivity extends AppCompatActivity {
     private ImageView imgProfilePic;
     private TextView txtName, txtUsername, txtEmail, txtPhone_number, txtBio, txtCity, txtCounty;
-    private Button editProfileButton;
+    private Button editProfileButton, seeMyAdsButton;
     private MaterialButton logoutButton;
     private ImageButton btnBack, btnWishlist;
     private FirebaseAuth firebaseAuth;
@@ -48,6 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
         txtCounty = findViewById(R.id.county_text);
         txtCity = findViewById(R.id.city_text);
         editProfileButton = findViewById(R.id.edit_profile_button);
+        seeMyAdsButton = findViewById(R.id.see_my_ads_button);
         logoutButton = findViewById(R.id.logout_button);
         btnBack = findViewById(R.id.btnBack);
         btnWishlist = findViewById(R.id.btnWishlist);
@@ -100,6 +102,14 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ProfileActivity.this, WishlistActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        seeMyAdsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfileActivity.this, MyAdsActivity.class);
                 startActivity(intent);
             }
         });

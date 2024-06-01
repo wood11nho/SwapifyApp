@@ -1,8 +1,10 @@
 package com.elias.swapify.items;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
@@ -10,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -50,6 +53,7 @@ import java.util.ArrayList;
 
 public class AddItemActivity extends AppCompatActivity {
     private static final int PICK_FROM_GALLERY = 1;
+    private static final int REQUEST_PERMISSION = 1001;
     private String itemPictureUrl;
     private ImageView itemPictureImageView;
     private Button changePictureButton;
@@ -146,7 +150,6 @@ public class AddItemActivity extends AppCompatActivity {
                     openGalleryWithPermissionCheck();
                 } catch (Exception e){
                     e.printStackTrace();
-
                 }
             }
         });
@@ -212,29 +215,47 @@ public class AddItemActivity extends AppCompatActivity {
         itemLocationSpinner.setAdapter(adapter);
     }
 
-
-
     private void openGalleryWithPermissionCheck() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PICK_FROM_GALLERY);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            // Android 14 or higher
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.READ_MEDIA_IMAGES,
+                    Manifest.permission.READ_MEDIA_VIDEO,
+                    Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
+            }, REQUEST_PERMISSION);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.READ_MEDIA_IMAGES,
+                    Manifest.permission.READ_MEDIA_VIDEO
+            }, REQUEST_PERMISSION);
         } else {
-            openGallery();
+            // Android 12L or lower
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+            }, REQUEST_PERMISSION);
         }
     }
 
+    private void showPermissionRationale() {
+        new AlertDialog.Builder(this)
+                .setTitle("Permission Needed")
+                .setMessage("This app needs to access your external storage to select a picture.")
+                .setPositiveButton("OK", (dialog, which) -> ActivityCompat.requestPermissions(AddItemActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION))
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
+    }
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case PICK_FROM_GALLERY:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(galleryIntent, PICK_FROM_GALLERY);
-                } else {
-                    Toast.makeText(this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
-                }
-                break;
+        if (requestCode == REQUEST_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openGallery();
+            } else {
+                Toast.makeText(this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -242,6 +263,7 @@ public class AddItemActivity extends AppCompatActivity {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(galleryIntent, PICK_FROM_GALLERY);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -291,7 +313,7 @@ public class AddItemActivity extends AppCompatActivity {
     private void classifyImage(Bitmap image) {
         // Ensure the model is ready for prediction
         if (firebaseMLModel.getInterpreter() != null) {
-            String predictedCategory = firebaseMLModel.predictImageCategory(image);
+            String predictedCategory = firebaseMLModel.predictImageCategory(image, this);
             Log.d("AddItemActivity", "Predicted Category: " + predictedCategory);
             // Create a modern and attractive screen notification or popup which tells you the predicted category
             showSnackbar(predictedCategory);
@@ -445,25 +467,19 @@ public class AddItemActivity extends AppCompatActivity {
     }
 
     private void uploadImageToFirebaseStorage(Uri imageUri) {
-        // Get a reference to the Firebase Storage location
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("item_images");
 
-        // Create a unique filename for the image (e.g., using a timestamp)
         String filename = "item_image_" + System.currentTimeMillis() + ".jpg";
         StorageReference imageRef = storageRef.child(filename);
 
-        // Upload the image
         imageRef.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> {
-                    // Image uploaded successfully, get the download URL
                     imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         String imageUrl = uri.toString();
-                        // Now, you have the imageUrl; you can do something with it or save it to Firestore
                         itemPictureUrl = imageUrl;
                     });
                 })
                 .addOnFailureListener(e -> {
-                    // Handle any errors that occur during the upload
                     Log.e("AddItemActivity", "Error uploading image: " + e.getMessage());
                 });
     }

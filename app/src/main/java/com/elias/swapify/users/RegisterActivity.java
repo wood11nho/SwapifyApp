@@ -33,14 +33,12 @@ public class RegisterActivity extends AppCompatActivity {
     MaterialButton btnRegister;
     EditText edtName, edtUsername, edtEmail, edtPassword, edtConfirmPassword;
     TextView tvPasswordLength, tvPasswordSpecialChar, tvPasswordNumber, tvPasswordLetter, tvPasswordMatch;
-    private FirebaseFirestore firestoreDB;
-    private FirebaseAuth firebaseAuth;
+    FirebaseFirestore firestoreDB;
+    FirebaseAuth firebaseAuth;
     ImageButton btnBack;
     private ExecutorService executorService;
     private static final Pattern NAME_PATTERN = Pattern.compile("^[A-Za-z]+(?:\\s+[A-Za-z]+)*$");
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()])[A-Za-z\\d!@#$%^&*()]{8,}$");
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +105,6 @@ public class RegisterActivity extends AppCompatActivity {
                     tvPasswordMatch.setTextColor(getResources().getColor(R.color.green_700));
                 }
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
 
@@ -161,26 +158,22 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private boolean validateInput(String name, String username, String email, String password) {
-        // Validate input fields
+    public boolean validateInput(String name, String username, String email, String password) {
         if (name.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty()) {
             Toast.makeText(RegisterActivity.this, "Please fill in all fields", Toast.LENGTH_LONG).show();
             return false;
         }
 
-        // Verify if the email is valid
         if (!isValidEmail(email)) {
             Toast.makeText(RegisterActivity.this, "Invalid email address", Toast.LENGTH_LONG).show();
             return false;
         }
 
-        // Verify regex for name: "^[A-Za-z]+(?:\s+[A-Za-z]+)*$"
         if (!name.matches(NAME_PATTERN.pattern())) {
             Toast.makeText(RegisterActivity.this, "Please enter a valid full name (only alphabetical characters are allowed)", Toast.LENGTH_LONG).show();
             return false;
         }
 
-        // Verify if password and confirm password match
         String confirmPassword = edtConfirmPassword.getText().toString();
         if (!password.equals(confirmPassword)) {
             Toast.makeText(RegisterActivity.this, "Passwords do not match", Toast.LENGTH_LONG).show();
@@ -188,8 +181,10 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         // Verify regex for password: "^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}$"
+        // Password must be at least 8 characters long and contain at least one letter, one number and one special character (!@#$%^&*())
         if (!password.matches(PASSWORD_PATTERN.pattern())) {
-            Toast.makeText(RegisterActivity.this, "Password must be at least 8 characters long and contain at least one letter, one number and one special character (!@#$%^&*())", Toast.LENGTH_LONG).show();
+            Toast.makeText(RegisterActivity.this, "Password must be at least 8 characters long and contain at least one letter, one number and one special character (!@#$%^&*())",
+                    Toast.LENGTH_LONG).show();
             return false;
         }
 
@@ -200,7 +195,7 @@ public class RegisterActivity extends AppCompatActivity {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    private void registerUserWithEmailAndPassword(String name, String username, String email, String password) {
+    public void registerUserWithEmailAndPassword(String name, String username, String email, String password) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -235,7 +230,7 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    private void saveUserDataToFirestore(String name, String username, String email, String userId) {
+    public void saveUserDataToFirestore(String name, String username, String email, String userId) {
         // Create a new customer
         CustomerModel customer = new CustomerModel();
         customer.setName(name);
@@ -271,7 +266,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Toast.makeText(RegisterActivity.this, "Error adding user to Firestore", Toast.LENGTH_LONG).show());
     }
 
-    void checkAndSendVerificationEmail() {
+    public void checkAndSendVerificationEmail() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             user.reload();
@@ -295,7 +290,7 @@ public class RegisterActivity extends AppCompatActivity {
         finish();
     }
 
-    void goToLoginPage() {
+    public void goToLoginPage() {
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
@@ -305,5 +300,21 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         executorService.shutdownNow();
+    }
+
+    public void setFirebaseAuth(FirebaseAuth mockAuth) {
+        this.firebaseAuth = mockAuth;
+    }
+
+    public void setFirestoreDB(FirebaseFirestore mockFirestore) {
+        this.firestoreDB = mockFirestore;
+    }
+
+    public EditText getEdtConfirmPassword() {
+        return edtConfirmPassword;
+    }
+
+    public void setEdtConfirmPassword(EditText mockEdtConfirmPassword) {
+        this.edtConfirmPassword = mockEdtConfirmPassword;
     }
 }

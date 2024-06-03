@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.elias.swapify.R;
 import com.elias.swapify.firebase.FirestoreUtil;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +44,7 @@ public class ChatAdapter extends ArrayAdapter<ChatModel>{
             // Initialize the view holder
             viewHolder = new ViewHolder();
             viewHolder.otherUserTextView = convertView.findViewById(R.id.otherPersonNameTextView);
+            viewHolder.otherUserAvatarImageView = convertView.findViewById(R.id.otherPersonAvatarImageView);
             viewHolder.chatLayout = convertView.findViewById(R.id.otherPersonLayout);
 
             // Set the tag
@@ -87,14 +89,14 @@ public class ChatAdapter extends ArrayAdapter<ChatModel>{
 
         // Set the username
         if (chat != null){
-            fetchOtherUser(chat, viewHolder.otherUserTextView);
+            fetchOtherUser(chat, viewHolder.otherUserTextView, viewHolder.otherUserAvatarImageView);
         }
 
         return convertView;
     }
 
 
-    private void fetchOtherUser(ChatModel chat, TextView otherUserTextView) {
+    private void fetchOtherUser(ChatModel chat, TextView otherUserTextView, ImageView otherUserAvatarImageView) {
         String senderId = firebaseAuth.getCurrentUser().getUid();
         String receiverId = (senderId.equals(chat.getUser1())) ? chat.getUser2() : chat.getUser1();
 
@@ -103,6 +105,7 @@ public class ChatAdapter extends ArrayAdapter<ChatModel>{
 
         // Add a tag to the TextView to identify it later
         otherUserTextView.setTag(receiverId);
+        otherUserAvatarImageView.setTag(receiverId);
 
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -111,18 +114,30 @@ public class ChatAdapter extends ArrayAdapter<ChatModel>{
                     String retrievedUserId = otherUserTextView.getTag().toString();
                     if (retrievedUserId.equals(receiverId)) {
                         // Only update the UI if the tags match
-                        otherUserTextView.setText("Chat with " + document.getString("username"));
+                        otherUserTextView.setText(document.getString("username"));
+                        String avatarUrl = document.getString("profilepicture");
+                        if (avatarUrl != null) {
+                            Glide.with(context)
+                                    .load(avatarUrl)
+                                    .placeholder(R.drawable.ic_profile_fulfill)
+                                    .error(R.drawable.ic_profile_fulfill)
+                                    .into(otherUserAvatarImageView);
+                        } else {
+                            otherUserAvatarImageView.setImageResource(R.drawable.ic_profile_fulfill);
+                        }
                     }
                 } else {
                     String retrievedUserId = otherUserTextView.getTag().toString();
                     if (retrievedUserId.equals(receiverId)) {
                         otherUserTextView.setText("No user found");
+                        otherUserAvatarImageView.setImageResource(R.drawable.ic_profile_fulfill);
                     }
                 }
             } else {
                 String retrievedUserId = otherUserTextView.getTag().toString();
                 if (retrievedUserId.equals(receiverId)) {
                     otherUserTextView.setText("No user found");
+                    otherUserAvatarImageView.setImageResource(R.drawable.ic_profile_fulfill);
                 }
             }
         });
@@ -131,6 +146,7 @@ public class ChatAdapter extends ArrayAdapter<ChatModel>{
 
     private static class ViewHolder {
         TextView otherUserTextView;
+        ImageView otherUserAvatarImageView;
         LinearLayout chatLayout;
     }
 }

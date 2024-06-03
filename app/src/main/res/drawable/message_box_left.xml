@@ -22,8 +22,8 @@
                 android:bottomLeftRadius="30dp"
                 android:bottomRightRadius="30dp"/>
             <gradient
-                android:startColor="#B2F7EF"
-                android:endColor="#5EDFFF"
+                android:startColor="@color/burnt_sienna"
+                android:endColor="@color/warm_amber"
                 android:angle="180"/>
         </shape>
     </item>

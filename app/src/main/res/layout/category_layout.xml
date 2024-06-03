@@ -1,21 +1,28 @@
 <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="150dp"
     android:layout_height="wrap_content"
     android:layout_marginEnd="16dp"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
-    android:background="@drawable/category_box"
     android:orientation="horizontal"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:background="@drawable/category_background">
 
-    <ImageView
-        android:id="@+id/categoryIcon"
+    <androidx.cardview.widget.CardView
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_category"
-        android:layout_marginStart="8dp"
-        app:tint="?attr/colorPrimary" />
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        android:layout_marginStart="8dp">
+
+        <ImageView
+            android:id="@+id/categoryIcon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_category"
+            android:scaleType="centerCrop" />
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/categoryName"
@@ -28,6 +35,5 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:layout_marginStart="8dp"
-
         android:textStyle="bold" />
 </LinearLayout>

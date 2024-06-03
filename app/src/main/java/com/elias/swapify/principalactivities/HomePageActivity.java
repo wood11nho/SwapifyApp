@@ -17,9 +17,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.elias.swapify.R;
 import com.elias.swapify.categories.CategoryAdapter;
-import com.elias.swapify.categories.CategoryModel;
 import com.elias.swapify.categories.SeeAllCategoriesActivity;
+import com.elias.swapify.chatbot.ChatbotActivity;
 import com.elias.swapify.chats.AllChatsActivity;
+import com.elias.swapify.events.AddEventDialogFragment;
 import com.elias.swapify.firebase.FirebaseUtil;
 import com.elias.swapify.firebase.FirestoreUtil;
 import com.elias.swapify.users.LoginActivity;
@@ -27,15 +28,12 @@ import com.elias.swapify.users.ProfileActivity;
 import com.elias.swapify.userpreferences.SearchDataManager;
 import com.elias.swapify.items.AddItemActivity;
 import com.elias.swapify.items.ItemAdapter;
-import com.elias.swapify.userpreferences.ItemInteractionManager;
 import com.elias.swapify.items.ItemModel;
-import com.elias.swapify.userpreferences.PostedItemsManager;
 import com.elias.swapify.items.SeeAllItemsActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class HomePageActivity extends AppCompatActivity {
 
@@ -44,6 +42,7 @@ public class HomePageActivity extends AppCompatActivity {
     private ImageButton profileButton;
     private ImageButton chatButton;
     private MaterialButton addItemButton;
+    private MaterialButton addEventButton;
     private MaterialButton seeAllItemsButton;
     private MaterialButton seeAllCategoriesButton;
     private ArrayList<ItemModel> items;
@@ -98,6 +97,7 @@ public class HomePageActivity extends AppCompatActivity {
         chatButton = findViewById(R.id.chat_button);
         profileButton = findViewById(R.id.profile_button);
         addItemButton = findViewById(R.id.addItemButton);
+        addEventButton = findViewById(R.id.addEventButton);
         seeAllItemsButton = findViewById(R.id.seeAllItemsButton);
         seeAllCategoriesButton = findViewById(R.id.seeAllCategoriesButton);
         editTextSearch = findViewById(R.id.editTextSearch);
@@ -152,6 +152,11 @@ public class HomePageActivity extends AppCompatActivity {
             finish(); // finish the current activity to remove it from the stack
         });
 
+        addEventButton.setOnClickListener(v -> {
+            AddEventDialogFragment addEventDialogFragment = AddEventDialogFragment.newInstance();
+            addEventDialogFragment.show(getSupportFragmentManager(), "AddEventDialogFragment");
+        });
+
         seeAllItemsButton.setOnClickListener(v -> {
             Intent intent = new Intent(HomePageActivity.this, SeeAllItemsActivity.class);
             startActivity(intent);
@@ -192,7 +197,7 @@ public class HomePageActivity extends AppCompatActivity {
         });
 
         fabSupport.setOnClickListener(v -> {
-            Intent intent = new Intent(HomePageActivity.this, TicketSupportActivity.class);
+            Intent intent = new Intent(HomePageActivity.this, ChatbotActivity.class);
             startActivity(intent);
         });
 

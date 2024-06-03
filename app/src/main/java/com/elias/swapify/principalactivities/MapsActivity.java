@@ -8,6 +8,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.ToggleButton;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -20,12 +22,14 @@ import androidx.core.content.ContextCompat;
 import com.elias.swapify.R;
 import com.elias.swapify.firebase.FirebaseUtil;
 import com.elias.swapify.items.SeeAllItemsActivity;
+import com.elias.swapify.events.EventModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -39,17 +43,22 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+
     private GoogleMap myMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private HashMap<String, LatLng> locationCoordinates = new HashMap<>();
-    FloatingActionButton fabBack, fabToggleLocation;
+    private FloatingActionButton fabBack, fabToggleLocation;
+    private ToggleButton toggleItems, toggleEvents;
     private boolean isLocationEnabled = false;
+    private List<Marker> itemMarkers = new ArrayList<>();
+    private List<Marker> eventMarkers = new ArrayList<>();
 
     // Permission request with the new Activity Result API
     private final ActivityResultLauncher<String> requestPermissionLauncher =
@@ -71,6 +80,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         fabToggleLocation = findViewById(R.id.fab_toggle_location);
         fabToggleLocation.setOnClickListener(v -> navigateToUserLocation());
+
+        toggleItems = findViewById(R.id.toggleItems);
+        toggleEvents = findViewById(R.id.toggleEvents);
+
+        toggleItems.setOnCheckedChangeListener((buttonView, isChecked) -> updateMarkersVisibility());
+        toggleEvents.setOnCheckedChangeListener((buttonView, isChecked) -> updateMarkersVisibility());
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -179,6 +194,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }, 5000);
 
         fetchAndDisplayItems();
+        fetchAndDisplayEvents();
     }
 
     private void fetchAndDisplayItems() {
@@ -206,6 +222,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                         .title(entry.getKey()));
                                 if (marker != null) {
                                     marker.setTag(entry.getValue());  // Store the item count in the marker's tag
+                                    itemMarkers.add(marker);
                                 }
                             }
                         }
@@ -215,18 +232,63 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 });
     }
 
+    private void fetchAndDisplayEvents() {
+        FirebaseFirestore.getInstance().collection("EVENTS")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            double latitude = document.getDouble("latitude");
+                            double longitude = document.getDouble("longitude");
+                            String eventName = document.getString("name");
+                            LatLng eventLocation = new LatLng(latitude, longitude);
+                            Marker marker = myMap.addMarker(new MarkerOptions()
+                                    .position(eventLocation)
+                                    .title(eventName)
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                            if (marker != null) {
+                                eventMarkers.add(marker);
+                            }
+                        }
+                    } else {
+                        Log.d("MapsActivity", "Error getting documents: ", task.getException());
+                    }
+                });
+    }
+
+    private void updateMarkersVisibility() {
+        boolean showItems = toggleItems.isChecked();
+        boolean showEvents = toggleEvents.isChecked();
+
+        for (Marker marker : itemMarkers) {
+            marker.setVisible(showItems);
+        }
+        for (Marker marker : eventMarkers) {
+            marker.setVisible(showEvents);
+        }
+    }
+
     @Override
     public boolean onMarkerClick(final Marker marker) {
         // Retrieve the item count from the marker's tag
         Integer itemCount = (Integer) marker.getTag();
-        String title = itemCount + " items found at " + marker.getTitle();
+        String title = marker.getTitle();
+        if (itemCount != null) {
+            title = itemCount + " items found at " + marker.getTitle();
+        }
 
         new AlertDialog.Builder(this)
                 .setTitle(title)
-                .setMessage("Do you want to see all items from " + marker.getTitle() + "?")
+                .setMessage("Do you want to see all items or events from " + marker.getTitle() + "?")
                 .setPositiveButton("Yes", (dialog, which) -> {
-                    Intent intent = new Intent(MapsActivity.this, SeeAllItemsActivity.class);
-                    intent.putExtra("location", marker.getTitle());
+                    Intent intent = null;
+                    if (itemCount != null) {
+                        intent = new Intent(MapsActivity.this, SeeAllItemsActivity.class);
+                        intent.putExtra("location", marker.getTitle());
+                    } else {
+                        // Replace with the appropriate activity to show event details
+                        Toast.makeText(MapsActivity.this, "Show event details for " + marker.getTitle(), Toast.LENGTH_SHORT).show();
+                    }
                     startActivity(intent);
                 })
                 .setNegativeButton("No", null)

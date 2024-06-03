@@ -40,6 +40,8 @@
         <activity
             android:name=".principalactivities.MapsActivity"
             android:exported="true" />
+        <activity android:name=".events.MapPickerActivity"
+            android:exported="true" />
         <activity
             android:name=".wishlists.WishlistActivity"
             android:exported="true" />
@@ -101,6 +103,11 @@
             android:name=".onboarding.OnboardingScreensActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".chatbot.ChatbotActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTop" />
+
         <activity
             android:name=".principalactivities.EntryActivity"
             android:exported="true"
@@ -115,6 +122,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
+        <meta-data
+            android:name="com.elias.swapify.OPENAI_API_KEY"
+            android:value="${OPENAI_API_KEY}" />
     </application>
 
 </manifest>

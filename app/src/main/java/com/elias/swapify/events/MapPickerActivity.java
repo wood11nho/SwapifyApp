@@ -83,8 +83,8 @@ public class MapPickerActivity extends FragmentActivity implements OnMapReadyCal
             return true;
         });
 
-        // Automatically center the map on user's location after 5 seconds
-        new Handler().postDelayed(this::navigateToUserLocation, 5000);
+        // Automatically center the map on user's location after 1 second
+        new Handler().postDelayed(this::navigateToUserLocation, 1000);
     }
 
     private void checkLocationPermission() {

@@ -16,3 +16,5 @@
 .cxx
 local.properties
 ai_categories_algorithm/
+messaging_access_key/
+app/src/main/assets/cloud_messaging/

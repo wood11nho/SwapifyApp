@@ -73,4 +73,7 @@
     <string name="onboarding_screen_3_description">Connect with other users, chat with them, and arrange swaps or purchases. The greater the community, the more items you can discover and the more people you can meet. Join us today!</string>
     <string name="onboarding_screen_4_title">Explore around you</string>
     <string name="onboarding_screen_4_description">Look on the map to see what items are available around you. You can also filter by category to find exactly what you are looking for. Did you find something you like? Add it to wishlist, so that you can find it later.</string>
+
+    <!-- default notification channel id -->
+    <string name="default_notification_channel_id">swapify_channel</string>
 </resources>

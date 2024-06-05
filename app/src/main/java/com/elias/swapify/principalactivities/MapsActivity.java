@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.widget.ToggleButton;
 import android.widget.Toast;
@@ -20,9 +21,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.elias.swapify.R;
+import com.elias.swapify.events.EventModel;
 import com.elias.swapify.firebase.FirebaseUtil;
 import com.elias.swapify.items.SeeAllItemsActivity;
-import com.elias.swapify.events.EventModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,6 +36,7 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.gson.Gson;
@@ -44,6 +46,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +62,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean isLocationEnabled = false;
     private List<Marker> itemMarkers = new ArrayList<>();
     private List<Marker> eventMarkers = new ArrayList<>();
+    private EventModel currentEvent; // Store the current event for which permissions are being requested
 
     // Permission request with the new Activity Result API
     private final ActivityResultLauncher<String> requestPermissionLauncher =
@@ -67,6 +71,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     initMap();
                 } else {
                     showDefaultLocation();
+                }
+            });
+
+    private final ActivityResultLauncher<String[]> calendarPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                Boolean writeCalendarGranted = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    writeCalendarGranted = result.getOrDefault(Manifest.permission.WRITE_CALENDAR, false);
+                }
+                Boolean readCalendarGranted = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    readCalendarGranted = result.getOrDefault(Manifest.permission.READ_CALENDAR, false);
+                }
+                if (writeCalendarGranted != null && readCalendarGranted != null && writeCalendarGranted && readCalendarGranted) {
+                    // Permissions granted, create the calendar reminder
+                    if (currentEvent != null) {
+                        createCalendarReminder(currentEvent);
+                    }
+                } else {
+                    Toast.makeText(this, "Calendar permissions are required to create reminders.", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -177,7 +201,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         showDefaultLocation(); // Show Romania initially
 
-        // Delay zoom to user's location by 5 seconds
+        // Delay zoom to user's location by 1 second
         new Handler().postDelayed(() -> {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 myMap.setMyLocationEnabled(true);
@@ -191,7 +215,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 });
             }
-        }, 5000);
+        }, 1000);
 
         fetchAndDisplayItems();
         fetchAndDisplayEvents();
@@ -219,7 +243,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             if (coordinates != null) {
                                 Marker marker = myMap.addMarker(new MarkerOptions()
                                         .position(coordinates)
-                                        .title(entry.getKey()));
+                                        .title(entry.getKey())
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))); // Red for items
                                 if (marker != null) {
                                     marker.setTag(entry.getValue());  // Store the item count in the marker's tag
                                     itemMarkers.add(marker);
@@ -242,11 +267,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             double longitude = document.getDouble("longitude");
                             String eventName = document.getString("name");
                             LatLng eventLocation = new LatLng(latitude, longitude);
+                            String eventDescription = document.getString("description");
+                            Timestamp timestamp = document.getTimestamp("timestamp");
                             Marker marker = myMap.addMarker(new MarkerOptions()
                                     .position(eventLocation)
                                     .title(eventName)
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))); // Green for events
                             if (marker != null) {
+                                marker.setTag(new EventModel(eventName, eventDescription, latitude, longitude, timestamp));
                                 eventMarkers.add(marker);
                             }
                         }
@@ -270,31 +298,63 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        // Retrieve the item count from the marker's tag
-        Integer itemCount = (Integer) marker.getTag();
-        String title = marker.getTitle();
-        if (itemCount != null) {
-            title = itemCount + " items found at " + marker.getTitle();
-        }
+        // Retrieve the tag to check if it's an item or event marker
+        Object tag = marker.getTag();
+        if (tag instanceof Integer) {
+            // Item marker
+            Integer itemCount = (Integer) tag;
+            String title = itemCount + " items found at " + marker.getTitle();
 
-        new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage("Do you want to see all items or events from " + marker.getTitle() + "?")
-                .setPositiveButton("Yes", (dialog, which) -> {
-                    Intent intent = null;
-                    if (itemCount != null) {
-                        intent = new Intent(MapsActivity.this, SeeAllItemsActivity.class);
+            new AlertDialog.Builder(this)
+                    .setTitle(title)
+                    .setMessage("Do you want to see all items from " + marker.getTitle() + "?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        Intent intent = new Intent(MapsActivity.this, SeeAllItemsActivity.class);
                         intent.putExtra("location", marker.getTitle());
-                    } else {
-                        // Replace with the appropriate activity to show event details
-                        Toast.makeText(MapsActivity.this, "Show event details for " + marker.getTitle(), Toast.LENGTH_SHORT).show();
-                    }
-                    startActivity(intent);
-                })
-                .setNegativeButton("No", null)
-                .show();
+                        startActivity(intent);
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+        } else if (tag instanceof EventModel) {
+            // Event marker
+            EventModel event = (EventModel) tag;
+            currentEvent = event;
+            requestCalendarPermission();
+        }
         return true;
     }
+
+    private void requestCalendarPermission() {
+        calendarPermissionLauncher.launch(new String[]{
+                Manifest.permission.WRITE_CALENDAR,
+                Manifest.permission.READ_CALENDAR
+        });
+    }
+
+    private void createCalendarReminder(EventModel event) {
+        Calendar beginTime = Calendar.getInstance();
+        beginTime.setTime(event.getTimestamp().toDate());
+        Calendar endTime = (Calendar) beginTime.clone();
+        endTime.add(Calendar.HOUR, 1);
+
+        Intent intent = new Intent(Intent.ACTION_INSERT)
+                .setData(CalendarContract.Events.CONTENT_URI)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
+                .putExtra(CalendarContract.Events.TITLE, event.getName())
+                .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
+                .putExtra(CalendarContract.Events.EVENT_LOCATION, event.getLatitude() + ", " + event.getLongitude());
+
+        // Check if there is an app that can handle this intent
+        Log.d("MapsActivity", "Intent: " + intent.toString());
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        } else {
+            Log.e("MapsActivity", "No app found to handle the intent.");
+            Toast.makeText(this, "No calendar app found to create reminder.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     private void navigateToUserLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {

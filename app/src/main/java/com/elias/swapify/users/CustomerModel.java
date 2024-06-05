@@ -13,6 +13,7 @@ public class CustomerModel {
     private String bio;
     private String county;
     private String city;
+    private String fcmToken;
 
     public CustomerModel() {
         this.name = "";
@@ -117,5 +118,13 @@ public class CustomerModel {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 }

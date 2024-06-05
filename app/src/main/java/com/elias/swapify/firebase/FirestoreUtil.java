@@ -7,6 +7,9 @@ import com.elias.swapify.charity.CharityModel;
 import com.elias.swapify.items.ItemModel;
 import com.elias.swapify.wishlists.WishlistItem;
 import com.elias.swapify.wishlists.WishlistModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -22,6 +25,27 @@ import java.util.Map;
 
 public class FirestoreUtil {
     private static final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    private static final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+    public static DocumentReference currentUserDetails() {
+        if (currentUser != null) {
+            return firestore.collection("USERS").document(currentUser.getUid());
+        } else {
+            return null;
+        }
+    }
+
+    public static CollectionReference usersCollection() {
+        return firestore.collection("USERS");
+    }
+
+    public static void updateUserDetails(String field, Object value, OnUpdateUserDetailsListener listener) {
+        if (currentUser != null) {
+            currentUserDetails().update(field, value)
+                    .addOnSuccessListener(aVoid -> listener.onUpdateSuccess())
+                    .addOnFailureListener(e -> listener.onUpdateFailure(e.toString()));
+        }
+    }
 
     public static void fetchCharityData(String charityId, OnCharityDataFetchedListener listener) {
         firestore.collection("CHARITIES").document(charityId).get()
@@ -387,5 +411,10 @@ public class FirestoreUtil {
     public interface OnWishlistItemsFetchedListener {
         void onWishlistItemsFetched(List<ItemModel> wishlistItems);
         void onError(String error);
+    }
+
+    public interface OnUpdateUserDetailsListener {
+        void onUpdateSuccess();
+        void onUpdateFailure(String error);
     }
 }

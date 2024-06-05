@@ -1,16 +1,24 @@
 package com.elias.swapify.principalactivities;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -20,6 +28,7 @@ import com.elias.swapify.categories.CategoryAdapter;
 import com.elias.swapify.categories.SeeAllCategoriesActivity;
 import com.elias.swapify.chatbot.ChatbotActivity;
 import com.elias.swapify.chats.AllChatsActivity;
+import com.elias.swapify.chats.ChatActivity;
 import com.elias.swapify.events.AddEventDialogFragment;
 import com.elias.swapify.firebase.FirebaseUtil;
 import com.elias.swapify.firebase.FirestoreUtil;
@@ -31,7 +40,9 @@ import com.elias.swapify.items.ItemAdapter;
 import com.elias.swapify.items.ItemModel;
 import com.elias.swapify.items.SeeAllItemsActivity;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
@@ -74,6 +85,18 @@ public class HomePageActivity extends AppCompatActivity {
             redirectTo(LoginActivity.class);
             return;
         }
+
+        if (getIntent().getExtras()!=null){
+            // from chat notification
+            Toast.makeText(this, "Chat notification", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, ChatActivity.class);
+            intent.putExtra("receiverId", getIntent().getStringExtra("receiverId"));
+            intent.putExtra("otherPersonName", getIntent().getStringExtra("otherPersonName"));
+            startActivity(intent);
+        }
+
+        // Ask for notification permission
+        askNotificationPermission();
 
         // Set the welcome message with the username
         tvWelcomeMessage = findViewById(R.id.tvWelcomeMessage);
@@ -187,8 +210,14 @@ public class HomePageActivity extends AppCompatActivity {
         );
 
         signOutButton.setOnClickListener(v -> {
-            FirebaseUtil.signOut();
-            redirectTo(LoginActivity.class);
+            FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    FirebaseUtil.signOut();
+                    redirectTo(LoginActivity.class);
+                } else {
+                    Log.e("HomePageActivity", "Error deleting FCM token: " + task.getException());
+                }
+            });
         });
 
         fabMaps.setOnClickListener(v -> {
@@ -275,5 +304,50 @@ public class HomePageActivity extends AppCompatActivity {
 
         // Apply the updated theme preference app-wide
         AppCompatDelegate.setDefaultNightMode(!isNightModeOn ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+    }
+
+    // Declare the launcher at the top of your Activity/Fragment:
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Toast.makeText(this, "Notification permission granted", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Notifications are disabled for Swapify", Toast.LENGTH_LONG).show();
+                }
+                // Proceed with other app logic after permission handling
+                checkUserStatus();
+            });
+
+    private void askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Notification permission already granted", Toast.LENGTH_SHORT).show();
+                // Proceed with other app logic
+                checkUserStatus();
+            } else {
+                // Show a dialog to ask the user for permission
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle("Notification Permission")
+                        .setMessage("Swapify would like to send you notifications. Is that okay?")
+                        .setPositiveButton("Yes", (dialog, which) ->
+                                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS))
+                        .setNegativeButton("No", (dialog, which) -> {
+                            Toast.makeText(this, "Notifications are disabled for Swapify", Toast.LENGTH_LONG).show();
+                            // Proceed with other app logic
+                            checkUserStatus();
+                        })
+                        .show();
+            }
+        } else {
+            // For older Android versions, assume permission is granted
+            checkUserStatus();
+        }
+    }
+
+    private void checkUserStatus() {
+        if (!FirebaseUtil.isUserLoggedIn()) {
+            redirectTo(LoginActivity.class);
+        }
     }
 }

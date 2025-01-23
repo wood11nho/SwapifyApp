@@ -1,6 +1,8 @@
 *.iml
 .gradle
 /local.properties
+/secrets.properties
+/local.defaults.properties
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -13,3 +15,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+ai_categories_algorithm/
+messaging_access_key/
+app/src/main/assets/cloud_messaging/

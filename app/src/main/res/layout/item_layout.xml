@@ -15,6 +15,8 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_question_mark"
         android:contentDescription="@string/item_image"
+        android:background="@drawable/shadow_effect"
+        android:adjustViewBounds="false"
         />
 
     <!-- Item Name -->
@@ -23,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/item_name"
-        android:textColor="@android:color/black"
+        android:textColor="?attr/colorPrimary"
         android:textSize="20sp"
         android:padding="8dp"
         android:gravity="center"
@@ -42,7 +44,7 @@
         android:padding="4dp"
         android:gravity="center"
         android:textStyle="bold"
-        android:textColor="@color/purple"
+        android:textColor="?attr/colorOnSecondary"
         android:ellipsize="end"
         android:maxLines="1"
         />

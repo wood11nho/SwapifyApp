@@ -3,10 +3,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:background="@color/light_white"
-    android:padding="8dp"
-    >
+    android:padding="8dp">
 
     <!-- Item Image -->
     <androidx.cardview.widget.CardView
@@ -15,7 +12,7 @@
         android:layout_weight="1"
         app:cardCornerRadius="16dp"
         android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/purple"
+        android:backgroundTint="?attr/colorPrimary"
         >
 
         <ImageView
@@ -44,7 +41,7 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="16dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="?attr/colorOnPrimary"
             android:padding="16dp"
             >
 
@@ -52,8 +49,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:backgroundTint="@color/white">
+                android:background="?attr/colorOnPrimary"
+                android:backgroundTint="?attr/colorOnPrimary">
 
                 <!-- Item Name -->
                 <TextView
@@ -61,13 +58,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/item_name"
-                    android:textColor="@android:color/black"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginTop="16dp"
+                    android:textAlignment="center"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     />
 
                 <!-- Item Price -->
@@ -78,24 +78,15 @@
                     android:text="@string/item_price"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="@color/purple"
+                    android:textColor="?attr/colorOnSecondary"
                     app:layout_constraintTop_toBottomOf="@+id/someDetailedItemName"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginTop="8dp"/>
-
-                <!-- Item Description -->
-                <TextView
-                    android:id="@+id/someDetailedItemDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/item_description"
-                    android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray"
-                    app:layout_constraintTop_toBottomOf="@+id/someDetailedItemPrice"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_marginTop="8dp"
+                    android:textAlignment="center"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -105,7 +96,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/purple"
+            android:background="?attr/colorOnPrimary"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             />
@@ -115,17 +106,14 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="16dp"
             android:padding="16dp"
+            android:backgroundTint="?attr/colorOnPrimary"
             android:layout_weight="2"
-            android:backgroundTint="@color/white"
-            android:background="@color/white"
             >
             <!-- Button Layout -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:background="@color/white"
-                android:backgroundTint="@color/white">
+                android:orientation="horizontal">
 
                 <!-- Send Message Button -->
                 <ImageButton

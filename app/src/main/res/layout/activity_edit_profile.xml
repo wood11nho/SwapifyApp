@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/light_white"
+    android:background="@drawable/background"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -15,8 +16,8 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal"
-            android:src="@mipmap/default_profile_picture"
-            android:background="@drawable/square_background"
+            android:src="@mipmap/defaultpicture"
+            android:background="?attr/colorOnPrimary"
             android:padding="10dp"
             android:cropToPadding="true"
             android:scaleType="centerCrop"
@@ -36,12 +37,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/name"
-            android:textColorHint="@color/dark_grey"
             android:inputType="textPersonName"
             android:maxLines="1"
             android:padding="8dp"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:autofillHints="Name"
             />
 
@@ -50,12 +50,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/username"
-            android:textColorHint="@color/dark_grey"
             android:inputType="text"
             android:maxLines="1"
             android:padding="8dp"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:autofillHints="Username"
             />
 
@@ -64,12 +63,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
-            android:textColorHint="@color/dark_grey"
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:padding="8dp"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:autofillHints="Email"
             />
 
@@ -78,12 +76,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/phone_number"
-            android:textColorHint="@color/dark_grey"
             android:inputType="phone"
             android:maxLines="1"
             android:padding="8dp"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:autofillHints="Phone Number"
             />
 
@@ -92,12 +89,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/bio"
-            android:textColorHint="@color/dark_grey"
             android:inputType="textMultiLine"
             android:lines="3"
             android:padding="8dp"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnPrimary"
             android:autofillHints="Bio"
             />
 
@@ -107,7 +103,7 @@
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:text="@string/choose_your_county"
-            android:textColor="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="16sp" />
 
         <Spinner
@@ -117,8 +113,7 @@
             android:entries="@array/counties_array"
             android:prompt="@string/select_county_prompt"
             android:padding="8dp"
-            android:background="?attr/colorPrimary"
-            android:backgroundTint="?attr/colorPrimary"
+            android:background="?attr/colorOnPrimary"
             android:textSize="16sp" />
 
         <TextView
@@ -127,7 +122,7 @@
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:text="@string/choose_your_city"
-            android:textColor="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="16sp" />
 
 
@@ -138,8 +133,7 @@
             android:entries="@array/cities_array"
             android:prompt="@string/select_city_prompt"
             android:padding="8dp"
-            android:background="?attr/colorPrimary"
-            android:backgroundTint="?attr/colorPrimary"
+            android:background="?attr/colorOnPrimary"
             android:textSize="16sp"
             />
 
@@ -149,7 +143,6 @@
             android:layout_height="wrap_content"
             android:text="@string/save"
             android:layout_gravity="center_horizontal"
-
             android:layout_marginTop="16dp" />
 
     </LinearLayout>

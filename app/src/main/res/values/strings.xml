@@ -8,12 +8,8 @@
     <string name="CustomerRegister">Register</string>
     <string name="a_short_description_of_4_rows">Introducing our new item sharing and swapping app - the ultimate tool for decluttering your home, discovering new items, and connecting with your community! With our app, you can easily upload items you no longer need or want, and browse listings from other users to find items that interest you.</string>
     <string name="back_button">Back Button</string>
-
-    <string-array name="counties_array">
-    </string-array>
-    <string-array name="cities_array">
-    </string-array>
-
+    <string-array name="counties_array"></string-array>
+    <string-array name="cities_array"></string-array>
     <string name="select_city_prompt">Select a city</string>
     <string name="select_county_prompt">Select a county</string>
     <string name="item_image">Item Image</string>
@@ -51,4 +47,33 @@
     <string name="all_categories">All Categories</string>
     <string name="category_image">Category Image</string>
     <string name="category_name">Category Name</string>
+    <string name="password_length">\u2022 Password must be at least 8 characters long</string>
+    <string name="password_must_match">\u2022 Password must match</string>
+    <string name="password_letter">\u2022 Password must contain at least one letter</string>
+    <string name="password_number">\u2022 Password must contain at least one number</string>
+    <string name="password_special_character">\u2022 Password must contain at least one special character</string>
+    <string name="welcome_message">Hi, %1$s! \uD83D\uDE03</string>
+    <string name="verify_email_message">Please enable your account by verifying your e-mail address.</string>
+    <string name="placeholder_email">Registered email will appear here.</string>
+    <string name="resend_verification_email">Resend Verification Email</string>
+    <string name="continue_to_login">Continue to Login</string>
+    <string name="item_picture">Item Picture</string>
+    <string name="toggle_night_mode">Toggle Night Mode</string>
+    <string name="all_chats">All Chats</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_chats">Search chats...</string>
+    <string name="wishlist_button">Wishlist Button</string>
+
+    <!--  Onboarding screens descriptions  -->
+    <string name="onboarding_screen_1_title">Welcome to Swapify!</string>
+    <string name="onboarding_screen_1_description">The ultimate tool for decluttering your home, discovering new items, and connecting with your community! Explore our wonderful app and discover all the features we have to offer.</string>
+    <string name="onboarding_screen_2_title">Discover New Items</string>
+    <string name="onboarding_screen_2_description">Easily upload items you no longer need or want, and browse listings from other users to find items that interest you. Swapify is the perfect place to find new treasures! We encourage sustainable living and fashion.</string>
+    <string name="onboarding_screen_3_title">Connect with Your Community</string>
+    <string name="onboarding_screen_3_description">Connect with other users, chat with them, and arrange swaps or purchases. The greater the community, the more items you can discover and the more people you can meet. Join us today!</string>
+    <string name="onboarding_screen_4_title">Explore around you</string>
+    <string name="onboarding_screen_4_description">Look on the map to see what items are available around you. You can also filter by category to find exactly what you are looking for. Did you find something you like? Add it to wishlist, so that you can find it later.</string>
+
+    <!-- default notification channel id -->
+    <string name="default_notification_channel_id">swapify_channel</string>
 </resources>

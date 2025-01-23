@@ -1,93 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Devices running Android 12L (API level 32) or lower -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" /> <!-- Devices running Android 13 (API level 33) or higher -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <!--
+ To handle the reselection within the app on devices running Android 14
+         or higher if your app targets Android 14 (API level 34) or higher.
+    -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo_swapify"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/logo_swapify_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Swapify"
-        tools:targetApi="31">
+        tools:targetApi="34">
+        <activity
+            android:name=".items.MyAdsActivity"
+            android:exported="false" />
+        <activity android:name="androidx.activity.ComponentActivity" />
+        <activity
+            android:name=".charity.FullDetailCharityActivity"
+            android:exported="false" />
+        <activity
+            android:name=".principalactivities.TicketSupportActivity"
+            android:exported="true" />
+        <activity
+            android:name=".principalactivities.MapsActivity"
+            android:exported="true" />
+        <activity android:name=".events.MapPickerActivity"
+            android:exported="true" />
+        <activity
+            android:name=".wishlists.WishlistActivity"
+            android:exported="true" />
+        <activity
+            android:name=".principalactivities.LoadingScreenActivity"
+            android:exported="true" />
+        <activity
+            android:name=".items.AddItemActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".users.RegisterActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".users.LoginActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".principalactivities.HomePageActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".users.ProfileActivity"
+            android:exported="true" />
+        <activity
+            android:name=".users.EditProfileActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".users.ForgotPasswordActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".items.SeeAllItemsActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".categories.SeeAllCategoriesActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".chats.ChatActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".chats.AllChatsActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".items.FullDetailItemActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".users.VerifyEmailActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".onboarding.OnboardingScreensActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".chatbot.ChatbotActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTop" />
 
         <activity
-            android:name=".LoadingScreenActivity"
-            android:exported="true">
-        </activity>
-
-        <activity
-            android:name=".AddItemActivity"
-            android:exported="true">
-        </activity>
-
-        <activity
-            android:name=".RegisterActivity"
-            android:exported="true">
-        </activity>
-
-        <activity
-            android:name=".LoginActivity"
-            android:exported="true">
-        </activity>
-
-        <activity
-            android:name=".HomePageActivity"
-            android:exported="true">
-        </activity>
-
-        <activity
-            android:name=".ProfileActivity"
-            android:exported="true">
-        </activity>
-
-        <activity
-            android:name=".EditProfileActivity"
-            android:exported="true">
-        </activity>
-
-        <activity
-            android:name=".ForgotPasswordActivity"
-            android:exported="true">
-        </activity>
-
-        <activity
-            android:name=".SeeAllItemsActivity"
-            android:exported="true">
-        </activity>
-
-        <activity
-            android:name=".SeeAllCategoriesActivity"
-            android:exported="true">
-        </activity>
-
-        <activity
-            android:name=".ChatActivity"
-            android:exported="true">
-        </activity>
-
-        <activity
-            android:name=".AllChatsActivity"
-            android:exported="true">
-        </activity>
-
-        <activity
-            android:name=".FullDetailItemActivity"
-            android:exported="true">
-        </activity>
-
-        <activity
-            android:name=".EntryActivity"
-            android:exported="true">
+            android:name=".principalactivities.EntryActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Swapify.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".cloudmessaging.CloudMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+        <meta-data
+            android:name="com.elias.swapify.OPENAI_API_KEY"
+            android:value="${OPENAI_API_KEY}" />
+        <meta-data
+            android:name="com.elias.swapify.ACCESS_TOKEN"
+            android:value="${ACCESS_TOKEN}" />
     </application>
 
 </manifest>

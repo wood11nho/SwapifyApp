@@ -1,16 +1,57 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.Swapify" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-    </style>
+<resources>
+<!--    &lt;!&ndash; Dark application theme. &ndash;&gt;-->
+<!--    <style name="Theme.Swapify.Dark" parent="Theme.MaterialComponents.DayNight.NoActionBar">-->
+<!--        &lt;!&ndash; Primary brand color. &ndash;&gt;-->
+<!--        <item name="colorPrimary">@color/deep_blue</item>-->
+<!--        <item name="colorPrimaryVariant">@color/mid_tone_blue</item>-->
+<!--        <item name="colorOnPrimary">@color/near_black</item>-->
+
+<!--        &lt;!&ndash; Secondary brand color. &ndash;&gt;-->
+<!--        <item name="colorSecondary">@color/warm_amber</item>-->
+<!--        <item name="colorSecondaryVariant">@color/burnt_sienna</item>-->
+<!--        <item name="colorOnSecondary">@color/off_white</item>-->
+
+<!--        &lt;!&ndash; Status bar color. &ndash;&gt;-->
+<!--        <item name="android:statusBarColor">@color/dark_blue</item>-->
+
+<!--        &lt;!&ndash; Background color &ndash;&gt;-->
+<!--        <item name="android:windowBackground">@color/light_gray</item>-->
+
+<!--        &lt;!&ndash; Surface color &ndash;&gt;-->
+<!--        <item name="colorSurface">@color/light_gray</item>-->
+<!--        <item name="colorOnSurface">@color/near_black</item>-->
+
+<!--        &lt;!&ndash; Text color &ndash;&gt;-->
+<!--        <item name="android:textColorPrimary">@color/near_black</item>-->
+<!--        <item name="android:textColorSecondary">@color/medium_gray</item>-->
+
+<!--        &lt;!&ndash; Action Bar &ndash;&gt;-->
+<!--        <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.ActionBar</item>-->
+<!--        <item name="android:actionBarStyle">@style/MyActionBar</item>-->
+
+<!--        &lt;!&ndash; Hints and light texts &ndash;&gt;-->
+<!--        <item name="android:textColorHint">@color/light_blue</item>-->
+
+<!--        &lt;!&ndash; Navigation Bar Color &ndash;&gt;-->
+<!--        <item name="android:navigationBarColor">@color/deep_blue</item>-->
+
+<!--        &lt;!&ndash; Red Color for verification purposes &ndash;&gt;-->
+<!--        <item name="colorError">@color/red_700_dark</item>-->
+
+<!--        <item name="selectableItemBackgroundBorderless">@color/light_blue</item>-->
+
+<!--        &lt;!&ndash; Font Family &ndash;&gt;-->
+<!--        <item name="android:fontFamily">@font/font_family</item>-->
+<!--    </style>-->
+
+<!--    &lt;!&ndash; Custom Action Bar Style for Dark Theme &ndash;&gt;-->
+<!--    <style name="MyActionBar.Dark" parent="@style/Widget.AppCompat.ActionBar">-->
+<!--        <item name="background">@color/deep_blue</item>-->
+<!--        <item name="titleTextStyle">@style/MyActionBarTitleText</item>-->
+<!--    </style>-->
+
+<!--    &lt;!&ndash; Custom Title Text Style for Action Bar in Dark Theme &ndash;&gt;-->
+<!--    <style name="MyActionBarTitleText.Dark" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">-->
+<!--        <item name="android:textColor">@color/near_black</item>-->
+<!--    </style>-->
 </resources>

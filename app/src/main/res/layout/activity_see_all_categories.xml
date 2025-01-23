@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_white"
+    android:background="@drawable/background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -10,19 +10,16 @@
         android:id="@+id/back_toolbar_all_categories"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/btnBack_all_categories"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/back_button"
             android:src="@drawable/ic_back_button"
             tools:ignore="TouchTargetSizeCheck"
@@ -33,7 +30,6 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#F6F5F5"
         app:layout_constraintTop_toBottomOf="@id/back_toolbar_all_categories"
         app:layout_constraintBottom_toTopOf="@id/dividerAllCategories"
         android:fillViewport="true"
@@ -50,8 +46,8 @@
                 android:text="@string/all_categories"
                 android:textSize="26sp"
                 android:textStyle="bold"
-                android:layout_marginStart="32dp"
-                android:textColor="@color/purple"
+                android:layout_marginStart="16dp"
+                android:textColor="?attr/colorSecondary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="16dp"
@@ -70,6 +66,7 @@
                 app:iconifiedByDefault="false"
                 android:background="@drawable/search_view_border"
                 android:padding="8dp"
+                style="@style/SearchViewStyle"
                 />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -91,27 +88,32 @@
         android:id="@+id/dividerAllCategories"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@+id/toolbarAllCategories"/>
+        app:layout_constraintBottom_toTopOf="@+id/toolbarAllCategories"
+        android:background="?android:attr/dividerHorizontal"
+        />
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/toolbarAllCategories"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:contentInsetStart="0dp"
+        app:contentInsetLeft="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="4dp"
+        >
 
         <ImageButton
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:id="@+id/reload_button_all_categories"
             android:layout_gravity="start"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="12dp"
+            android:background="?attr/selectableItemBackground"
+            android:paddingStart="16dp"
+            android:paddingEnd="0dp"
             android:src="@drawable/ic_menu"
             tools:ignore="TouchTargetSizeCheck"
-            android:layout_marginBottom="18dp"
             android:contentDescription="@string/reload_page"
             />
 
@@ -120,12 +122,11 @@
             android:layout_height="48dp"
             android:id="@+id/profile_button_all_categories"
             android:layout_gravity="end"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="12dp"
+            android:background="?attr/selectableItemBackground"
+            android:paddingStart="0dp"
+            android:paddingEnd="16dp"
             android:src="@drawable/ic_profile"
             tools:ignore="TouchTargetSizeCheck"
-            android:layout_marginBottom="18dp"
-            app:tint="@color/grey"
             android:contentDescription="@string/profile"
             />
 

@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_white"
+    android:background="@drawable/background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -10,19 +10,16 @@
         android:id="@+id/back_toolbar_all_items"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/btnBack_all_items"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/back_button"
             android:src="@drawable/ic_back_button"
             tools:ignore="TouchTargetSizeCheck"
@@ -33,7 +30,6 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#F6F5F5"
         app:layout_constraintTop_toBottomOf="@id/back_toolbar_all_items"
         app:layout_constraintBottom_toTopOf="@id/dividerAllItems"
         android:fillViewport="true"
@@ -50,8 +46,8 @@
                 android:text="@string/all_items"
                 android:textSize="26sp"
                 android:textStyle="bold"
-                android:layout_marginStart="32dp"
-                android:textColor="@color/purple"
+                android:layout_marginStart="16dp"
+                android:textColor="?attr/colorSecondary"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="16dp"
@@ -66,11 +62,125 @@
                 app:layout_constraintTop_toBottomOf="@id/allItemsTitle"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                android:queryHint="Search"
                 app:iconifiedByDefault="false"
                 android:background="@drawable/search_view_border"
                 android:padding="8dp"
-                />
+                android:queryHint="Search for item, category, location..."
+                style="@style/SearchViewStyle" />
+
+            <ImageButton
+                android:id="@+id/toggle_filters_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="Toggle filters"
+                android:src="@drawable/ic_show_filters"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.041"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/searchViewAllItems" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/filter_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/toggle_filters_button"
+                android:layout_marginTop="8dp"
+                android:padding="16dp">
+
+                <!-- Category Filter -->
+                <TextView
+                    android:id="@+id/categoryFilter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+
+                    />
+                <Spinner
+                    android:id="@+id/spinnerCategoryFilter"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/categoryFilter"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    />
+
+                <!-- Location Filter -->
+                <TextView
+                    android:id="@+id/locationFilter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/spinnerCategoryFilter"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="16dp"
+                    />
+                <Spinner
+                    android:id="@+id/spinnerLocationFilter"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/locationFilter"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <!-- Price Range Filter -->
+                <!-- Implement as per your design. Example: Two EditTexts for min and max price or a range slider -->
+                <!-- Placeholder for Price Range -->
+                <TextView
+                    android:id="@+id/priceRange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Price Range"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/spinnerLocationFilter"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="16dp"
+                    />
+                <EditText
+                    android:id="@+id/etMinPriceFilter"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/priceRange"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/etMaxPriceFilter"
+                    android:layout_marginTop="8dp"
+                    android:inputType="numberDecimal"
+                    android:hint="Min Price"
+                    />
+
+                <EditText
+                    android:id="@+id/etMaxPriceFilter"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/priceRange"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/etMinPriceFilter"
+                    android:layout_marginTop="8dp"
+                    android:inputType="numberDecimal"
+                    android:hint="Max Price"
+                    />
+
+                <!-- Apply Filter Button -->
+                <Button
+                    android:id="@+id/applyFilterButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Apply Filter"
+                    app:layout_constraintTop_toBottomOf="@id/etMinPriceFilter"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="16dp"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/allItemsRecyclerView"
@@ -78,9 +188,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                app:layout_constraintTop_toBottomOf="@id/searchViewAllItems"
+                app:layout_constraintTop_toBottomOf="@id/filter_layout"
                 android:clipToPadding="false"
-                android:layout_marginStart="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -91,8 +202,9 @@
         android:id="@+id/dividerAllItems"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@+id/toolbarAllItems"/>
+        app:layout_constraintBottom_toTopOf="@+id/toolbarAllItems"
+        android:background="?android:attr/dividerHorizontal"
+        />
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
@@ -100,18 +212,22 @@
         android:id="@+id/toolbarAllItems"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="4dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetLeft="0dp"
+        >
 
         <ImageButton
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:id="@+id/reload_button_all_items"
             android:layout_gravity="start"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="12dp"
+            android:background="?attr/selectableItemBackground"
             android:src="@drawable/ic_menu"
+            android:paddingStart="16dp"
+            android:paddingEnd="0dp"
             tools:ignore="TouchTargetSizeCheck"
-            android:layout_marginBottom="18dp"
             android:contentDescription="@string/reload_page"
             />
 
@@ -120,12 +236,11 @@
             android:layout_height="48dp"
             android:id="@+id/profile_button_all_items"
             android:layout_gravity="end"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="12dp"
+            android:background="?attr/selectableItemBackground"
             android:src="@drawable/ic_profile"
             tools:ignore="TouchTargetSizeCheck"
-            android:layout_marginBottom="18dp"
-            app:tint="@color/grey"
+            android:paddingStart="0dp"
+            android:paddingEnd="16dp"
             android:contentDescription="@string/profile"
             />
 

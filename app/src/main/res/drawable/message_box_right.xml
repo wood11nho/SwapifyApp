@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Shadow Layer -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <corners android:radius="8dp" />
+            <padding
+                android:left="4dp"
+                android:top="4dp"
+                android:right="4dp"
+                android:bottom="4dp" />
+        </shape>
+    </item>
+
+    <!-- Background Layer with Gradient -->
+    <item android:top="2dp" android:right="2dp" android:left="2dp">
+        <shape android:shape="rectangle">
+            <corners
+                android:topLeftRadius="30dp"
+                android:topRightRadius="0dp"
+                android:bottomLeftRadius="30dp"
+                android:bottomRightRadius="30dp"/>
+            <gradient
+                android:startColor="@color/teal_900"
+                android:endColor="@color/teal_200"
+                android:type="linear"/>
+        </shape>
+    </item>
+</layer-list>

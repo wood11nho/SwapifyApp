@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorPrimaryVariant">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:id="@+id/llAddEvent">
+
+        <TextView
+            android:id="@+id/tvEventTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create Collector's Event"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tvEventDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Organize a meeting for collectors to trade, sell, and connect with the community. Set a location and time for participants to join in real life and bring the collector's community together."
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="16sp"
+            android:paddingBottom="16dp"
+            android:gravity="center" />
+
+        <EditText
+            android:id="@+id/etEventName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Event Name"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="18sp"
+            android:background="?attr/editTextBackground"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
+        <EditText
+            android:id="@+id/etEventDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Event Description"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="18sp"
+            android:background="?attr/editTextBackground"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnChooseLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose Location on Map"
+            android:textColor="?attr/colorOnPrimary"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/tvChosenLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No Location Chosen"
+            android:textColor="?attr/colorOnSecondary"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnChooseDateTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose Date and Time"
+            android:textColor="?attr/colorOnPrimary"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/tvChosenDateTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No Date and Time Chosen"
+            android:textColor="?attr/colorOnSecondary"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnAddEvent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Event"
+            android:textColor="?attr/colorOnPrimary"
+            android:backgroundTint="?attr/colorSecondaryVariant"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+
+</ScrollView>

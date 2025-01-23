@@ -4,16 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_white"
-    tools:context=".RegisterActivity">
+    android:background="@drawable/background"
+    tools:context=".users.RegisterActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,7 +21,7 @@
             android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/back_button"
             android:src="@drawable/ic_back_button"
             tools:ignore="TouchTargetSizeCheck"
@@ -31,96 +29,194 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <EditText
-        android:id="@+id/edtName"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutName"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="@string/CustomerName"
-        android:textColorHint="@color/dark_grey"
-        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-    <EditText
-        android:id="@+id/edtUsername"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="@string/CustomerUsername"
-        android:textColorHint="@color/dark_grey"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtName"
-        android:autofillHints="username" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/CustomerName"
+            android:inputType="textPersonName"
+            android:autofillHints="" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/edtEmail"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutUsername"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="@string/CustomerEmail"
-        android:textColorHint="@color/dark_grey"
-        android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtUsername"
-        android:autofillHints="email" />
+        app:layout_constraintTop_toBottomOf="@id/layoutName">
 
-    <EditText
-        android:id="@+id/edtPassword"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="@string/CustomerPassword"
-        android:textColorHint="@color/dark_grey"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtEmail"
-        android:autofillHints="password" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/CustomerUsername"
+            android:inputType="textPersonName"
+            android:autofillHints="username" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/edtConfirmPassword"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutEmail"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="@string/ConfirmPassword"
-        android:textColorHint="@color/dark_grey"
-        android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtPassword"
-        android:autofillHints="password" />
+        app:layout_constraintTop_toBottomOf="@id/layoutUsername">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/CustomerEmail"
+            android:inputType="textEmailAddress"
+            android:autofillHints="email" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutEmail"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/CustomerPassword"
+            android:inputType="textPassword"
+            android:autofillHints="password" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutConfirmPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutPassword"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/ConfirmPassword"
+            android:inputType="textPassword"
+            android:autofillHints="password" />
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <com.google.android.material.button.MaterialButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:text="@string/CustomerRegister"
         android:id="@+id/btnRegister"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtConfirmPassword"
+        app:layout_constraintTop_toBottomOf="@+id/layoutConfirmPassword"
+        android:backgroundTint="?attr/colorPrimary"
+        android:textColor="?attr/colorSecondary"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:id="@+id/llPasswordRequirements"
+        app:layout_constraintTop_toBottomOf="@+id/btnRegister"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp"
+        android:background="@drawable/rounded_corners">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/password_length"
+            android:textColor="?attr/colorError"
+            android:textSize="16sp"
+            android:layout_marginStart="16dp"
+            android:id="@+id/tvPasswordLength"
+            app:layout_constraintTop_toBottomOf="@+id/btnRegister"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/password_letter"
+            android:textColor="?attr/colorError"
+            android:textSize="16sp"
+            android:layout_marginStart="16dp"
+            android:id="@+id/tvPasswordLetter"
+            app:layout_constraintTop_toBottomOf="@+id/tvPasswordLength"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/password_number"
+            android:textColor="?attr/colorError"
+            android:textSize="16sp"
+            android:layout_marginStart="16dp"
+            android:id="@+id/tvPasswordNumber"
+            app:layout_constraintTop_toBottomOf="@+id/tvPasswordLetter"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/password_special_character"
+            android:textColor="?attr/colorError"
+            android:textSize="16sp"
+            android:layout_marginStart="16dp"
+            android:id="@+id/tvPasswordSpecialChar"
+            app:layout_constraintTop_toBottomOf="@+id/tvPasswordNumber"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/password_must_match"
+            android:textColor="?attr/colorError"
+            android:textSize="16sp"
+            android:layout_marginStart="16dp"
+            android:id="@+id/tvPasswordMatch"
+            app:layout_constraintTop_toBottomOf="@+id/tvPasswordSpecialChar"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
